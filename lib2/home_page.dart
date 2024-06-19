@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 //material contains predefined widgets and themes
 
@@ -98,11 +99,11 @@ class HomePageState extends State<HomePage> { //extends hp but keeps in consider
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(CupertinoIcons.house_fill),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.account_balance_wallet),
+            icon: Icon(CupertinoIcons.clock_fill),
             label: 'Deadlines',
           ),
           BottomNavigationBarItem(
@@ -111,7 +112,7 @@ class HomePageState extends State<HomePage> { //extends hp but keeps in consider
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.red,
+        selectedItemColor: Color.fromARGB(1000,130, 36, 51),
         onTap: _onItemTapped,
       ),
     );
