@@ -97,6 +97,7 @@ class HomePageState extends State<HomePage> { //extends hp but keeps in consider
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed, // Add this line to remove magnification
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.house_fill),
