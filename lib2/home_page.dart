@@ -1,5 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sapienzapay/deadlines.dart';
+import 'package:sapienzapay/profile.dart';
 //material contains predefined widgets and themes
 
 void main() {
@@ -14,6 +15,7 @@ class MyApp extends StatelessWidget {  //it's IMMUTABLE
     return MaterialApp(
       title: 'SapienzaPay',
       theme: ThemeData(
+        // ignore: prefer_const_constructors
         primaryColor: Color.fromARGB(255, 111, 20, 28)
       ),
       home: const HomePage(),
@@ -36,13 +38,6 @@ class HomePageState extends State<HomePage> { //extends hp but keeps in consider
     GlobalKey<PullUpListWidgetState>()
   ]; //_keys keeps globalkey instances for each pulluplistwidget to identify them uniquely and access their states
 
-  final List<Widget> _widgetOptions = <Widget>[
-    PullUpListWidget(key: GlobalKey<PullUpListWidgetState>(), text: 'Home'),
-    PullUpListWidget(key: GlobalKey<PullUpListWidgetState>(), text: 'Deadlines'),
-    PullUpListWidget(key: GlobalKey<PullUpListWidgetState>(), text: 'Profile'),
-  ]; //_widgetOptions = list of the widgets to display for every tab 
-
-
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -53,58 +48,139 @@ class HomePageState extends State<HomePage> { //extends hp but keeps in consider
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('SapienzaPay'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              _keys[_selectedIndex].currentState?.scrollToTop();
-            },
-            child: const Text(
-              'View all',
-              style: TextStyle(color: Colors.grey),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            //user greeting
+            // ignore: prefer_const_constructors
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              // ignore: prefer_const_constructors
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: const Text(
+                  'Hi, Firdaous!', //modify to take parameter from acc creation time. will remove const
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+              ),
             ),
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          // BUTTONS
+          //0ther buttons
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.red[100],
+                    backgroundColor: Colors.grey[400],
+                  ),
                   onPressed: () {},
-                  child: const Text('Uni Bank account'),
+                  child: const Text('Uni Bank Account'),
                 ),
                 ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.red[100],
+                    backgroundColor: Colors.grey[400],
+                  ),
                   onPressed: () {},
                   child: const Text('All cards'),
                 ),
               ],
             ),
           ),
-          ElevatedButton(
-            onPressed: () {},
-            child: const Text('Account balance:'),
-          ),
-          // PULLUP LIST
-          Expanded(
-            child: _widgetOptions.elementAt(_selectedIndex),
-          ),
-        ],
+          //ACC BALANCE
+          Stack(
+            children: [
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(16.0),
+                margin: const EdgeInsets.all(8.0),
+                decoration: BoxDecoration(
+                  // ignore: prefer_const_constructors
+                  color: Color.fromARGB(255, 111, 20, 28),
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'UNI BANK ACCOUNT BALANCE',
+                      style: TextStyle(color: Colors.grey[50], fontSize: 16),
+                    ),
+                    // ignore: prefer_const_constructors
+                    const SizedBox(height:8.0),
+                    Text(
+                      'Card **** **** **** 1234',
+                      style: TextStyle(color: Colors.grey[50], fontSize: 16),
+                    ),
+                    const SizedBox(height: 8.0),
+                    Text(
+                      'E 1800,00',
+                      style: TextStyle(color: Colors.grey[50], fontSize: 32, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 8.0),
+                    Text(
+                      '08/2025',
+                      style: TextStyle(color: Colors.grey[50], fontSize: 16),
+                    ),
+                  ],
+                ),
+              ),
+              Positioned(
+                bottom: 16,
+                right: 16,
+                child: ElevatedButton(
+                  onPressed: () {
+                    //MONEY LOGIC TO BE ADDED
+                  },
+                  child: const Text('Add money'),
+                  ),
+                ),
+              ],
+            ),
+          //TRANSACTIONS
+            Padding(
+              padding:const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Last Transactions',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      _keys[_selectedIndex].currentState?.scrollToTop();
+                    },
+                    child: Text(
+                      'View All',
+                      style: TextStyle(color: Colors.grey[400]),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              color: Colors.red[300],
+              child: _selectedIndex == 0
+                ? PullUpListWidget(key: _keys[_selectedIndex], text: 'Home')
+                :(_selectedIndex == 1
+                  ? DeadlinesPage(key: _keys[_selectedIndex])
+                  : ProfilePage(key: _keys[_selectedIndex])),
+            ),
+          ],
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed, // Add this line to remove magnification
+        type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.house_fill),
+            icon: Icon(Icons.home),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.clock_fill),
+            icon: Icon(Icons.account_balance_wallet),
             label: 'Deadlines',
           ),
           BottomNavigationBarItem(
@@ -113,7 +189,8 @@ class HomePageState extends State<HomePage> { //extends hp but keeps in consider
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Color.fromARGB(1000,130, 36, 51),
+        // ignore: prefer_const_constructors
+        selectedItemColor: Color.fromARGB(255, 111, 20, 28),
         onTap: _onItemTapped,
       ),
     );
@@ -137,7 +214,7 @@ class PullUpListWidgetState extends State<PullUpListWidget> {
   @override
   void initState() { //initialises list containing items
     super.initState();
-    items = List.generate(20, (index) => '${widget.text} Item $index');
+    items = List.generate(6, (index) => '${widget.text} Item $index');
   }
 
   void filterList() {
@@ -146,7 +223,7 @@ class PullUpListWidgetState extends State<PullUpListWidget> {
       if (filterUniversityTransfers) {
         items = items.where((item) => item.contains('University Transfer')).toList();
       } else {
-        items = List.generate(20, (index) => '${widget.text} Item $index');
+        items = List.generate(6, (index) => '${widget.text} Item $index');
       }
     });
   }
@@ -170,7 +247,7 @@ class PullUpListWidgetState extends State<PullUpListWidget> {
             children: [
               ElevatedButton(
                 onPressed: filterList,
-                child: const Text('University Transfers'),
+                child: const Text('University'),
               ),
               ElevatedButton(
                 onPressed: filterList,
@@ -185,16 +262,25 @@ class PullUpListWidgetState extends State<PullUpListWidget> {
             itemCount: items.length,
             itemBuilder: (context, index) {
               return ListTile(
-                title: Text(items[index]),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
+                leading: CircleAvatar(
+                  backgroundColor: Colors.red[100],
+                  child: const Icon(Icons.payment, color: Colors.white),
+                  ),
+                  title: Text(items[index]),
+                  subtitle: Text('Date: ${(DateTime.now().subtract(Duration(days:index*2))).toString().split(' ')[0]}'),
+                  trailing: Text(
+                  index % 2 == 0 ? 'E 100.00' : 'E -50.00',
+                  style: TextStyle(color: index % 2 == 0 ? Colors.green : Colors.red),
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
                       builder: (context) => DetailPage(item: items[index]),
-                    ),
-                  );
-                },
-              );
+                      ),
+                    );
+                  },
+                );
             },
           ),
         ),
