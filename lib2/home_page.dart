@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sapienzapay/deadlines.dart';
 import 'package:sapienzapay/profile.dart';
@@ -176,11 +177,11 @@ class HomePageState extends State<HomePage> { //extends hp but keeps in consider
         type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(CupertinoIcons.house_fill),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.account_balance_wallet),
+            icon: Icon(CupertinoIcons.clock),
             label: 'Deadlines',
           ),
           BottomNavigationBarItem(
