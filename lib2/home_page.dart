@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sapienzapay/deadlines.dart';
+import 'package:sapienzapay/lib2/deadlines.dart'; //Check with Eden
 import 'package:sapienzapay/profile.dart';
 //material contains predefined widgets and themes
 
