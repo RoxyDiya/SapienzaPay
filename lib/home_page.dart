@@ -145,8 +145,9 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               SizedBox(height: 20, width: double.infinity),
               Container(
-                width: double.infinity, // Make the segmented control take full width
-                padding: EdgeInsets.symmetric(horizontal: 16), // Add padding if needed
+                //width: double.infinity, // Make the segmented control take full width
+                width: MediaQuery.of(context).size.width - 64, // Adjust width as needed, subtracting padding
+                //padding: EdgeInsets.symmetric(horizontal: 16), // Add padding if needed
                 decoration: BoxDecoration(
                   color: CupertinoColors.lightBackgroundGray,
                   borderRadius: BorderRadius.circular(8), // Adjust the radius as needed
