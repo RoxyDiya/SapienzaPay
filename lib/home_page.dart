@@ -78,6 +78,7 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
+
 class _HomeScreenState extends State<HomeScreen> {
   bool showUniversityTransactions = false;
 
@@ -146,6 +147,11 @@ class _HomeScreenState extends State<HomeScreen> {
               Container(
                 width: double.infinity, // Make the segmented control take full width
                 padding: EdgeInsets.symmetric(horizontal: 16), // Add padding if needed
+                decoration: BoxDecoration(
+                  color: CupertinoColors.lightBackgroundGray,
+                  borderRadius: BorderRadius.circular(8), // Adjust the radius as needed
+                  border: Border.all(color: CupertinoColors.lightBackgroundGray), // Optional: Border color
+                ),
                 child: CupertinoSegmentedControl<int>(
                   children: {
                     0: Text('All',style: TextStyle(color: Colors.black)),
@@ -217,6 +223,7 @@ class _HomeScreenState extends State<HomeScreen> {
     ),
   ];
 }
+
 
 class PlaceholderWidget extends StatelessWidget {
   final String text;
