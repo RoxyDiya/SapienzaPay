@@ -142,18 +142,25 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
               ),
-              SizedBox(height: 20),
-              CupertinoSegmentedControl<int>(
-                children: {
-                  0: Text('All'),
-                  1: Text('University'),
-                },
-                onValueChanged: (int val) {
-                  setState(() {
-                    showUniversityTransactions = val == 1;
-                  });
-                },
-                groupValue: showUniversityTransactions ? 1 : 0,
+              SizedBox(height: 20, width: double.infinity),
+              Container(
+                width: double.infinity, // Make the segmented control take full width
+                padding: EdgeInsets.symmetric(horizontal: 16), // Add padding if needed
+                child: CupertinoSegmentedControl<int>(
+                  children: {
+                    0: Text('All',style: TextStyle(color: Colors.black)),
+                    1: Text('University',style: TextStyle(color: Colors.black) ),
+                  },
+                  onValueChanged: (int val) {
+                    setState(() {
+                      showUniversityTransactions = val == 1;
+                    });
+                  },
+                  groupValue: showUniversityTransactions ? 1 : 0,
+                  unselectedColor: CupertinoColors.lightBackgroundGray, // iOS grey for unselected segments
+                  selectedColor: CupertinoColors.white, // iOS grey for selected segments
+                  borderColor: CupertinoColors.lightBackgroundGray, // iOS grey for the border
+                ),
               ),
             ],
           ),
