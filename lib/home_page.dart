@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'deadlines.dart';
 
 void main() {
   runApp(const MyApp());
@@ -32,7 +33,7 @@ class HomePageState extends State<HomePage> {
 
   final List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
-    PlaceholderWidget('Deadlines'),
+    DeadlinesPage(),
     PlaceholderWidget('Profile'),
   ];
 
@@ -59,6 +60,7 @@ class HomePageState extends State<HomePage> {
           BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.clock_fill),
             label: 'Deadlines',
+
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
