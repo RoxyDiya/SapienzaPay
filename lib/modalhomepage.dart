@@ -45,9 +45,6 @@ class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('SapienzaPay'),
-      ),
       body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
@@ -81,14 +78,40 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   bool showUniversityTransactions = false;
 
+  void _showModal(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return DraggableScrollableSheet(
+          initialChildSize: 1.0,
+          minChildSize: 0.5,
+          maxChildSize: 1.0,
+          builder: (context, scrollController) {
+            return SingleChildScrollView(
+              controller: scrollController,
+              child: Column(
+                children: showUniversityTransactions
+                    ? universityTransactions
+                    : allTransactions,
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.fromLTRB(16.0, 70.0, 16.0, 0),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   'Hi, Firdaous!',
@@ -98,15 +121,28 @@ class _HomeScreenState extends State<HomeScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    CupertinoButton(
-                      color: CupertinoColors.systemGrey,
-                      onPressed: () {},
-                      child: const Text('Uni Bank Account'),
+                    Expanded(
+                      child: CupertinoButton(
+                        padding: EdgeInsets.symmetric(horizontal: 20),
+                        color: CupertinoColors.systemGrey.withOpacity(0.5),
+                        onPressed: () {},
+                        child: const Text(
+                          'Uni Bank Account',
+                          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+                        ),
+                      ),
                     ),
-                    CupertinoButton(
-                      color: CupertinoColors.systemGrey,
-                      onPressed: () {},
-                      child: const Text('All cards'),
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: CupertinoButton(
+                        padding: EdgeInsets.symmetric(horizontal: 20),
+                        color: CupertinoColors.systemGrey.withOpacity(0.5),
+                        onPressed: () {},
+                        child: const Text(
+                          'All cards',
+                          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -135,22 +171,41 @@ class _HomeScreenState extends State<HomeScreen> {
                         style: TextStyle(color: Colors.white, fontSize: 32, fontWeight: FontWeight.bold),
                       ),
                       SizedBox(height: 10),
-                      CupertinoButton(
-                        color: Colors.grey,
-                        onPressed: () {},
-                        child: const Text('Add money'),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: CupertinoButton(
+                          color: Colors.white,
+                          padding: EdgeInsets.symmetric(horizontal: 20),
+                          onPressed: () {},
+                          child: const Text('Add money', style: TextStyle(color: Colors.black),),
+                        ),
                       ),
                     ],
                   ),
                 ),
-                SizedBox(height: 20, width: double.infinity),
+                SizedBox(height: 20),
+                Text(
+                  'Last transactions',
+                  style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+                ),
+                CupertinoButton(
+                  onPressed: () => _showModal(context),
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      'View All',
+                      style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10),
                 Container(
                   width: double.infinity,
                   padding: EdgeInsets.symmetric(horizontal: 16),
                   child: CupertinoSegmentedControl<int>(
                     children: {
-                      0: Text('All', style: TextStyle(color: Colors.black)),
-                      1: Text('University', style: TextStyle(color: Colors.black)),
+                      0: Text('All', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black)),
+                      1: Text('University', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black)),
                     },
                     onValueChanged: (int val) {
                       setState(() {
@@ -167,34 +222,41 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           Expanded(
-            child: ListView(
-              children: showUniversityTransactions
-                  ? universityTransactions
-                  : allTransactions,
-            ),
-          ),
-          CupertinoButton(
-            onPressed: () {
-              showModalBottomSheet(
-                context: context,
-                builder: (BuildContext context) {
-                  return DraggableScrollableSheet(
-                    expand: false,
-                    builder: (context, scrollController) {
-                      return SingleChildScrollView(
-                        controller: scrollController,
-                        child: Column(
-                          children: showUniversityTransactions
-                              ? universityTransactions
-                              : allTransactions,
+            child: GestureDetector(
+              onVerticalDragUpdate: (details) {
+                if (details.primaryDelta! < -10) {
+                  _showModal(context);
+                }
+              },
+              child: Stack(
+                children: [
+                  ListView(
+                    children: showUniversityTransactions
+                        ? universityTransactions
+                        : allTransactions,
+                  ),
+                  Positioned.fill(
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        height: 40,
+                        color: Colors.black.withOpacity(0.1),
+                        child: Center(
+                          child: Container(
+                            width: 40,
+                            height: 5,
+                            decoration: BoxDecoration(
+                              color: Colors.grey,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
                         ),
-                      );
-                    },
-                  );
-                },
-              );
-            },
-            child: Text('View All'),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
         ],
       ),
@@ -244,14 +306,17 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class PlaceholderWidget extends StatelessWidget {
-  final String text;
+  final String title;
 
-  const PlaceholderWidget(this.text, {super.key});
+  PlaceholderWidget(this.title);
 
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text('$text Page'),
+      child: Text(
+        title,
+        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+      ),
     );
   }
 }
