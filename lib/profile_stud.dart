@@ -640,14 +640,14 @@ class _PaymentPlanScreenState extends State<PaymentPlanScreen> {
         ),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(19.0),
         child: Column(
           children: <Widget>[
             SizedBox(height: 120),
             Container(
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(15),
               ),
               child: Column(
                 children: [
@@ -664,11 +664,11 @@ class _PaymentPlanScreenState extends State<PaymentPlanScreen> {
                         Text(
                           'All-in-one',
                           style: TextStyle(
-                            color: _selectedPlan == 'All-in-one' ? Colors.red : Colors.black,
+                            color: _selectedPlan == 'All-in-one' ? Colors.black : Colors.black,
                           ),
                         ),
                         if (_selectedPlan == 'All-in-one')
-                          Icon(CupertinoIcons.check_mark, color: Colors.red),
+                          Icon(CupertinoIcons.check_mark, color: Color.fromARGB(1000, 130, 36, 61)),
                       ],
                     ),
                   ),
@@ -686,11 +686,11 @@ class _PaymentPlanScreenState extends State<PaymentPlanScreen> {
                         Text(
                           'Installments',
                           style: TextStyle(
-                            color: _selectedPlan == 'Installments' ? Colors.red : Colors.black,
+                            color: _selectedPlan == 'Installments' ? Colors.black : Colors.black,
                           ),
                         ),
                         if (_selectedPlan == 'Installments')
-                          Icon(CupertinoIcons.check_mark, color: Colors.red),
+                          Icon(CupertinoIcons.check_mark, color: Color.fromARGB(1000, 130, 36, 61)),
                       ],
                     ),
                   ),
