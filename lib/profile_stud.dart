@@ -452,6 +452,47 @@ class PlaceholderWidget extends StatelessWidget {
   }
 }
 
+
+
+class MainScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return CupertinoTabScaffold(
+      tabBar: CupertinoTabBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(CupertinoIcons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(CupertinoIcons.person),
+            label: 'Profile',
+          ),
+        ],
+      ),
+      tabBuilder: (BuildContext context, int index) {
+        switch (index) {
+          case 0:
+            return CupertinoTabView(builder: (context) {
+              return CupertinoPageScaffold(
+                navigationBar: CupertinoNavigationBar(
+                  middle: Text('Home'),
+                ),
+                child: Center(child: Text('Home Tab')),
+              );
+            });
+          case 1:
+            return CupertinoTabView(builder: (context) {
+              return ProfileScreen();
+            });
+          default:
+            return Container();
+        }
+      },
+    );
+  }
+}
+
 class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -473,12 +514,13 @@ class ProfileScreen extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
+              Divider(color: Colors.grey[300]),
               SizedBox(height: 20),
               Row(
                 children: [
                   CircleAvatar(
                     radius: 30,
-                    backgroundImage: AssetImage('assets/images/WhatsApp Image 2024-06-05 at 17.44.30.jpeg'), // Replace with your image asset
+                    backgroundImage: AssetImage('assets/profile_picture.png'), // Replace with your image asset
                   ),
                   SizedBox(width: 10),
                   Column(
@@ -516,6 +558,8 @@ class ProfileScreen extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 20),
+              Divider(color: Colors.grey[300]),
+              SizedBox(height: 40),
               Text(
                 'Payment settings',
                 style: TextStyle(
@@ -523,15 +567,21 @@ class ProfileScreen extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 20),
+              Divider(color: Colors.grey[300]),
+              SizedBox(height: 5),
               ListTile(
                 title: Text('Payment plan'),
                 trailing: Icon(CupertinoIcons.right_chevron),
-                onTap: () { 
-                  // Handle payment plan tap
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) => PaymentPlanScreen(),
+                    ),
+                  );
                 },
               ),
-              Divider(),
+              Divider(color: Colors.grey[300]),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -562,6 +612,92 @@ class ProfileScreen extends StatelessWidget {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class PaymentPlanScreen extends StatefulWidget {
+  @override
+  _PaymentPlanScreenState createState() => _PaymentPlanScreenState();
+}
+
+class _PaymentPlanScreenState extends State<PaymentPlanScreen> {
+  String _selectedPlan = 'Installments';
+
+  @override
+  Widget build(BuildContext context) {
+    return CupertinoPageScaffold(
+      backgroundColor: Color(0xFFF7E8E8),
+      navigationBar: CupertinoNavigationBar(
+        middle: Text('Payment plan'),
+        leading: CupertinoNavigationBarBackButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          previousPageTitle: 'Profile',
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: <Widget>[
+            SizedBox(height: 120),
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Column(
+                children: [
+                  CupertinoButton(
+                    padding: EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+                    onPressed: () {
+                      setState(() {
+                        _selectedPlan = 'All-in-one';
+                      });
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'All-in-one',
+                          style: TextStyle(
+                            color: _selectedPlan == 'All-in-one' ? Colors.red : Colors.black,
+                          ),
+                        ),
+                        if (_selectedPlan == 'All-in-one')
+                          Icon(CupertinoIcons.check_mark, color: Colors.red),
+                      ],
+                    ),
+                  ),
+                  Divider(color: Colors.grey[300]),
+                  CupertinoButton(
+                    padding: EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+                    onPressed: () {
+                      setState(() {
+                        _selectedPlan = 'Installments';
+                      });
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Installments',
+                          style: TextStyle(
+                            color: _selectedPlan == 'Installments' ? Colors.red : Colors.black,
+                          ),
+                        ),
+                        if (_selectedPlan == 'Installments')
+                          Icon(CupertinoIcons.check_mark, color: Colors.red),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );
