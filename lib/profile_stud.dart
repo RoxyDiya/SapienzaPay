@@ -548,6 +548,7 @@ class ProfileScreen extends StatelessWidget {
                       showModalBottomSheet(
                         context: context,
                         builder: (BuildContext context) => EditProfileModal(),
+                        isScrollControlled: true,
                       );
                     },
                     child: Text(
@@ -636,10 +637,17 @@ class _EditProfileModalState extends State<EditProfileModal> {
     return CupertinoPageScaffold(
       backgroundColor: Colors.white,
       navigationBar: CupertinoNavigationBar(
-        middle: Text('Edit Profile'),
+        leading:CupertinoButton(
+          padding: EdgeInsets.zero,
+          child: Text('Cancel', style: TextStyle(color:Colors.black)),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        middle: Text('Edit'),
         trailing: CupertinoButton(
           padding: EdgeInsets.zero,
-          child: Text('Done'),
+          child: Text('Done', style: TextStyle(color:Colors.black)),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -651,7 +659,7 @@ class _EditProfileModalState extends State<EditProfileModal> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              SizedBox(height: 20),
+              SizedBox(height: 60),
               Center(
                 child: Column(
                   children: [
@@ -667,8 +675,8 @@ class _EditProfileModalState extends State<EditProfileModal> {
                       child: Text(
                         'Change Pic',
                         style: TextStyle(
-                          color: CupertinoColors.activeBlue,
-                          fontWeight: FontWeight.bold,
+                          color: Color.fromARGB(1000, 130, 36, 61),
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ),
@@ -730,7 +738,7 @@ class _EditProfileModalState extends State<EditProfileModal> {
                     },
                     child: Icon(
                       isEditingPhoneNumber ? CupertinoIcons.check_mark : CupertinoIcons.pencil,
-                      color: CupertinoColors.activeBlue,
+                      color: CupertinoColors.systemGrey,
                     ),
                   ),
                 ],
