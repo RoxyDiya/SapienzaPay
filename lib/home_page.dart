@@ -178,7 +178,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  final List<Widget> allTransactions = [
+  final List<Widget> allTransactions = [ //SHOULD NOT BE FINAL!
     ListTile(
       title: Text('Second Instalment 23/24'),
       subtitle: Text('Today'),
