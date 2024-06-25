@@ -44,7 +44,7 @@ class HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    TextStyle labelStyle = TextStyle(fontSize: 15, fontWeight: FontWeight.w600);
+    TextStyle labelStyle = TextStyle(fontSize: 10, fontWeight: FontWeight.normal);
     return Scaffold(
       body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
@@ -69,7 +69,7 @@ class HomePageState extends State<HomePage> {
         onTap: _onItemTapped,
         selectedLabelStyle: labelStyle,
         unselectedLabelStyle: labelStyle.copyWith(color: Colors.grey),
-        iconSize: 30,
+        iconSize: 25,
       ),
     );
   }
@@ -453,7 +453,6 @@ class PlaceholderWidget extends StatelessWidget {
 }
 
 
-
 class MainScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -508,7 +507,7 @@ class ProfileScreen extends StatelessWidget {
             children: <Widget>[
               SizedBox(height: 100),
               Text(
-                'Account',
+                'Account Details',
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
@@ -543,9 +542,13 @@ class ProfileScreen extends StatelessWidget {
                     ],
                   ),
                   Spacer(),
-                  TextButton(
+                  CupertinoButton(
+                    padding: EdgeInsets.zero,
                     onPressed: () {
-                      // Handle edit profile
+                      showModalBottomSheet(
+                        context: context,
+                        builder: (BuildContext context) => EditProfileModal(),
+                      );
                     },
                     child: Text(
                       'Edit',
@@ -582,6 +585,7 @@ class ProfileScreen extends StatelessWidget {
                 },
               ),
               Divider(color: Colors.grey[300]),
+              SizedBox(height: 5),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -605,11 +609,133 @@ class ProfileScreen extends StatelessWidget {
                 child: Text(
                   'Sign Out',
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 18,
                     color: Colors.red,
                   ),
                 ),
               ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class EditProfileModal extends StatefulWidget {
+  @override
+  _EditProfileModalState createState() => _EditProfileModalState();
+}
+
+class _EditProfileModalState extends State<EditProfileModal> {
+  TextEditingController phoneController = TextEditingController(text: '+39 370 307 53 54');
+  bool isEditingPhoneNumber = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return CupertinoPageScaffold(
+      backgroundColor: Colors.white,
+      navigationBar: CupertinoNavigationBar(
+        middle: Text('Edit Profile'),
+        trailing: CupertinoButton(
+          padding: EdgeInsets.zero,
+          child: Text('Done'),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              SizedBox(height: 20),
+              Center(
+                child: Column(
+                  children: [
+                    CircleAvatar(
+                      radius: 50,
+                      backgroundImage: AssetImage('assets/profile_picture.png'), // Replace with your image asset
+                    ),
+                    CupertinoButton(
+                      padding: EdgeInsets.zero,
+                      onPressed: () {
+                        // Handle change picture
+                      },
+                      child: Text(
+                        'Change Pic',
+                        style: TextStyle(
+                          color: CupertinoColors.activeBlue,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 20),
+              Divider(color: Colors.grey[300]),
+              ListTile(
+                title: Text('NAME: Firdaous'),
+              ),
+              Divider(color: Colors.grey[300]),
+              ListTile(
+                title: Text('SURNAME: Hajjaji'),
+              ),
+              Divider(color: Colors.grey[300]),
+              ListTile(
+                title: Text('STUDENT ID N°: 2006406'),
+              ),
+              Divider(color: Colors.grey[300]),
+              ListTile(
+                title: Text('ENROLLMENT YEAR: 2021/22'),
+              ),
+              Divider(color: Colors.grey[300]),
+              ListTile(
+                title: Text('COURSE NAME: ACSAI'),
+              ),
+              Divider(color: Colors.grey[300]),
+              ListTile(
+                title: Text('EMAIL: hajjaji.2006406@studenti.uni...'),
+              ),
+              Divider(color: Colors.grey[300]),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'PHONE NUMBER:',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  Spacer(),
+                  if (isEditingPhoneNumber)
+                    Expanded(
+                      child: CupertinoTextField(
+                        controller: phoneController,
+                        autofocus: true,
+                      ),
+                    )
+                  else
+                    Text(
+                      phoneController.text,
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  CupertinoButton(
+                    padding: EdgeInsets.zero,
+                    onPressed: () {
+                      setState(() {
+                        isEditingPhoneNumber = !isEditingPhoneNumber;
+                      });
+                    },
+                    child: Icon(
+                      isEditingPhoneNumber ? CupertinoIcons.check_mark : CupertinoIcons.pencil,
+                      color: CupertinoColors.activeBlue,
+                    ),
+                  ),
+                ],
+              ),
+              Divider(color: Colors.grey[300]),
             ],
           ),
         ),
