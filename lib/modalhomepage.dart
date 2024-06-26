@@ -44,7 +44,7 @@ class HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    TextStyle labelStyle = TextStyle(fontSize: 15, fontWeight: FontWeight.w600);
+    TextStyle labelStyle = TextStyle(fontSize: 12, fontWeight: FontWeight.w600);
     return Scaffold(
       body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
@@ -69,7 +69,7 @@ class HomePageState extends State<HomePage> {
         onTap: _onItemTapped,
         selectedLabelStyle: labelStyle,
         unselectedLabelStyle: labelStyle.copyWith(color: Colors.grey),
-        iconSize: 30,
+        iconSize: 25,
       ),
     );
   }
@@ -209,7 +209,7 @@ Widget build(BuildContext context) {
             child: Stack(
               children: [
                 Container(
-                  margin: EdgeInsets.only(top: 20),
+                  margin: EdgeInsets.only(top: 30),
                   decoration: BoxDecoration(
                     color: CupertinoColors.white,
                     borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
@@ -240,15 +240,15 @@ Widget build(BuildContext context) {
                         ),
                         Container(
                           width: double.infinity,
-                          padding: EdgeInsets.symmetric(horizontal: 16),
-                          child: CupertinoSegmentedControl<int>(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          child: CupertinoSlidingSegmentedControl<int>(
                             children: {
                               0: Padding(
                                 padding: const EdgeInsets.symmetric(vertical: 10),
                                 child: Text(
                                   'All',
                                   style: TextStyle(
-                                      fontWeight: FontWeight.bold, fontSize: 18, color: showUniversityTransactions ? Colors.black : CupertinoColors.inactiveGray),
+                                      fontWeight: FontWeight.bold, fontSize: 18, color: showUniversityTransactions ? Colors.black : CupertinoColors.black),
                                 ),
                               ),
                               1: Padding(
@@ -256,20 +256,18 @@ Widget build(BuildContext context) {
                                 child: Text(
                                   'University',
                                   style: TextStyle(
-                                      fontWeight: FontWeight.bold, fontSize: 18, color: showUniversityTransactions ? CupertinoColors.inactiveGray : Colors.black),
+                                      fontWeight: FontWeight.bold, fontSize: 18, color: showUniversityTransactions ? CupertinoColors.black : Colors.black),
                                 ),
                               ),
                             },
-                            onValueChanged: (int val) {
+                            onValueChanged: (int? val) {
                               setState(() {
                                 showUniversityTransactions = val == 1;
                               });
                             },
                             groupValue: showUniversityTransactions ? 1 : 0,
-                            unselectedColor: CupertinoColors.lightBackgroundGray,
-                            selectedColor: CupertinoColors.white,
-                            borderColor: CupertinoColors.lightBackgroundGray,
-                            pressedColor: CupertinoColors.lightBackgroundGray,
+                            backgroundColor: CupertinoColors.lightBackgroundGray,
+                            thumbColor: CupertinoColors.white,
                           ),
                         ),
                         SizedBox(height: 17),
@@ -374,7 +372,7 @@ Widget build(BuildContext context) {
           ),
           child: ListTile(
             title: Text('Fake Card 1'),
-            subtitle: Text('* * ** 1234'),
+            subtitle: Text('**** **** **** 1234'),
             trailing: Icon(Icons.credit_card),
           ),
         ),
