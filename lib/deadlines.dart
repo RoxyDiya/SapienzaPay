@@ -70,7 +70,7 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
         ),
         margin: EdgeInsets.symmetric(vertical: 1.0),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           mainAxisSize: MainAxisSize.max, //added this
           children: [
             Column(
