@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'home_page.dart';
+import 'detailspage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,7 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'SapienzaPay',
+      //title: 'sapienzapay';
       theme: ThemeData(
         primaryColor: Color.fromARGB(255, 111, 20, 28),
       ),
@@ -45,44 +46,68 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
   }
 
   final List<Map<String, String>> overdueFees = [
-    {'date': 'NOV 15', 'description': '1st TUITION FEE', 'amount': '€766'},
+    {'month': 'NOV', 'day': '15', 'year': '2023', 'description': '1st TUITION FEE', 'amount': '€766'},
   ];
   final List<Map<String, String>> upcomingFees = [
-    {'date': 'DEC 19', 'description': '2nd TUITION FEE', 'amount': '€670'},
-    {'date': 'MAR 1O', 'description': '3rd TUITION FEE', 'amount': '€805'}
+    {'month': 'DEC', 'day': '19', 'year': '2024', 'description': '2nd TUITION FEE', 'amount': '€670'},
+    {'month': 'MAR 1O', 'day': '10', 'year': '2024', 'description': '3rd TUITION FEE', 'amount': '€805'}
   ];
-  Widget buildDeadlineItem(Map<String, String> deadline) {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
-      decoration: BoxDecoration(
-        color: Colors.red.shade100,
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-      margin: EdgeInsets.symmetric(vertical: 5.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                deadline['date']!,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.red.shade700,
+  Widget buildDeadlineItem(Map<String, String> deadline, bool isOverdue) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DeadlineDetailsPage(deadline: deadline),
+          ),
+        );
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
+        decoration: BoxDecoration(
+          color: isOverdue ? Colors.red.shade100 : Colors.white,
+          borderRadius: BorderRadius.circular(0.0),
+        ),
+        margin: EdgeInsets.symmetric(vertical: 1.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  deadline['month']!,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.red[700],
+                  ),
                 ),
-              ),
-              Text(
-                deadline['description']!,
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
-          Text(
-            deadline['amount']!,
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-        ],
+                Text(
+                  deadline['day']!,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.red[700]
+                    ),
+                ),
+                Text(
+                  deadline['year']!,
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey[300]
+                  ),
+                ),
+              ],
+            ),
+            Text(
+              deadline['description']!,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            Text(
+              deadline['amount']!,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -91,9 +116,9 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
-      appBar: AppBar(
-        title: Text('Deadlines'),
-      ),
+      //appBar: AppBar(
+      //  title: Text('Deadlines'),
+      //),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -112,7 +137,7 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
               SizedBox(height:20),
               Column(
                 children: overdueFees
-                  .map((fee)=> buildDeadlineItem(fee))
+                  .map((fee)=> buildDeadlineItem(fee, true))
                   .toList(),
               ), //LIST OF UPCOMING TAXES AS LIGHT RED BUTTONS
               SizedBox(height:10),
@@ -123,7 +148,7 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
               SizedBox(height:20),
               Column(
                 children: upcomingFees
-                  .map((fee) => buildDeadlineItem(fee))
+                  .map((fee) => buildDeadlineItem(fee, false))
                   .toList(),
               ),
               SizedBox(height:20),
@@ -151,5 +176,5 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
 
 /*code where I have made the page scrollable and added the list items
 TODO: add these actions
-- navigate to details on long tap
-- */
+- add long tap to multiple selection
+- modify colour of pay button when at least one item is selected*/ 
