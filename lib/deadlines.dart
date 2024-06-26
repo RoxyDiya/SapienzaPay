@@ -63,7 +63,7 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
         );
       },
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
+        //padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
         decoration: BoxDecoration(
           color: isOverdue ? Colors.red.shade100 : Colors.white,
           borderRadius: BorderRadius.circular(0.0),
@@ -71,9 +71,10 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
         margin: EdgeInsets.symmetric(vertical: 1.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisSize: MainAxisSize.max, //added this
           children: [
             Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center, //changed from start to center
               children: [
                 Text(
                   deadline['month']!,
@@ -151,7 +152,7 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
                   .map((fee) => buildDeadlineItem(fee, false))
                   .toList(),
               ),
-              SizedBox(height:20),
+              SizedBox(height:300),
               Center(
                 child: ElevatedButton( //MAKE THIS GREY AND CHANGE ITS COLOUR ONCE YOU HAVE SELECTED
                   onPressed: () { //AT LEAST ONE OF THE TAXES TO PAY
@@ -176,5 +177,6 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
 
 /*code where I have made the page scrollable and added the list items
 TODO: add these actions
-- add long tap to multiple selection
-- modify colour of pay button when at least one item is selected*/ 
+- modify colour of pay button when at least one item is selected
+- when clicking Pay, it should open a modal/page to select means of payment, then a riepilogo, then a done widget and navigation back to the deadlines page with the previously selected items removed + subtract money from the card in the home page + only allow the payment to happen if there is enough money + add the transaction to the list in the home page. 
+*/
