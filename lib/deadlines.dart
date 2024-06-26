@@ -71,7 +71,7 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
         margin: EdgeInsets.symmetric(vertical: 1.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          mainAxisSize: MainAxisSize.max, //added this
+          //mainAxisSize: MainAxisSize.max, //as a possibile fix
           children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.center, //changed from start to center
