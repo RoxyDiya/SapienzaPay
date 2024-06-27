@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -28,46 +29,49 @@ class InitialLoginPage extends StatelessWidget {
       body: Column(
         children: [
           Container(
-            color: Color.fromARGB(255, 130, 36, 61),
-            height: MediaQuery.of(context).size.height * 0.4,
+            color: Color.fromARGB(1000, 130, 36, 61).withOpacity(0.7),
+            height: MediaQuery.of(context).size.height * 0.25, // Reduced height
             child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ClipOval(
-                    child: Image.network(
-                      'https://via.placeholder.com/100',
-                      width: 100,
-                      height: 100,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  Text(
-                    'Welcome to SapienzaPay',
-                    style: TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Text(
-                    'make your uni life easier!',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
+              child: ClipOval(
+                child: Image.network(
+                  'https://via.placeholder.com/100',
+                  width: 100,
+                  height: 100,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
           ),
+          SizedBox(height: 35),
+          Text(
+            'Welcome to SapienzaPay!',
+            style: TextStyle(
+              fontSize: 32,
+              fontWeight: FontWeight.bold,
+              color: Color.fromARGB(1000, 130, 36, 61),
+            ),
+          ),
+          SizedBox(height: 10),
+          Text(
+            'Make your uni life easier!',
+            style: TextStyle(
+              fontSize: 16,
+              color: CupertinoColors.systemGrey,
+            ),
+          ),
           Spacer(),
+          Text(
+            'I am...',
+            style: TextStyle(
+              fontSize: 20,
+              color: Color.fromARGB(1000, 130, 36, 61),
+            ),
+          ),
+          SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              ElevatedButton(
+              OutlinedButton(
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -75,15 +79,17 @@ class InitialLoginPage extends StatelessWidget {
                   );
                 },
                 child: Text('Parent'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color.fromARGB(255, 130, 36, 61),
-                  padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: Colors.black,
+                  backgroundColor: Colors.white,
+                  side: BorderSide(color: Colors.grey),
+                  padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15), // Increased size
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(10),
                   ),
                 ),
               ),
-              ElevatedButton(
+              OutlinedButton(
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -91,17 +97,19 @@ class InitialLoginPage extends StatelessWidget {
                   );
                 },
                 child: Text('Student'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color.fromARGB(255, 130, 36, 61),
-                  padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: Colors.black,
+                  backgroundColor: Colors.white,
+                  side: BorderSide(color: Colors.grey),
+                  padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15), // Increased size
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(10),
                   ),
                 ),
               ),
             ],
           ),
-          SizedBox(height: 30),
+          SizedBox(height: 350),
         ],
       ),
     );
@@ -127,33 +135,29 @@ class _ParentLoginPageState extends State<ParentLoginPage> {
       body: Column(
         children: [
           Container(
-            color: Color.fromARGB(255, 130, 36, 61),
-            height: MediaQuery.of(context).size.height * 0.4,
+            color: Color.fromARGB(1000, 130, 36, 61).withOpacity(0.7),
+            height: MediaQuery.of(context).size.height * 0.25, // Reduced height
             child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ClipOval(
-                    child: Image.network(
-                      'https://via.placeholder.com/100',
-                      width: 100,
-                      height: 100,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  Text(
-                    'Parent Login',
-                    style: TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
+              child: ClipOval(
+                child: Image.network(
+                  'https://via.placeholder.com/100',
+                  width: 100,
+                  height: 100,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
           ),
+          SizedBox(height: 50),
+          Text(
+            'Parent Login',
+            style: TextStyle(
+              fontSize: 32,
+              fontWeight: FontWeight.bold,
+              color: Color.fromARGB(1000, 130, 36, 61),
+            ),
+          ),
+          SizedBox(height: 20),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Form(
@@ -192,7 +196,7 @@ class _ParentLoginPageState extends State<ParentLoginPage> {
                     },
                   ),
                   SizedBox(height: 20),
-                  ElevatedButton(
+                  OutlinedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         Navigator.push(
@@ -202,11 +206,13 @@ class _ParentLoginPageState extends State<ParentLoginPage> {
                       }
                     },
                     child: Text('Login'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color.fromARGB(255, 130, 36, 61),
-                      padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: Colors.black,
+                      backgroundColor: Colors.white,
+                      side: BorderSide(color: Colors.grey),
+                      padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15), // Increased size
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(10),
                       ),
                     ),
                   ),
@@ -214,6 +220,26 @@ class _ParentLoginPageState extends State<ParentLoginPage> {
               ),
             ),
           ),
+          Spacer(),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: OutlinedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('Back'),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: Colors.black,
+                backgroundColor: Colors.white,
+                side: BorderSide(color: Colors.grey),
+                padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15), // Increased size
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: 20),
         ],
       ),
     );
@@ -232,4 +258,3 @@ class HomePage extends StatelessWidget {
     );
   }
 }
-
