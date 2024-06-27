@@ -13,7 +13,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      //title: 'sapienzapay';
       theme: ThemeData(
         primaryColor: Color.fromARGB(255, 111, 20, 28),
       ),
@@ -99,13 +98,14 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
         //padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
         decoration: BoxDecoration(
           color: isSelected
-            ? Colors.red.shade300
+            ? Colors.red[200]
             : isOverdue
               ? Colors.red[100]
               : Colors.white,
           borderRadius: BorderRadius.circular(0.0),
         ),
-        margin: EdgeInsets.symmetric(vertical: 1.0),  //maybe this is why it goes to the top!!
+        margin: EdgeInsets.symmetric(vertical: 1.0), 
+        width: double.infinity, //maybe this will fill the whole screen
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           // mainAxisSize: MainAxisSize.max, //as a possibile fix
@@ -131,7 +131,7 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
                   deadline['year']!,
                   style: TextStyle(
                     fontSize: 12,
-                    color: Colors.grey[300]
+                    color: Colors.grey[500]
                   ),
                 ),
               ],
