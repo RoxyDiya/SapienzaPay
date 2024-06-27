@@ -497,6 +497,7 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
+        backgroundColor: Colors.white,
         middle: Text('Profile'),
       ),
       child: SingleChildScrollView(
@@ -505,7 +506,7 @@ class ProfileScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              SizedBox(height: 100),
+              SizedBox(height: 3),
               Text(
                 'Account Details',
                 style: TextStyle(
@@ -574,6 +575,7 @@ class ProfileScreen extends StatelessWidget {
               Divider(color: Colors.grey[300]),
               SizedBox(height: 5),
               ListTile(
+                contentPadding: EdgeInsets.zero,
                 title: Text('Payment plan'),
                 trailing: Icon(CupertinoIcons.right_chevron),
                 onTap: () {
@@ -587,31 +589,42 @@ class ProfileScreen extends StatelessWidget {
               ),
               Divider(color: Colors.grey[300]),
               SizedBox(height: 5),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Enable deadline notifications',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  CupertinoSwitch(
-                    value: false,
-                    onChanged: (bool value) {
-                      // Handle switch toggle
-                    },
-                  ),
-                ],
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        'Enable deadline notifications',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ),
+                    CupertinoSwitch(
+                      value: false,
+                      onChanged: (bool value) {
+                        // Handle switch toggle
+                      },
+                    ),
+                  ],
+                ),
               ),
+              Divider(color: Colors.grey[300]),
               SizedBox(height: 20),
-              TextButton(
-                onPressed: () {
-                  // Handle sign out
-                },
-                child: Text(
-                  'Sign Out',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.red,
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: TextButton(
+                  onPressed: () {
+                    // Handle sign out
+                  },
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Sign Out',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.red,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -622,6 +635,8 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 }
+
+
 
 class EditProfileModal extends StatefulWidget {
   @override
@@ -770,7 +785,7 @@ class _PaymentPlanScreenState extends State<PaymentPlanScreen> {
           onPressed: () {
             Navigator.pop(context);
           },
-          previousPageTitle: 'Profile',
+          previousPageTitle: 'Profile', color: Colors.black,
         ),
       ),
       child: Padding(

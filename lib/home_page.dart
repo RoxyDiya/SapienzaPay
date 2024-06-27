@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -14,7 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'SapienzaPay',
       theme: ThemeData(
-        primaryColor: Color.fromARGB(1000, 130, 36, 61),
+        primaryColor: Color.fromARGB(255, 130, 36, 61),
       ),
       home: const HomePage(),
     );
@@ -65,7 +64,7 @@ class HomePageState extends State<HomePage> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Color.fromARGB(1000, 130, 36, 51),
+        selectedItemColor: Color.fromARGB(255, 130, 36, 51),
         unselectedItemColor: Colors.grey,
         onTap: _onItemTapped,
         selectedLabelStyle: labelStyle,
@@ -75,6 +74,7 @@ class HomePageState extends State<HomePage> {
     );
   }
 }
+
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -106,8 +106,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: CupertinoButton(
                         padding: EdgeInsets.symmetric(horizontal: 20),
                         color: isUniBankAccountSelected
-                            ? Color.fromARGB(1000, 130, 36, 61).withOpacity(0.4)
-                            : Color.fromARGB(1000, 130, 36, 61).withOpacity(0.1),
+                            ? Color.fromARGB(255, 130, 36, 61).withOpacity(0.4)
+                            : Color.fromARGB(255, 130, 36, 61).withOpacity(0.1),
                         onPressed: () {
                           setState(() {
                             isUniBankAccountSelected = true;
@@ -125,8 +125,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: CupertinoButton(
                         padding: EdgeInsets.symmetric(horizontal: 10),
                         color: !isUniBankAccountSelected
-                            ? Color.fromARGB(1000, 130, 36, 61).withOpacity(0.4)
-                            : Color.fromARGB(1000, 130, 36, 61).withOpacity(0.1),
+                            ? Color.fromARGB(255, 130, 36, 61).withOpacity(0.4)
+                            : Color.fromARGB(255, 130, 36, 61).withOpacity(0.1),
                         onPressed: () {
                           setState(() {
                             isUniBankAccountSelected = false;
@@ -154,114 +154,122 @@ class _HomeScreenState extends State<HomeScreen> {
               minChildSize: 0.4,
               maxChildSize: 0.93,
               builder: (context, scrollController) {
-                return SingleChildScrollView(
-                  controller: scrollController,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: CupertinoColors.white,
-                      borderRadius:
-                          BorderRadius.vertical(top: Radius.circular(20)),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.3),
-                          spreadRadius: 1,
-                          blurRadius: 3,
-                          offset: Offset(0, 1),
-                        ),
-                      ],
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Center(
-                            child: Container(
-                              height: 5,
-                              width: 40,
-                              decoration: BoxDecoration(
-                                color: Colors.grey,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              margin: EdgeInsets.only(top: 10, bottom: 20),
-                            ),
-                          ),
-                          Container(
-                            width: double.infinity,
-                            padding: EdgeInsets.symmetric(horizontal: 10),
-                            child: CupertinoSlidingSegmentedControl<int>(
-                              children: {
-                                0: Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 10),
-                                  child: Text(
-                                    'All',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18,
-                                        color: showUniversityTransactions
-                                            ? Colors.black
-                                            : CupertinoColors.black),
-                                  ),
-                                ),
-                                1: Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 10),
-                                  child: Text(
-                                    'University',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18,
-                                        color: showUniversityTransactions
-                                            ? CupertinoColors.black
-                                            : Colors.black),
-                                  ),
-                                ),
-                              },
-                              onValueChanged: (int? val) {
-                                setState(() {
-                                  showUniversityTransactions = val == 1;
-                                });
-                              },
-                              groupValue: showUniversityTransactions ? 1 : 0,
-                              backgroundColor:
-                                  CupertinoColors.lightBackgroundGray,
-                              thumbColor: CupertinoColors.white,
-                            ),
-                          ),
-                          SizedBox(height: 17),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                return Container(
+                  decoration: BoxDecoration(
+                    color: CupertinoColors.white,
+                    borderRadius:
+                        BorderRadius.vertical(top: Radius.circular(20)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.3),
+                        spreadRadius: 1,
+                        blurRadius: 3,
+                        offset: Offset(0, 1),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      GestureDetector(
+                        onVerticalDragUpdate: (details) {
+                          // Forward the drag updates to the scrollController
+                          scrollController.position.moveTo(
+                            scrollController.position.pixels -
+                                details.primaryDelta!,
+                          );
+                        },
+                        child: Container(
+                          padding: EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                'Last transactions',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
-                                    fontSize: 20),
-                              ),
-                              CupertinoButton(
-                                padding: EdgeInsets.all(7.0),
-                                onPressed: () {},
-                                child: Text(
-                                  'View All',
-                                  style: TextStyle(
-                                      color: Colors.grey, fontSize: 16),
+                              Center(
+                                child: Container(
+                                  height: 5,
+                                  width: 40,
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  margin: EdgeInsets.only(top: 10, bottom: 10),
                                 ),
+                              ),
+                              Container(
+                                width: double.infinity,
+                                padding: EdgeInsets.symmetric(horizontal: 10),
+                                child: CupertinoSlidingSegmentedControl<int>(
+                                  children: {
+                                    0: Padding(
+                                      padding: const EdgeInsets.symmetric(vertical: 10),
+                                      child: Text(
+                                        'All',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18,
+                                            color: showUniversityTransactions
+                                                ? Colors.black
+                                                : CupertinoColors.black),
+                                      ),
+                                    ),
+                                    1: Padding(
+                                      padding: const EdgeInsets.symmetric(vertical: 10),
+                                      child: Text(
+                                        'University',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18,
+                                            color: showUniversityTransactions
+                                                ? CupertinoColors.black
+                                                : Colors.black),
+                                      ),
+                                    ),
+                                  },
+                                  onValueChanged: (int? val) {
+                                    setState(() {
+                                      showUniversityTransactions = val == 1;
+                                    });
+                                  },
+                                  groupValue: showUniversityTransactions ? 1 : 0,
+                                  backgroundColor: CupertinoColors.lightBackgroundGray,
+                                  thumbColor: CupertinoColors.white,
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Last transactions',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                        fontSize: 20),
+                                  ),
+                                  CupertinoButton(
+                                    padding: EdgeInsets.all(7.0),
+                                    onPressed: () {},
+                                    child: Text(
+                                      'View All',
+                                      style: TextStyle(
+                                          color: Colors.grey, fontSize: 16),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
-                          ListView(
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            padding: EdgeInsets.fromLTRB(0, 0, 0, 16),
-                            children: showUniversityTransactions
-                                ? universityTransactions
-                                : allTransactions,
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
+                      Expanded(
+                        child: ListView(
+                          controller: scrollController,
+                          padding: EdgeInsets.zero, // Remove any padding
+                          children: showUniversityTransactions
+                              ? universityTransactions
+                              : allTransactions,
+                        ),
+                      ),
+                    ],
                   ),
                 );
               },
@@ -321,107 +329,104 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildAllCardsView() {
-    return Column(
+ Widget _buildAllCardsView() {
+  return Padding(
+    padding: const EdgeInsets.fromLTRB(16.0, 70.0, 16.0, 0),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          padding: EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: Color.fromARGB(232, 98, 23, 43),
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'ALL CARDS BALANCE',
-                style: TextStyle(
-                    color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 10),
-              Text(
-                'Card * * ** 1234',
-                style: TextStyle(
-                    color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 20),
-              Text(
-                '€ 2500,00',
-                style: TextStyle(
-                    color: Colors.white, fontSize: 35, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 20),
-              Align(
-                alignment: Alignment.bottomLeft,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.grey.withOpacity(0.3),
-                    borderRadius: BorderRadius.circular(20), // Adjust the radius value as needed
-                  ),
-                  child: CupertinoButton(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                    onPressed: () {},
-                    child: const Text(
-                      'Add money',
-                      style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
+        _buildCardView(
+          'CARD N°3',
+          '**** **** **** 1234',
+          'Firdaous Hajjaji',
+          '03/30',
+          'assets/mastercard.png',
         ),
-        SizedBox(height: 20),
-        Container(
-          padding: EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: Color.fromARGB(232, 98, 23, 43),
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'OTHER CARDS',
-                style: TextStyle(
-                    color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 10),
-              Text(
-                'Card * * ** 5678',
-                style: TextStyle(
-                    color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 20),
-              Text(
-                '€ 1500,00',
-                style: TextStyle(
-                    color: Colors.white, fontSize: 35, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 20),
-              Align(
-                alignment: Alignment.bottomLeft,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.grey.withOpacity(0.3),
-                    borderRadius: BorderRadius.circular(20), // Adjust the radius value as needed
-                  ),
-                  child: CupertinoButton(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                    onPressed: () {},
-                    child: const Text(
-                      'Add money',
-                      style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
+        SizedBox(height: 10),
+        _buildCardView(
+          'CARD N°2',
+          '**** **** **** 5678',
+          'Firdaous Hajjaji',
+          '03/30',
+          'assets/visa.png',
+        ),
+        SizedBox(height: 10),
+        _buildCardView(
+          'CARD N°1',
+          '**** **** **** 9012',
+          'Firdaous Hajjaji',
+          '03/30',
+          'assets/mastercard.png',
         ),
       ],
-    );
-  }
+    ),
+  );
+}
+
+Widget _buildCardView(String cardTitle, String cardNumber, String cardHolder, String expiryDate, String imagePath) {
+  return Container(
+    padding: EdgeInsets.all(20),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(15),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black12,
+          offset: Offset(0, 4),
+          blurRadius: 10,
+        ),
+      ],
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          cardTitle,
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        SizedBox(height: 10),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  cardHolder,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  cardNumber,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey.shade700,
+                  ),
+                ),
+                Text(
+                  expiryDate,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey.shade700,
+                  ),
+                ),
+              ],
+            ),
+            Image.asset(
+              imagePath,
+              height: 40,
+            ),
+          ],
+        ),
+      ],
+    ),
+  );
+}
 
   List<Widget> get universityTransactions {
     return [
@@ -444,6 +449,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   List<Widget> get allTransactions {
     return [
+      _buildTransactionItem('University Fee', '€300.00', '12 March 2023'),
       _buildTransactionItem('Grocery', '€50.00', '10 March 2023'),
       _buildTransactionItem('Cinema', '€15.00', '11 March 2023'),
       ...universityTransactions,
