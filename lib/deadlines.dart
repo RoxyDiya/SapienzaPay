@@ -32,6 +32,8 @@ class DeadlinesPage extends StatefulWidget {
 
 class _DeadlinesPageState extends State<DeadlinesPage> {
   int _selectedIndex=1;
+  bool _isSelecting = false;
+  Set<Map<String, String>> _selectedDeadlines = {};
 
   final List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
@@ -50,28 +52,63 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
   ];
   final List<Map<String, String>> upcomingFees = [
     {'month': 'DEC', 'day': '19', 'year': '2024', 'description': '2nd TUITION FEE', 'amount': '€670'},
-    {'month': 'MAR 1O', 'day': '10', 'year': '2024', 'description': '3rd TUITION FEE', 'amount': '€805'}
+    {'month': 'MAR', 'day': '10', 'year': '2024', 'description': '3rd TUITION FEE', 'amount': '€805'}
   ];
+
+
+
+  void _onDeadlineTap(Map<String, String> deadline) {
+    if (_isSelecting) {
+      _toggleSelection(deadline);
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => DeadlineDetailsPage(deadline: deadline),
+        ),
+      );
+    }
+  }
+
+  void _onDeadlineLongPress(Map<String, String> deadline) {
+    setState(() {
+      _isSelecting = true;
+      _selectedDeadlines.add(deadline);
+    });
+  }
+
+  void _toggleSelection(Map<String, String> deadline) {
+    setState(() {
+      if (_selectedDeadlines.contains(deadline)) {
+        _selectedDeadlines.remove(deadline);
+        if (_selectedDeadlines.isEmpty) {
+          _isSelecting = false;
+        }
+      } else {
+        _selectedDeadlines.add(deadline);
+      }
+    });
+  }
+  
   Widget buildDeadlineItem(Map<String, String> deadline, bool isOverdue) {
+    bool isSelected = _selectedDeadlines.contains(deadline);
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => DeadlineDetailsPage(deadline: deadline),
-          ),
-        );
-      },
+      onTap: () => _onDeadlineTap(deadline),
+      onLongPress: () => _onDeadlineLongPress(deadline),
       child: Container(
         //padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
         decoration: BoxDecoration(
-          color: isOverdue ? Colors.red.shade100 : Colors.white,
+          color: isSelected
+            ? Colors.red.shade300
+            : isOverdue
+              ? Colors.red[100]
+              : Colors.white,
           borderRadius: BorderRadius.circular(0.0),
         ),
-        margin: EdgeInsets.symmetric(vertical: 1.0),
+        margin: EdgeInsets.symmetric(vertical: 1.0),  //maybe this is why it goes to the top!!
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          //mainAxisSize: MainAxisSize.max, //as a possibile fix
+          // mainAxisSize: MainAxisSize.max, //as a possibile fix
           children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.center, //changed from start to center
@@ -154,13 +191,20 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
               ),
               SizedBox(height:300),
               Center(
-                child: ElevatedButton( //MAKE THIS GREY AND CHANGE ITS COLOUR ONCE YOU HAVE SELECTED
-                  onPressed: () { //AT LEAST ONE OF THE TAXES TO PAY
-                    //navigation action
-                  },
-                  child: const Text('Pay'),
+                child: ElevatedButton( 
+                  onPressed: _selectedDeadlines.isNotEmpty
+                  ? () {}
+                  : null,
+                  child: const Text('Pay Now',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      )
+                    ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromARGB(255, 111, 20, 28),
+                    backgroundColor: _selectedDeadlines.isNotEmpty
+                    ? Color.fromARGB(255, 111, 20, 28)
+                    : Colors.grey[500],
                     padding: const EdgeInsets.symmetric(vertical:16.0),
                     textStyle: const TextStyle(fontSize: 18),
                   ),
@@ -177,6 +221,5 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
 
 /*code where I have made the page scrollable and added the list items
 TODO: add these actions
-- modify colour of pay button when at least one item is selected
 - when clicking Pay, it should open a modal/page to select means of payment, then a riepilogo, then a done widget and navigation back to the deadlines page with the previously selected items removed + subtract money from the card in the home page + only allow the payment to happen if there is enough money + add the transaction to the list in the home page. 
 */
