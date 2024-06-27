@@ -338,16 +338,30 @@ class _HomeScreenState extends State<HomeScreen> {
           height: 370,
           padding: EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: Colors.pink,
+            color: Colors.purple,
             borderRadius: BorderRadius.circular(20),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'CARD N°3',
-                style: TextStyle(
-                    color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+              Row(
+                children: [
+                  Text(
+                    'CARD N°1',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(width: 210), // Adjust the spacing as needed
+                  Image.asset(
+                    'assets/mastercardlogo.png', // Replace with the path to your image
+                    width: 40,  // Set the desired width
+                    height: 40, // Set the desired height
+                    //color: Colors.white, // Apply color filter if needed
+                  ),
+                ],
               ),
             ],
           ),
@@ -357,16 +371,30 @@ class _HomeScreenState extends State<HomeScreen> {
           height: 310,
           padding: EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: Colors.purple,
+            color: Colors.pink,
             borderRadius: BorderRadius.circular(20),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'CARD N°2',
-                style: TextStyle(
-                    color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+              Row(
+                children: [
+                  Text(
+                    'CARD N°2',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(width: 210), // Adjust the spacing as needed
+                  Image.asset(
+                    'assets/visalogo.png', // Replace with the path to your image
+                    width: 40,  // Set the desired width
+                    height: 40, // Set the desired height
+                    //color: Colors.white, // Apply color filter if needed
+                  ),
+                ],
               ),              
             ],
           ),
@@ -392,16 +420,16 @@ class _HomeScreenState extends State<HomeScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(width: 240), // Adjust the spacing as needed
+                  SizedBox(width: 210), // Adjust the spacing as needed
                   Image.asset(
                     'assets/mastercardlogo.png', // Replace with the path to your image
-                    width: 24,  // Set the desired width
-                    height: 24, // Set the desired height
-                    color: Colors.white, // Apply color filter if needed
+                    width: 40,  // Set the desired width
+                    height: 40, // Set the desired height
+                    //color: Colors.white, // Apply color filter if needed
                   ),
                 ],
               ),   
-              SizedBox(height: 125),
+              SizedBox(height: 110),
               Text(
                 'Firdaous Hajjaji                                03/30',
                 style: TextStyle(
@@ -449,10 +477,26 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildTransactionItem(String title, String amount, String date) {
-    return ListTile(
-      title: Text(title, style: TextStyle(fontWeight: FontWeight.bold)),
-      subtitle: Text(date),
-      trailing: Text(amount, style: TextStyle(fontWeight: FontWeight.bold)),
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+      padding: EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        border: Border.all(color: Color.fromARGB(232, 217, 217, 217)),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(title, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              Text(date, style: TextStyle(fontSize: 14, color: Colors.grey)),
+            ],
+          ),
+          Text(amount, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+        ],
+      ),
     );
   }
 }
