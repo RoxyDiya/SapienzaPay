@@ -330,103 +330,95 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
  Widget _buildAllCardsView() {
-  return Padding(
-    padding: const EdgeInsets.fromLTRB(16.0, 70.0, 16.0, 0),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Stack(
+      alignment: Alignment.bottomCenter,
       children: [
-        _buildCardView(
-          'CARD N°3',
-          '**** **** **** 1234',
-          'Firdaous Hajjaji',
-          '03/30',
-          'assets/mastercard.png',
-        ),
-        SizedBox(height: 10),
-        _buildCardView(
-          'CARD N°2',
-          '**** **** **** 5678',
-          'Firdaous Hajjaji',
-          '03/30',
-          'assets/visa.png',
-        ),
-        SizedBox(height: 10),
-        _buildCardView(
-          'CARD N°1',
-          '**** **** **** 9012',
-          'Firdaous Hajjaji',
-          '03/30',
-          'assets/mastercard.png',
-        ),
-      ],
-    ),
-  );
-}
-
-Widget _buildCardView(String cardTitle, String cardNumber, String cardHolder, String expiryDate, String imagePath) {
-  return Container(
-    padding: EdgeInsets.all(20),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(15),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black12,
-          offset: Offset(0, 4),
-          blurRadius: 10,
-        ),
-      ],
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          cardTitle,
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
+        Container(
+          width: 500,
+          height: 370,
+          padding: EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: Colors.pink,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'CARD N°3',
+                style: TextStyle(
+                    color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+            ],
           ),
         ),
-        SizedBox(height: 10),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  cardHolder,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
+        Container(
+          width: 500,
+          height: 310,
+          padding: EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: Colors.purple,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'CARD N°2',
+                style: TextStyle(
+                    color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+              ),              
+            ],
+          ),
+        ),
+        Container(
+          width: 500,
+          height: 250,
+          padding: EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: Colors.blue,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Text(
+                    'CARD N°2',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                Text(
-                  cardNumber,
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey.shade700,
+                  SizedBox(width: 240), // Adjust the spacing as needed
+                  Image.asset(
+                    'assets/mastercardlogo.png', // Replace with the path to your image
+                    width: 24,  // Set the desired width
+                    height: 24, // Set the desired height
+                    color: Colors.white, // Apply color filter if needed
                   ),
-                ),
-                Text(
-                  expiryDate,
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey.shade700,
-                  ),
-                ),
-              ],
-            ),
-            Image.asset(
-              imagePath,
-              height: 40,
-            ),
-          ],
+                ],
+              ),   
+              SizedBox(height: 125),
+              Text(
+                'Firdaous Hajjaji                                03/30',
+                style: TextStyle(
+                    color: Colors.white, fontSize: 18, fontWeight: FontWeight.w500),
+              ),
+              SizedBox(height: 5),
+              Text(
+                '**** **** **** 0886',
+                style: TextStyle(
+                    color: Colors.white, fontSize: 18, fontWeight: FontWeight.w500),
+              ),              
+            ],
+          ),
         ),
       ],
-    ),
-  );
-}
+    );
+  }
 
   List<Widget> get universityTransactions {
     return [
