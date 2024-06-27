@@ -53,8 +53,11 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
     {'month': 'DEC', 'day': '19', 'year': '2024', 'description': '2nd TUITION FEE', 'amount': '€670'},
     {'month': 'MAR', 'day': '10', 'year': '2024', 'description': '3rd TUITION FEE', 'amount': '€805'}
   ];
-
-
+  final List<Map<String,String>> paymentmeth = [
+    {'icon':'sapienzalogo.png', 'accname': 'University Bank Account'},
+    {'icon': 'visalogo.png', 'accname': 'Card **** **** **** 9876'},
+    {'icon': 'mclogo.png', 'accname':'Card **** **** **** 1928'}
+  ];
 
   void _onDeadlineTap(Map<String, String> deadline) {
     if (_isSelecting) {
@@ -87,6 +90,67 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
         _selectedDeadlines.add(deadline);
       }
     });
+  }
+
+  void _singleselection(Map<String,String> meth) {
+   //SINGLE SELECTION LOGIC, ONCE YOU PAY IT OPENS THE SECOND MODAL!!! 
+  }
+
+  Widget buildPaymentMeth (Map<String, String> payment) {
+    return GestureDetector(
+      onTap: () => _singleselection(payment),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(0.0),
+          border: Border.all(
+            color: Color.fromARGB(255, 100, 100, 100)
+            ),
+        ),
+        width: double.infinity,
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start, //prolly gotta be different
+              children: [
+                //ADD THE CIRCLE FOR MULTIPLE SELECTION FROM CUPERTINO,
+                Text(payment['icon']!),
+                Text(payment['accname']!)
+              ]
+            )]
+          )
+      ),
+    );
+  }
+
+  void _payModal(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Scaffold( //Scaffold might not work for modals
+          body: SingleChildScrollView(
+            child: 
+              Column(
+                children: [
+                  Row(
+                    children: [
+                      //ADD ALIGNMENT
+                      Text(
+                        'Cancel'
+                        //ADD ONTAP GO BACK TO DEADLINES (WITH SAME SELECTIONS RIGHT?)
+                      ),
+                      Text(
+                        'Payment Method',
+                        style: TextStyle(fontWeight: FontWeight.bold)
+                      )
+                    ]
+                  ),
+                  //PAYMENT METHOD MTHD
+                ]
+              )
+          )
+        );
+      }
+    );
   }
   
   Widget buildDeadlineItem(Map<String, String> deadline, bool isOverdue) {
@@ -199,7 +263,9 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
               Center(
                 child: ElevatedButton( 
                   onPressed: _selectedDeadlines.isNotEmpty
-                  ? () {}
+                  ? () {
+                    //_payModal(context);
+                  }
                   : null,
                   child: const Text('Pay Now',
                     style: TextStyle(
