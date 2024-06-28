@@ -463,11 +463,19 @@ class AddMoneyModal extends StatefulWidget {
   _AddMoneyModalState createState() => _AddMoneyModalState();
 }
 
-
 class _AddMoneyModalState extends State<AddMoneyModal> {
   int? _selectedOption;
+  String _amount = '';
+  bool _isAmountValid = false;
 
-    @override
+  void _updateAmount(String value) {
+    setState(() {
+      _amount = value;
+      _isAmountValid = double.tryParse(value) != null && double.parse(value) > 0;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
@@ -482,7 +490,7 @@ class _AddMoneyModalState extends State<AddMoneyModal> {
             Navigator.pop(context);
           },
         ),
-        trailing: _selectedOption != null
+        trailing: _isAmountValid
             ? CupertinoButton(
                 padding: EdgeInsets.zero,
                 child: Text('Next', style: TextStyle(color: Colors.black)),
@@ -503,9 +511,32 @@ class _AddMoneyModalState extends State<AddMoneyModal> {
         padding: const EdgeInsets.only(top: 100.0), // Adjust the padding value as needed
         child: Column(
           children: [
-            _buildOptionRow(0, 'Uni Bank Account'),
+            _buildOptionRow(0, '**** **** **** 1928'),
             _buildOptionRow(1, '**** **** **** 0886'),
             _buildOptionRow(2, '**** **** **** 5678'),
+            SizedBox(height: 50),
+            Container(
+              width: 350 , // Set the desired width for the input field
+              child: CupertinoTextField(
+                placeholder: 'Amount',
+                keyboardType: TextInputType.number,
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 22),
+                padding: EdgeInsets.symmetric(vertical: 16, horizontal: 10),
+                decoration: BoxDecoration(
+                  color: _selectedOption != null
+                      ? Color.fromARGB(255, 242, 217, 217)
+                      : Color.fromARGB(255, 242, 242, 246),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: CupertinoColors.systemGrey,
+                    width: 0.4,
+                  ),
+                ),
+                enabled: _selectedOption != null, // Disable the input field until a payment method is selected
+                onChanged: _updateAmount,
+              ),
+            ),
           ],
         ),
       ),
@@ -565,7 +596,7 @@ class EnterAmountScreen extends StatelessWidget {
     String selectedPaymentMethod;
     switch (selectedOption) {
       case 0:
-        selectedPaymentMethod = 'Uni Bank Account';
+        selectedPaymentMethod = '**** **** **** 1928';
         break;
       case 1:
         selectedPaymentMethod = '**** **** **** 0886';
@@ -590,7 +621,7 @@ class EnterAmountScreen extends StatelessWidget {
             Navigator.pop(context);
           },
         ),
-        trailing: Container(),
+        trailing: Container(), // Empty container to balance the Cancel button
       ),
       child: Center(
         child: Padding(
@@ -601,77 +632,75 @@ class EnterAmountScreen extends StatelessWidget {
               // Remove the 'Enter Amount' title
               SizedBox(height: 50),
               Column(
-  crossAxisAlignment: CrossAxisAlignment.start,
-  children: [
-    // 'From' Section
-    Text(
-      'From:',
-      style: TextStyle(
-        fontSize: 20,
-        fontWeight: FontWeight.bold,
-        color: Colors.grey,
-      ),
-    ),
-    SizedBox(height: 10),
-    Container(
-      width: double.infinity,
-      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-      decoration: BoxDecoration(
-        color: CupertinoColors.systemGrey6,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(
-          color: CupertinoColors.systemGrey,
-          width: 0.5,
-        ),
-      ),
-      child: Text(
-        selectedPaymentMethod,
-        style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.w500),
-      ),
-    ),
-    SizedBox(height: 26),
-    // Center the Icon vertically
-    SizedBox(
-      height: 26, // Adjust the height as needed for vertical alignment
-      child: Center(
-        child: Icon(
-          CupertinoIcons.arrow_down,
-          size: 24,
-          color: Colors.black,
-        ),
-      ),
-    ),
-    SizedBox(height: 10),
-    // 'To' Section
-    Text(
-      'To:',
-      style: TextStyle(
-        fontSize: 20,
-        fontWeight: FontWeight.bold,
-        color: Colors.grey,
-      ),
-    ),
-    SizedBox(height: 10),
-    Container(
-      width: double.infinity,
-      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-      decoration: BoxDecoration(
-        color: CupertinoColors.systemGrey6,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(
-          color: CupertinoColors.systemGrey,
-          width: 0.5,
-        ),
-      ),
-      child: Text(
-        'University Bank Account', // Replace with actual 'To' text
-        style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.w500),
-      ),
-    ),
-  ],
-),
-
-
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // 'From' Section
+                  Text(
+                    'From:',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey,
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                    decoration: BoxDecoration(
+                      color: CupertinoColors.systemGrey6,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        color: CupertinoColors.systemGrey,
+                        width: 0.5,
+                      ),
+                    ),
+                    child: Text(
+                      selectedPaymentMethod,
+                      style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.w500),
+                    ),
+                  ),
+                  SizedBox(height: 26),
+                  // Center the Icon vertically
+                  SizedBox(
+                    height: 26, // Adjust the height as needed for vertical alignment
+                    child: Center(
+                      child: Icon(
+                        CupertinoIcons.arrow_down,
+                        size: 24,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  // 'To' Section
+                  Text(
+                    'To:',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey,
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                    decoration: BoxDecoration(
+                      color: CupertinoColors.systemGrey6,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        color: CupertinoColors.systemGrey,
+                        width: 0.5,
+                      ),
+                    ),
+                    child: Text(
+                      'University Bank Account', // Replace with actual 'To' text
+                      style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.w500),
+                    ),
+                  ),
+                ],
+              ),
               SizedBox(height: 80),
               CupertinoTextField(
                 placeholder: 'Amount',
@@ -696,8 +725,6 @@ class EnterAmountScreen extends StatelessWidget {
     );
   }
 }
-
-
   List<Widget> get universityTransactions {
     return [
       _buildTransactionItem('University Fee', '€300.00', '12 March 2023'),
