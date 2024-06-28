@@ -79,11 +79,13 @@ class HomePageState extends State<HomePage> {
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
+  
 }
 
 class _HomeScreenState extends State<HomeScreen> {
   bool showUniversityTransactions = false;
   bool isUniBankAccountSelected = true;
+  double balance = 2500.00;
 
   @override
   Widget build(BuildContext context) {
@@ -144,7 +146,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 SizedBox(height: 25),
                 isUniBankAccountSelected
-                    ? _buildBankAccountCard()
+                    ? _buildBankAccountCard(context)
                     : _buildAllCardsView(),
               ],
             ),
@@ -280,7 +282,8 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildBankAccountCard() {
+  @override
+  Widget _buildBankAccountCard(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(25),
       decoration: BoxDecoration(
@@ -303,7 +306,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           SizedBox(height: 20),
           Text(
-            '€ 2500,00',
+            '€ ${balance.toStringAsFixed(2)}',
             style: TextStyle(
                 color: Colors.white, fontSize: 35, fontWeight: FontWeight.bold),
           ),
@@ -313,7 +316,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Container(
               decoration: BoxDecoration(
                 color: Colors.grey.withOpacity(0.3),
-                borderRadius: BorderRadius.circular(20), // Adjust the radius value as needed
+                borderRadius: BorderRadius.circular(20),
               ),
               child: CupertinoButton(
                 padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
@@ -451,15 +454,22 @@ class _HomeScreenState extends State<HomeScreen> {
     void _showAddMoneyModal(BuildContext context) {
     showCupertinoModalPopup(
       context: context,
-      builder: (context) {
-        return AddMoneyModal();
-      },
+      builder: (context) => AddMoneyModal(
+        onAmountAdded: (amount) {
+          setState(() {
+            balance += amount;
+          });
+        },
+      ),
     );
   }
 }
 
-
 class AddMoneyModal extends StatefulWidget {
+  final Function(double) onAmountAdded;
+
+  AddMoneyModal({required this.onAmountAdded});
+
   @override
   _AddMoneyModalState createState() => _AddMoneyModalState();
 }
@@ -496,13 +506,14 @@ class _AddMoneyModalState extends State<AddMoneyModal> {
                 padding: EdgeInsets.zero,
                 child: Text('Next', style: TextStyle(color: Colors.black)),
                 onPressed: () {
+                  widget.onAmountAdded(double.parse(_amount));
                   _showDoneOverlay(context);
                 },
               )
             : null,
       ),
       child: Padding(
-        padding: const EdgeInsets.only(top: 100.0), // Adjust the padding value as needed
+        padding: const EdgeInsets.only(top: 100.0),
         child: Column(
           children: [
             _buildOptionRow(0, '**** **** **** 1928'),
@@ -510,7 +521,7 @@ class _AddMoneyModalState extends State<AddMoneyModal> {
             _buildOptionRow(2, '**** **** **** 5678'),
             SizedBox(height: 50),
             Container(
-              width: 350, // Set the desired width for the input field
+              width: 350,
               child: CupertinoTextField(
                 placeholder: 'Amount',
                 keyboardType: TextInputType.number,
@@ -527,7 +538,7 @@ class _AddMoneyModalState extends State<AddMoneyModal> {
                     width: 0.4,
                   ),
                 ),
-                enabled: _selectedOption != null, // Disable the input field until a payment method is selected
+                enabled: _selectedOption != null,
                 onChanged: _updateAmount,
               ),
             ),
@@ -569,8 +580,8 @@ class _AddMoneyModalState extends State<AddMoneyModal> {
               text,
               style: TextStyle(
                 fontSize: 18,
-                color: Colors.black, // Set text color to black
-                fontWeight: FontWeight.normal, // Set text weight to normal (not bold)
+                color: Colors.black,
+                fontWeight: FontWeight.normal,
               ),
             ),
           ],
@@ -578,9 +589,6 @@ class _AddMoneyModalState extends State<AddMoneyModal> {
       ),
     );
   }
-}
-
-
 
   void _showDoneOverlay(BuildContext context) {
     showCupertinoDialog(
@@ -605,10 +613,11 @@ class _AddMoneyModalState extends State<AddMoneyModal> {
     );
 
     Future.delayed(Duration(seconds: 2), () {
-      Navigator.of(context).pop(); // Close the dialog
-      Navigator.of(context).pop(); // Navigate back to the home page
+      Navigator.of(context).pop();
+      Navigator.of(context).pop();
     });
   }
+}
 
 
 
