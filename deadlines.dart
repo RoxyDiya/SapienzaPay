@@ -14,13 +14,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-        primaryColor: Color.fromARGB(255, 111, 20, 28),
+        primaryColor: const Color.fromARGB(255, 111, 20, 28),
       ),
       home: const HomePage(),
     );
   }
 }
-
 
 class DeadlinesPage extends StatefulWidget {
   const DeadlinesPage({super.key});
@@ -30,12 +29,13 @@ class DeadlinesPage extends StatefulWidget {
 }
 
 class _DeadlinesPageState extends State<DeadlinesPage> {
-  int _selectedIndex=1;
+  int _selectedIndex = 1;
   bool _isSelecting = false;
   Set<Map<String, String>> _selectedDeadlines = {};
+  int? _selectedOption;
 
   final List<Widget> _widgetOptions = <Widget>[
-    HomeScreen(),
+    HomePage(),
     DeadlinesPage(),
     PlaceholderWidget('Profile'),
   ];
@@ -49,12 +49,17 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
   final List<Map<String, String>> overdueFees = [
     {'month': 'NOV', 'day': '15', 'year': '2023', 'description': '1st TUITION FEE', 'amount': '€766'},
   ];
+
   final List<Map<String, String>> upcomingFees = [
     {'month': 'DEC', 'day': '19', 'year': '2024', 'description': '2nd TUITION FEE', 'amount': '€670'},
     {'month': 'MAR', 'day': '10', 'year': '2024', 'description': '3rd TUITION FEE', 'amount': '€805'}
   ];
 
-
+  final List<Map<String, String>> paymentmeth = [
+    {'icon': 'sapienzalogo.png', 'accname': 'University Bank Account'},
+    {'icon': 'visalogo.png', 'accname': 'Card **** **** **** 9876'},
+    {'icon': 'mclogo.png', 'accname': 'Card **** **** **** 1928'}
+  ];
 
   void _onDeadlineTap(Map<String, String> deadline) {
     if (_isSelecting) {
@@ -88,30 +93,152 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
       }
     });
   }
-  
+
+  Widget buildPaymentMeth(Map<String, String> payment) {
+    return GestureDetector(
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(
+              color: Color.fromARGB(255, 209, 209, 214),
+              width: 0.5,
+            ),
+          ),
+        ),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Image.asset(payment['icon']!, width: 40, height: 40),
+                const SizedBox(width: 10),
+                Text(
+                  payment['accname']!,
+                  style: const TextStyle(fontSize: 18),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _payModal(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return Container(
+              padding: const EdgeInsets.all(16.0),
+              height: MediaQuery.of(context).size.height * 0.9,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GestureDetector(
+                        onTap: () => Navigator.pop(context),
+                        child: const Text(
+                          'Cancel',
+                          style: TextStyle(
+                            color: CupertinoColors.inactiveGray,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                      const Text(
+                        'Payment Method',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  Column(
+                    children: paymentmeth.map((payment) {
+                      int index = paymentmeth.indexOf(payment);
+                      return _buildOptionRow(index, payment['accname']!, setState);
+                    }).toList(),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildOptionRow(int index, String text, StateSetter setState) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _selectedOption = index;
+        });
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(
+              color: Color.fromARGB(255, 209, 209, 214),
+              width: 0.5,
+            ),
+          ),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              _selectedOption == index
+                  ? CupertinoIcons.check_mark_circled_solid
+                  : CupertinoIcons.circle,
+              color: _selectedOption == index
+                  ? Color.fromARGB(255, 130, 36, 61)
+                  : CupertinoColors.inactiveGray,
+            ),
+            SizedBox(width: 10),
+            Text(
+              text,
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.black,
+                fontWeight: FontWeight.normal,
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget buildDeadlineItem(Map<String, String> deadline, bool isOverdue) {
     bool isSelected = _selectedDeadlines.contains(deadline);
     return GestureDetector(
       onTap: () => _onDeadlineTap(deadline),
       onLongPress: () => _onDeadlineLongPress(deadline),
       child: Container(
-        //padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
         decoration: BoxDecoration(
           color: isSelected
-            ? Colors.red[200]
-            : isOverdue
-              ? Colors.red[100]
-              : Colors.white,
+              ? Colors.red[200]
+              : isOverdue
+                  ? Colors.red[100]
+                  : Colors.white,
           borderRadius: BorderRadius.circular(0.0),
         ),
-        margin: EdgeInsets.symmetric(vertical: 1.0), 
-        width: double.infinity, //maybe this will fill the whole screen
+        margin: const EdgeInsets.symmetric(vertical: 1.0),
+        width: double.infinity,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          // mainAxisSize: MainAxisSize.max, //as a possibile fix
           children: [
             Column(
-              crossAxisAlignment: CrossAxisAlignment.center, //changed from start to center
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
                   deadline['month']!,
@@ -124,92 +251,100 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
                   deadline['day']!,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    color: Colors.red[700]
-                    ),
+                    color: Colors.red[700],
+                  ),
                 ),
                 Text(
                   deadline['year']!,
                   style: TextStyle(
                     fontSize: 12,
-                    color: Colors.grey[500]
+                    color: isSelected ? Colors.grey[800] : Colors.grey[500],
                   ),
                 ),
               ],
             ),
-            Text(
-              deadline['description']!,
-              style: TextStyle(fontWeight: FontWeight.bold),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  deadline['description']!,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  deadline['amount']!,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ],
             ),
-            Text(
-              deadline['amount']!,
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
+            const Icon(CupertinoIcons.right_chevron),
           ],
         ),
       ),
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
-      //appBar: AppBar(
-      //  title: Text('Deadlines'),
-      //),
+    return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(0.0), //removed inset to see if it covers the whole screen
+          padding: const EdgeInsets.all(0.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              const Text(
                 'Deadlines',
                 style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 10),
-              Text(
+              const SizedBox(height: 10),
+              const Text(
                 'OVERDUE',
-                style: TextStyle(color: Color.fromARGB(255, 111, 20, 28,), fontWeight: FontWeight.bold, fontSize: 24)
+                style: TextStyle(
+                  color: Color.fromARGB(255, 111, 20, 28),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 24,
                 ),
-              SizedBox(height:20),
+              ),
+              const SizedBox(height: 20),
               Column(
-                children: overdueFees
-                  .map((fee)=> buildDeadlineItem(fee, true))
-                  .toList(),
-              ), //LIST OF UPCOMING TAXES AS LIGHT RED BUTTONS
-              SizedBox(height:10),
-              Text(
+                children: overdueFees.map((fee) => buildDeadlineItem(fee, true)).toList(),
+              ),
+              const SizedBox(height: 10),
+              const Text(
                 'UPCOMING',
-                style: TextStyle(fontSize: 24, color: Color.fromARGB(255, 111, 20,28))
+                style: TextStyle(
+                  fontSize: 24,
+                  color: Color.fromARGB(255, 111, 20, 28),
+                ),
               ),
-              SizedBox(height:20),
+              const SizedBox(height: 20),
               Column(
-                children: upcomingFees
-                  .map((fee) => buildDeadlineItem(fee, false))
-                  .toList(),
+                children: upcomingFees.map((fee) => buildDeadlineItem(fee, false)).toList(),
               ),
-              SizedBox(height:300),
+              const SizedBox(height: 300),
               Center(
-                child: ElevatedButton( 
+                child: ElevatedButton(
                   onPressed: _selectedDeadlines.isNotEmpty
-                  ? () {}
-                  : null,
-                  child: const Text('Pay Now',
+                      ? () {
+                          _payModal(context);
+                        }
+                      : null,
+                  child: const Text(
+                    'Pay Now',
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
-                      )
                     ),
+                  ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _selectedDeadlines.isNotEmpty
-                    ? Color.fromARGB(255, 111, 20, 28)
-                    : Colors.grey[500],
-                    padding: EdgeInsets.symmetric(vertical:16.0, horizontal: 20.0), //added horizontal padding hoping it makes text better
+                        ? const Color.fromARGB(255, 111, 20, 28)
+                        : Colors.grey[500],
+                    padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 20.0),
                     textStyle: const TextStyle(fontSize: 18),
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),
@@ -217,6 +352,7 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
     );
   }
 }
+
 
 
 /*code where I have made the page scrollable and added the list items
