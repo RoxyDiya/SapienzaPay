@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/widgets.dart';
 
 void main() {
   runApp(const MyApp());
@@ -316,11 +317,11 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               child: CupertinoButton(
                 padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                onPressed: () {},
                 child: const Text(
                   'Add money',
                   style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
                 ),
+                onPressed: () => _showAddMoneyModal(context),
               ),
             ),
           ),
@@ -447,6 +448,255 @@ class _HomeScreenState extends State<HomeScreen> {
       ],
     );
   }
+    void _showAddMoneyModal(BuildContext context) {
+    showCupertinoModalPopup(
+      context: context,
+      builder: (context) {
+        return AddMoneyModal();
+      },
+    );
+  }
+}
+
+class AddMoneyModal extends StatefulWidget {
+  @override
+  _AddMoneyModalState createState() => _AddMoneyModalState();
+}
+
+
+class _AddMoneyModalState extends State<AddMoneyModal> {
+  int? _selectedOption;
+
+    @override
+  Widget build(BuildContext context) {
+    return CupertinoPageScaffold(
+      navigationBar: CupertinoNavigationBar(
+        middle: Text(
+          'Add Money',
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+        ),
+        leading: CupertinoButton(
+          padding: EdgeInsets.zero,
+          child: Text('Cancel', style: TextStyle(color: Colors.black)),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        trailing: _selectedOption != null
+            ? CupertinoButton(
+                padding: EdgeInsets.zero,
+                child: Text('Next', style: TextStyle(color: Colors.black)),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) => EnterAmountScreen(
+                        selectedOption: _selectedOption!,
+                      ),
+                    ),
+                  );
+                },
+              )
+            : null,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.only(top: 100.0), // Adjust the padding value as needed
+        child: Column(
+          children: [
+            _buildOptionRow(0, 'Uni Bank Account'),
+            _buildOptionRow(1, '**** **** **** 0886'),
+            _buildOptionRow(2, '**** **** **** 5678'),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildOptionRow(int index, String text) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _selectedOption = index;
+        });
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(
+              color: CupertinoColors.systemGrey4,
+              width: 0.5,
+            ),
+          ),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              _selectedOption == index
+                  ? CupertinoIcons.check_mark_circled_solid
+                  : CupertinoIcons.circle,
+              color: _selectedOption == index
+                  ? Color.fromARGB(255, 130, 36, 61)
+                  : CupertinoColors.inactiveGray,
+            ),
+            SizedBox(width: 10),
+            Text(
+              text,
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.black, // Set text color to black
+                fontWeight: FontWeight.normal, // Set text weight to normal (not bold)
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class EnterAmountScreen extends StatelessWidget {
+  final int selectedOption;
+
+  EnterAmountScreen({required this.selectedOption});
+
+  @override
+  Widget build(BuildContext context) {
+    String selectedPaymentMethod;
+    switch (selectedOption) {
+      case 0:
+        selectedPaymentMethod = 'Uni Bank Account';
+        break;
+      case 1:
+        selectedPaymentMethod = '**** **** **** 0886';
+        break;
+      case 2:
+        selectedPaymentMethod = '**** **** **** 5678';
+        break;
+      default:
+        selectedPaymentMethod = 'Unknown';
+    }
+
+    return CupertinoPageScaffold(
+      navigationBar: CupertinoNavigationBar(
+        middle: Text(
+          'Add Money',
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+        ),
+        leading: CupertinoButton(
+          padding: EdgeInsets.zero,
+          child: Text('Cancel', style: TextStyle(color: Colors.black)),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        trailing: Container(),
+      ),
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Remove the 'Enter Amount' title
+              SizedBox(height: 50),
+              Column(
+  crossAxisAlignment: CrossAxisAlignment.start,
+  children: [
+    // 'From' Section
+    Text(
+      'From:',
+      style: TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+        color: Colors.grey,
+      ),
+    ),
+    SizedBox(height: 10),
+    Container(
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+      decoration: BoxDecoration(
+        color: CupertinoColors.systemGrey6,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: CupertinoColors.systemGrey,
+          width: 0.5,
+        ),
+      ),
+      child: Text(
+        selectedPaymentMethod,
+        style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.w500),
+      ),
+    ),
+    SizedBox(height: 26),
+    // Center the Icon vertically
+    SizedBox(
+      height: 26, // Adjust the height as needed for vertical alignment
+      child: Center(
+        child: Icon(
+          CupertinoIcons.arrow_down,
+          size: 24,
+          color: Colors.black,
+        ),
+      ),
+    ),
+    SizedBox(height: 10),
+    // 'To' Section
+    Text(
+      'To:',
+      style: TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+        color: Colors.grey,
+      ),
+    ),
+    SizedBox(height: 10),
+    Container(
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+      decoration: BoxDecoration(
+        color: CupertinoColors.systemGrey6,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: CupertinoColors.systemGrey,
+          width: 0.5,
+        ),
+      ),
+      child: Text(
+        'University Bank Account', // Replace with actual 'To' text
+        style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.w500),
+      ),
+    ),
+  ],
+),
+
+
+              SizedBox(height: 80),
+              CupertinoTextField(
+                placeholder: 'Amount',
+                keyboardType: TextInputType.number,
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 22),
+                padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                decoration: BoxDecoration(
+                  color: Color.fromARGB(255, 242, 242, 246),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: CupertinoColors.systemGrey,
+                    width: 0.4,
+                  ),
+                ),
+              ),
+              SizedBox(height: 320),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 
   List<Widget> get universityTransactions {
     return [
@@ -499,7 +749,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-}
+
 
 class PlaceholderWidget extends StatelessWidget {
   final String text;
