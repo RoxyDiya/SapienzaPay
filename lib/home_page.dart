@@ -34,7 +34,7 @@ class HomePageState extends State<HomePage> {
 
   final List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
-    PlaceholderWidget('Deadlines'),
+    DeadlinesPage(),
     PlaceholderWidget('Profile'),
   ];
 
