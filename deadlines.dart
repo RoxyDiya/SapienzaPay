@@ -94,6 +94,13 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
     });
   }
 
+  void _cancelSelection() {
+    setState(() {
+      _isSelecting = false;
+      _selectedDeadlines.clear();
+    });
+  }
+
   Widget buildPaymentMeth(Map<String, String> payment) {
     return GestureDetector(
       child: Container(
@@ -237,6 +244,18 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
+            if (_isSelecting)
+              Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: Icon(
+                  isSelected
+                    ? CupertinoIcons.check_mark_circled_solid
+                    : CupertinoIcons.circle,
+                  color: isSelected
+                    ? Color.fromARGB(255, 130, 36, 61)
+                    : CupertinoColors.inactiveGray,
+                ),
+              ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -297,13 +316,30 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
                 style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 10),
-              const Text(
-                'OVERDUE',
-                style: TextStyle(
-                  color: Color.fromARGB(255, 111, 20, 28),
-                  fontWeight: FontWeight.bold,
-                  fontSize: 24,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                //might need to adjust width of main axis
+                children: [
+                  const Text(
+                    'OVERDUE',
+                    style: TextStyle(
+                      color: Color.fromARGB(255, 111, 20, 28),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 24,
+                    ),
+                  ),
+                  if (_isSelecting)
+                    GestureDetector(
+                      onTap: _cancelSelection,
+                      child: Text(
+                        'Cancel',
+                        style: TextStyle(
+                          color: Color.fromARGB(255, 130, 130, 146),
+                          fontSize: 18
+                        )
+                      )
+                    )//an object that responds to tap
+                ],
               ),
               const SizedBox(height: 20),
               Column(
