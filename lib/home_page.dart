@@ -478,6 +478,7 @@ class _AddMoneyModalState extends State<AddMoneyModal> {
   int? _selectedOption;
   String _amount = '';
   bool _isAmountValid = false;
+  bool _showError = false;
 
   void _updateAmount(String value) {
     setState(() {
@@ -519,19 +520,23 @@ class _AddMoneyModalState extends State<AddMoneyModal> {
             _buildOptionRow(0, '**** **** **** 1928'),
             _buildOptionRow(1, '**** **** **** 0886'),
             _buildOptionRow(2, '**** **** **** 5678'),
-            SizedBox(height: 50),
-            Container(
-              width: 350,
+            SizedBox(height: 20),
+            if (_showError)
+              Text(
+                'Choose an option before entering an amount',
+                style: TextStyle(color: Colors.red, fontSize: 14),
+              ),
+            SizedBox(height: 10),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
               child: CupertinoTextField(
-                placeholder: 'Amount',
+                placeholder: 'Enter amount',
                 keyboardType: TextInputType.number,
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 22),
-                padding: EdgeInsets.symmetric(vertical: 16, horizontal: 10),
+                textAlign: TextAlign.start,
+                style: TextStyle(fontSize: 18),
+                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                 decoration: BoxDecoration(
-                  color: _selectedOption != null
-                      ? Color.fromARGB(255, 242, 217, 217)
-                      : Color.fromARGB(255, 242, 242, 246),
+                  color: Color.fromARGB(255, 242, 242, 246),
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(
                     color: CupertinoColors.systemGrey,
@@ -540,6 +545,13 @@ class _AddMoneyModalState extends State<AddMoneyModal> {
                 ),
                 enabled: _selectedOption != null,
                 onChanged: _updateAmount,
+                onTap: () {
+                  if (_selectedOption == null) {
+                    setState(() {
+                      _showError = true;
+                    });
+                  }
+                },
               ),
             ),
           ],
@@ -553,6 +565,7 @@ class _AddMoneyModalState extends State<AddMoneyModal> {
       onTap: () {
         setState(() {
           _selectedOption = index;
+          _showError = false;
         });
       },
       child: Container(
