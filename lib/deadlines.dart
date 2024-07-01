@@ -32,6 +32,7 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
   int _selectedIndex = 1;
   bool _isSelecting = false;
   Set<Map<String, String>> _selectedDeadlines = {};
+  int? _selectedOption;
 
   final List<Widget> _widgetOptions = <Widget>[
     HomePage(),
@@ -67,7 +68,9 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => DeadlineDetailsPage(deadline: deadline),
+          builder: (context) => DeadlineDetailsPage(
+            deadline: deadline //The argument type 'List<Map<String, String>> Function({bool growable})' can't be assigned to the parameter type 'List<Map<String, String>>'. 
+          ),
         ),
       );
     }
@@ -93,9 +96,15 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
     });
   }
 
+  void _cancelSelection() {
+    setState(() {
+      _isSelecting = false;
+      _selectedDeadlines.clear();
+    });
+  }
+
   Widget buildPaymentMeth(Map<String, String> payment) {
     return GestureDetector(
-      onTap: () => _ndModal(context, payment),
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 20, horizontal: 16),
         decoration: BoxDecoration(
@@ -111,7 +120,6 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                // Replace with an actual image icon widget or your icon implementation
                 Image.asset(payment['icon']!, width: 40, height: 40),
                 const SizedBox(width: 10),
                 Text(
@@ -126,56 +134,96 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
     );
   }
 
-  void _ndModal(BuildContext context, Map<String, String> paymentmethod) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return Placeholder(); // Implement your second modal content here
-      },
-    );
-  }
-
-  void _payModal(BuildContext context) {
+  void payModal(BuildContext context) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       builder: (BuildContext context) {
-        return Container(
-          padding: const EdgeInsets.all(16.0),
-          height: MediaQuery.of(context).size.height * 0.9,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return Container(
+              padding: const EdgeInsets.all(16.0),
+              height: MediaQuery.of(context).size.height * 0.9,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  GestureDetector(
-                    onTap: () => Navigator.pop(context),
-                    child: const Text(
-                      'Cancel',
-                      style: TextStyle(
-                        color: Colors.red,
-                        fontSize: 16,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GestureDetector(
+                        onTap: () => Navigator.pop(context),
+                        child: const Text(
+                          'Cancel',
+                          style: TextStyle(
+                            color: CupertinoColors.inactiveGray,
+                            fontSize: 16,
+                          ),
+                        ),
                       ),
-                    ),
+                      const Text(
+                        'Payment Method',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ],
                   ),
-                  const Text(
-                    'Payment Method',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                    ),
+                  const SizedBox(height: 20),
+                  Column(
+                    children: paymentmeth.map((payment) {
+                      int index = paymentmeth.indexOf(payment);
+                      return buildOptionRow(index, payment['accname']!, setState);
+                    }).toList(),
                   ),
                 ],
               ),
-              const SizedBox(height: 20),
-              Column(
-                children: paymentmeth.map((payment) => buildPaymentMeth(payment)).toList(),
-              ),
-            ],
-          ),
+            );
+          },
         );
       },
+    );
+  }
+
+  Widget buildOptionRow(int index, String text, StateSetter setState) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _selectedOption = index;
+        });
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(
+              color: Color.fromARGB(255, 209, 209, 214),
+              width: 0.5,
+            ),
+          ),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              _selectedOption == index
+                  ? CupertinoIcons.check_mark_circled_solid
+                  : CupertinoIcons.circle,
+              color: _selectedOption == index
+                  ? Color.fromARGB(255, 130, 36, 61)
+                  : CupertinoColors.inactiveGray,
+            ),
+            SizedBox(width: 10),
+            Text(
+              text,
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.black,
+                fontWeight: FontWeight.normal,
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 
@@ -198,6 +246,18 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
+            if (_isSelecting)
+              Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: Icon(
+                  isSelected
+                    ? CupertinoIcons.check_mark_circled_solid
+                    : CupertinoIcons.circle,
+                  color: isSelected
+                    ? Color.fromARGB(255, 130, 36, 61)
+                    : CupertinoColors.inactiveGray,
+                ),
+              ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -258,13 +318,30 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
                 style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 10),
-              const Text(
-                'OVERDUE',
-                style: TextStyle(
-                  color: Color.fromARGB(255, 111, 20, 28),
-                  fontWeight: FontWeight.bold,
-                  fontSize: 24,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                //might need to adjust width of main axis
+                children: [
+                  const Text(
+                    'OVERDUE',
+                    style: TextStyle(
+                      color: Color.fromARGB(255, 111, 20, 28),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 24,
+                    ),
+                  ),
+                  if (_isSelecting)
+                    GestureDetector(
+                      onTap: _cancelSelection,
+                      child: Text(
+                        'Cancel',
+                        style: TextStyle(
+                          color: Color.fromARGB(255, 130, 130, 146),
+                          fontSize: 18
+                        )
+                      )
+                    )//an object that responds to tap
+                ],
               ),
               const SizedBox(height: 20),
               Column(
@@ -287,7 +364,7 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
                 child: ElevatedButton(
                   onPressed: _selectedDeadlines.isNotEmpty
                       ? () {
-                          _payModal(context);
+                          payModal(context);
                         }
                       : null,
                   child: const Text(
@@ -313,6 +390,7 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
     );
   }
 }
+
 
 
 /*code where I have made the page scrollable and added the list items
