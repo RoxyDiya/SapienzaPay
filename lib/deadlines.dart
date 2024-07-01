@@ -47,12 +47,12 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
   }
 
   final List<Map<String, String>> overdueFees = [
-    {'month': 'NOV', 'day': '15', 'year': '2023', 'description': '1st TUITION FEE', 'amount': '€766'},
+    {'month': 'NOV', 'day': '15', 'description': '1st TUITION FEE', 'amount': '€766'},
   ];
 
   final List<Map<String, String>> upcomingFees = [
-    {'month': 'DEC', 'day': '19', 'year': '2024', 'description': '2nd TUITION FEE', 'amount': '€670'},
-    {'month': 'MAR', 'day': '10', 'year': '2024', 'description': '3rd TUITION FEE', 'amount': '€805'}
+    {'month': 'DEC', 'day': '19', 'description': '2nd TUITION FEE', 'amount': '€670'},
+    {'month': 'MAR', 'day': '10', 'description': '3rd TUITION FEE', 'amount': '€805'}
   ];
 
   final List<Map<String, String>> paymentmeth = [
@@ -275,13 +275,6 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
                     color: Colors.red[700],
                   ),
                 ),
-                Text(
-                  deadline['year']!,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: isSelected ? Colors.grey[800] : Colors.grey[500],
-                  ),
-                ),
               ],
             ),
             Column(
@@ -309,21 +302,22 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(0.0),
+          padding: const EdgeInsets.only( top: 10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const SizedBox(height: 40),
               const Text(
-                'Deadlines',
-                style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+                ' Deadlines',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 10),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 //might need to adjust width of main axis
                 children: [
                   const Text(
-                    'OVERDUE',
+                    ' OVERDUE',
                     style: TextStyle(
                       color: Color.fromARGB(255, 111, 20, 28),
                       fontWeight: FontWeight.bold,
@@ -334,7 +328,7 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
                     GestureDetector(
                       onTap: _cancelSelection,
                       child: Text(
-                        'Cancel',
+                        'Cancel  ',
                         style: TextStyle(
                           color: Color.fromARGB(255, 130, 130, 146),
                           fontSize: 18
@@ -343,11 +337,11 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
                     )//an object that responds to tap
                 ],
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 5),
               Column(
                 children: overdueFees.map((fee) => buildDeadlineItem(fee, true)).toList(),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 5),
               const Text(
                 'UPCOMING',
                 style: TextStyle(
@@ -355,11 +349,11 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
                   color: Color.fromARGB(255, 111, 20, 28),
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 5),
               Column(
                 children: upcomingFees.map((fee) => buildDeadlineItem(fee, false)).toList(),
               ),
-              const SizedBox(height: 300),
+              const SizedBox(height: 350),
               Center(
                 child: ElevatedButton(
                   onPressed: _selectedDeadlines.isNotEmpty
