@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'home_page.dart';
 import 'detailspage.dart';
+import 'utils.dart';
 
 void main() {
   runApp(const MyApp());
@@ -233,15 +234,13 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
       onTap: () => _onDeadlineTap(deadline),
       onLongPress: () => _onDeadlineLongPress(deadline),
       child: Container(
+        margin: EdgeInsets.symmetric(vertical: 10),
         decoration: BoxDecoration(
-          color: isSelected
-              ? Colors.red[200]
-              : isOverdue
-                  ? Colors.red[100]
-                  : Colors.white,
+          color: isOverdue
+            ? Color.fromARGB(255, 247, 199, 204)
+            : Colors.white,
           borderRadius: BorderRadius.circular(0.0),
         ),
-        margin: const EdgeInsets.symmetric(vertical: 1.0),
         width: double.infinity,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -306,10 +305,10 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 40),
+              const SizedBox(height: 80),
               const Text(
                 ' Deadlines',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 10),
               Row(
@@ -341,12 +340,14 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
               Column(
                 children: overdueFees.map((fee) => buildDeadlineItem(fee, true)).toList(),
               ),
-              const SizedBox(height: 5),
+              const SizedBox(height: 40),
               const Text(
-                'UPCOMING',
+                ' UPCOMING',
                 style: TextStyle(
                   fontSize: 24,
                   color: Color.fromARGB(255, 111, 20, 28),
+                  fontWeight: FontWeight.bold,
+
                 ),
               ),
               const SizedBox(height: 5),
