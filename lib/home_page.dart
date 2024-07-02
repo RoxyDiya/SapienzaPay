@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -121,17 +123,18 @@ class _HomeScreenState extends State<HomeScreen> {
     allTransactions.addAll(universityTransactions);
   }
 
-  void _addUniversityTransaction(String title, String amount, String date) {
-    setState(() {
-      Map<String, String> newTransaction = {
-        'title': title,
-        'amount': amount,
-        'date': date,
-      };
-        universityTransactions.insert(0, newTransaction); // Insert at the beginning
+ void _addUniversityTransaction(String title, String amount, DateTime date) {
+  setState(() {
+    Map<String, String> newTransaction = {
+      'title': title,
+      'amount': amount,
+      'date': DateFormat('d MMMM yyyy').format(date),
+    };
+    universityTransactions.insert(0, newTransaction); // Insert at the beginning
     allTransactions.insert(0, newTransaction); // Insert at the beginning for all transactions as well
   });
 }
+
  
 
   @override
@@ -313,6 +316,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Expanded(
                         child: ListView.builder(
                           controller: scrollController,
+                          padding: EdgeInsets.zero,
                           itemCount: showUniversityTransactions
                               ? universityTransactions.length
                               : allTransactions.length,
@@ -510,7 +514,7 @@ void _showAddMoneyModal(BuildContext context) {
           setState(() {
             balance += amount;
             // Adding a new university transaction
-            _addUniversityTransaction('Added Money', '€${amount.toStringAsFixed(2)}', DateTime.now().toString().split(' ')[0]);
+            _addUniversityTransaction('New transaction', '€${amount.toStringAsFixed(2)}', DateTime.now());
           });
         },
       ),
