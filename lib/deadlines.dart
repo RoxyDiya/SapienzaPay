@@ -48,12 +48,12 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
   }
 
   final List<Map<String, String>> overdueFees = [
-    {'month': 'NOV', 'day': '15', 'description': '1st TUITION FEE', 'amount': '€766'},
+    {'month': 'NOV', 'day': '15', 'description': '1º TUITION FEE', 'amount': '€766'},
   ];
 
   final List<Map<String, String>> upcomingFees = [
-    {'month': 'DEC', 'day': '19', 'description': '2nd TUITION FEE', 'amount': '€670'},
-    {'month': 'MAR', 'day': '10', 'description': '3rd TUITION FEE', 'amount': '€805'}
+    {'month': 'DEC', 'day': '19', 'description': '2º TUITION FEE', 'amount': '€670'},
+    {'month': 'MAR', 'day': '10', 'description': '3º TUITION FEE', 'amount': '€805'}
   ];
 
   final List<Map<String, String>> paymentmeth = [
@@ -230,71 +230,80 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
 
   Widget buildDeadlineItem(Map<String, String> deadline, bool isOverdue) {
     bool isSelected = _selectedDeadlines.contains(deadline);
-    return GestureDetector(
-      onTap: () => _onDeadlineTap(deadline),
-      onLongPress: () => _onDeadlineLongPress(deadline),
-      child: Container(
-        margin: EdgeInsets.symmetric(vertical: 10),
-        decoration: BoxDecoration(
-          color: isOverdue
-            ? Color.fromARGB(255, 247, 199, 204)
-            : Colors.white,
-          borderRadius: BorderRadius.circular(0.0),
-        ),
-        width: double.infinity,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            if (_isSelecting)
-              Padding(
-                padding: const EdgeInsets.only(right: 8),
-                child: Icon(
-                  isSelected
-                    ? CupertinoIcons.check_mark_circled_solid
-                    : CupertinoIcons.circle,
-                  color: isSelected
-                    ? Color.fromARGB(255, 130, 36, 61)
-                    : CupertinoColors.inactiveGray,
-                ),
-              ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
+    return Column(
+      children: [
+        Divider(color: CupertinoColors.inactiveGray.withOpacity(0.6), thickness: 0.5, height: 0.5),
+        GestureDetector(
+          onTap: () => _onDeadlineTap(deadline),
+          onLongPress: () => _onDeadlineLongPress(deadline),
+            child: Container(
+              decoration: BoxDecoration(
+              color: isOverdue 
+                ? Color.fromARGB(135, 158, 51, 57).withOpacity(0.15)
+                : Colors.white,
+              borderRadius: BorderRadius.circular(0.0),
+            ),
+            width: double.infinity,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Text(
-                  deadline['month']!,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.red[700],
+                if (_isSelecting)
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8),
+                    child: Icon(
+                      isSelected
+                        ? CupertinoIcons.check_mark_circled_solid
+                        : CupertinoIcons.circle,
+                      color: isSelected
+                        ? Color.fromARGB(255, 130, 36, 61)
+                        : CupertinoColors.inactiveGray,
+                    ),
                   ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(height:12),
+                    Text(
+                      deadline['month']!,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: Colors.red[700],
+                        fontSize: 16
+                      ),
+                    ),
+                    Text(
+                      deadline['day']!,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        color: Colors.black,
+                        fontSize: 40
+                      ),
+                    ),
+                  ],
                 ),
-                Text(
-                  deadline['day']!,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.red[700],
-                  ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      deadline['description']!,
+                      style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+                    ),
+                    SizedBox(height:8),
+                    Text(
+                      deadline['amount']!,
+                      style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 28),
+                    ),
+                  ],
                 ),
+                const Icon(CupertinoIcons.right_chevron),
               ],
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  deadline['description']!,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  deadline['amount']!,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-            const Icon(CupertinoIcons.right_chevron),
-          ],
+          ),
         ),
-      ),
+        Divider(color: CupertinoColors.inactiveGray.withOpacity(0.6), thickness: 0.5, height: 0.5),
+      ]
     );
-  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -305,24 +314,25 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 80),
+              const SizedBox(height: 60),
               const Text(
                 ' Deadlines',
                 style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 30),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 //might need to adjust width of main axis
                 children: [
                   const Text(
-                    ' OVERDUE',
+                    '  Overdue:',
                     style: TextStyle(
                       color: Color.fromARGB(255, 111, 20, 28),
                       fontWeight: FontWeight.bold,
                       fontSize: 24,
                     ),
                   ),
+
                   if (_isSelecting)
                     GestureDetector(
                       onTap: _cancelSelection,
@@ -336,25 +346,25 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
                     )//an object that responds to tap
                 ],
               ),
-              const SizedBox(height: 5),
+              const SizedBox(height: 15),
               Column(
                 children: overdueFees.map((fee) => buildDeadlineItem(fee, true)).toList(),
               ),
               const SizedBox(height: 40),
               const Text(
-                ' UPCOMING',
+                '  Upcoming:',
                 style: TextStyle(
                   fontSize: 24,
                   color: Color.fromARGB(255, 111, 20, 28),
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.normal,
 
                 ),
               ),
-              const SizedBox(height: 5),
+              const SizedBox(height: 15),
               Column(
                 children: upcomingFees.map((fee) => buildDeadlineItem(fee, false)).toList(),
               ),
-              const SizedBox(height: 350),
+              const SizedBox(height: 190),
               Center(
                 child: ElevatedButton(
                   onPressed: _selectedDeadlines.isNotEmpty
@@ -366,10 +376,15 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
                     'Pay Now',
                     style: TextStyle(
                       color: Colors.white,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.normal,
+                      fontSize: 24,
                     ),
                   ),
                   style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    fixedSize: Size.fromWidth(350),
                     backgroundColor: _selectedDeadlines.isNotEmpty
                         ? const Color.fromARGB(255, 111, 20, 28)
                         : Colors.grey[500],
