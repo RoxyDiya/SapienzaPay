@@ -87,6 +87,53 @@ class _HomeScreenState extends State<HomeScreen> {
   bool isUniBankAccountSelected = true;
   double balance = 2500.00;
 
+ // Dynamic transactions list for university and all
+  List<Map<String, String>> universityTransactions = [
+    {
+      'title': 'University Fee',
+      'amount': '€300.00',
+      'date': '12 March 2023',
+    },
+    {
+      'title': 'Library Fee',
+      'amount': '€50.00',
+      'date': '15 March 2023',
+    },
+  ];
+
+  List<Map<String, String>> allTransactions = [
+    {
+      'title': 'Grocery',
+      'amount': '€50.00',
+      'date': '10 March 2023',
+    },
+    {
+      'title': 'Cinema',
+      'amount': '€15.00',
+      'date': '11 March 2023',
+    },
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    // Adding initial university transactions to all transactions
+    allTransactions.addAll(universityTransactions);
+  }
+
+  void _addUniversityTransaction(String title, String amount, String date) {
+    setState(() {
+      Map<String, String> newTransaction = {
+        'title': title,
+        'amount': amount,
+        'date': date,
+      };
+        universityTransactions.insert(0, newTransaction); // Insert at the beginning
+    allTransactions.insert(0, newTransaction); // Insert at the beginning for all transactions as well
+  });
+}
+ 
+
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
@@ -263,13 +310,18 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                       ),
-                      Expanded(
-                        child: ListView(
+                    Expanded(
+                        child: ListView.builder(
                           controller: scrollController,
-                          padding: EdgeInsets.zero, // Remove any padding
-                          children: showUniversityTransactions
-                              ? universityTransactions
-                              : allTransactions,
+                          itemCount: showUniversityTransactions
+                              ? universityTransactions.length
+                              : allTransactions.length,
+                          itemBuilder: (context, index) {
+                            final transaction = showUniversityTransactions
+                                ? universityTransactions[index]
+                                : allTransactions[index];
+                            return _buildTransactionItem(transaction);
+                          },
                         ),
                       ),
                     ],
@@ -281,7 +333,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-
   @override
   Widget _buildBankAccountCard(BuildContext context) {
     return Container(
@@ -451,13 +502,15 @@ class _HomeScreenState extends State<HomeScreen> {
       ],
     );
   }
-    void _showAddMoneyModal(BuildContext context) {
+void _showAddMoneyModal(BuildContext context) {
     showCupertinoModalPopup(
       context: context,
       builder: (context) => AddMoneyModal(
         onAmountAdded: (amount) {
           setState(() {
             balance += amount;
+            // Adding a new university transaction
+            _addUniversityTransaction('Added Money', '€${amount.toStringAsFixed(2)}', DateTime.now().toString().split(' ')[0]);
           });
         },
       ),
@@ -634,35 +687,9 @@ class _AddMoneyModalState extends State<AddMoneyModal> {
 
 
 
-  List<Widget> get universityTransactions {
-    return [
-      _buildTransactionItem('University Fee', '€300.00', '12 March 2023'),
-      _buildTransactionItem('Library Fee', '€50.00', '15 March 2023'),
-      _buildTransactionItem('University Fee', '€300.00', '12 March 2023'),
-      _buildTransactionItem('Library Fee', '€50.00', '15 March 2023'),
-      _buildTransactionItem('University Fee', '€300.00', '12 March 2023'),
-      _buildTransactionItem('Library Fee', '€50.00', '15 March 2023'),
-      _buildTransactionItem('University Fee', '€300.00', '12 March 2023'),
-      _buildTransactionItem('Library Fee', '€50.00', '15 March 2023'),
-      _buildTransactionItem('University Fee', '€300.00', '12 March 2023'),
-      _buildTransactionItem('Library Fee', '€50.00', '15 March 2023'),
-      _buildTransactionItem('University Fee', '€300.00', '12 March 2023'),
-      _buildTransactionItem('Library Fee', '€50.00', '15 March 2023'),
-      _buildTransactionItem('University Fee', '€300.00', '12 March 2023'),
-      _buildTransactionItem('Library Fee', '€50.00', '15 March 2023'),
-    ];
-  }
 
-  List<Widget> get allTransactions {
-    return [
-      _buildTransactionItem('University Fee', '€300.00', '12 March 2023'),
-      _buildTransactionItem('Grocery', '€50.00', '10 March 2023'),
-      _buildTransactionItem('Cinema', '€15.00', '11 March 2023'),
-      ...universityTransactions,
-    ];
-  }
 
-  Widget _buildTransactionItem(String title, String amount, String date) {
+    Widget _buildTransactionItem(Map<String, String> transaction) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
       padding: EdgeInsets.all(16),
@@ -676,17 +703,15 @@ class _AddMoneyModalState extends State<AddMoneyModal> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(title, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-              Text(date, style: TextStyle(fontSize: 14, color: Colors.grey)),
+              Text(transaction['title']!, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              Text(transaction['date']!, style: TextStyle(fontSize: 14, color: Colors.grey)),
             ],
           ),
-          Text(amount, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          Text(transaction['amount']!, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
         ],
       ),
     );
   }
-
-
 class PlaceholderWidget extends StatelessWidget {
   final String text;
 
