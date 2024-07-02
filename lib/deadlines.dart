@@ -206,6 +206,7 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
         child: Row(
           children: [
             Icon(
+              size: 40,
               _selectedOption == index
                   ? CupertinoIcons.check_mark_circled_solid
                   : CupertinoIcons.circle,
@@ -213,7 +214,7 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
                   ? Color.fromARGB(255, 130, 36, 61)
                   : CupertinoColors.inactiveGray,
             ),
-            SizedBox(width: 10),
+            //SizedBox(height: 1),
             Text(
               text,
               style: TextStyle(
@@ -239,7 +240,7 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
             child: Container(
               decoration: BoxDecoration(
               color: isOverdue 
-                ? Color.fromARGB(135, 158, 51, 57).withOpacity(0.15)
+                ? Color.fromARGB(33, 236, 51, 57)
                 : Colors.white,
               borderRadius: BorderRadius.circular(0.0),
             ),
@@ -279,6 +280,7 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
                         fontSize: 40
                       ),
                     ),
+                    SizedBox(height:8),
                   ],
                 ),
                 Column(
