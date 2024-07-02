@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'home_page.dart';
 import 'deadlines.dart';
+import 'utils.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,6 +14,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      //title: 'sapienzapay';
       theme: ThemeData(
         primaryColor: Color.fromARGB(255, 111, 20, 28),
       ),
@@ -20,6 +22,7 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
 
 class DeadlineDetailsPage extends StatefulWidget {
   final Map<String, String> deadline;
@@ -33,7 +36,7 @@ class _DeadlineDetailsState extends State<DeadlineDetailsPage> {
   int _selectedIndex = 1;
 
   final List<Widget> _widgetOptions = <Widget>[
-    HomePage(),
+    HomeScreen(),
     DeadlinesPage(),
     PlaceholderWidget('Profile')
   ];
@@ -44,149 +47,138 @@ class _DeadlineDetailsState extends State<DeadlineDetailsPage> {
     });
   }
 
+
   @override
   Widget build(BuildContext context) {
-    final deadline = widget.deadline;
-    TextStyle labelStyle = TextStyle(fontSize: 12, fontWeight: FontWeight.w600);
-    TextStyle detailStyle = TextStyle(fontSize: 16, fontWeight: FontWeight.w600);
-    
-    bool isOverdue = DateTime.parse('${deadline['year']}-${deadline['month']}-${deadline['day']}').isBefore(DateTime.now());
-
+    TextStyle labelStyle = TextStyle(fontSize: 14, fontWeight: FontWeight.w600);
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            SizedBox(height: 70),
             GestureDetector(
-              onTap: () {
-                Navigator.pop(context);
-              },
+              onTap: () {},
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Icon(CupertinoIcons.chevron_left),
-                  Text('Deadlines'),
-                ],
-              ),
-            ),
-            SizedBox(height: 20),
-            Center(
-              child: Column(
-                children: [
-                  Image.asset('assets/sapienzalogo.png', height: 100), // Replace with your logo asset
-                  Text(
-                    '${deadline['description']}',
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 20),
-            Divider(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('A.A. Year:', style: labelStyle),
-                Text('23/24', style: detailStyle),
-              ],
-            ),
-            Divider(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Status:', style: labelStyle),
-                Text('Unpaid', style: detailStyle),
-              ],
-            ),
-            Divider(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Regional Tax:', style: labelStyle),
-                Text('€140', style: detailStyle),
-              ],
-            ),
-            Divider(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Postage Stamp:', style: labelStyle),
-                Text('€16', style: detailStyle),
-              ],
-            ),
-            Divider(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('First Installment:', style: labelStyle),
-                Text('€550', style: detailStyle),
-              ],
-            ),
-            Divider(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Penalty fee:', style: labelStyle),
-                Text('€60', style: detailStyle),
-              ],
-            ),
-            Divider(),
-            SizedBox(height: 20),
-            Center(
-              child: Column(
-                children: [
-                  Text(
-                    'DUE ON ${deadline['day']}/${deadline['month']}/${deadline['year']}',
-                    style: TextStyle(
-                      color: Color.fromARGB(255, 111, 20, 28),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 22,
-                    ),
-                  ),
-                  if (isOverdue)
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Icon(CupertinoIcons.chevron_left, color: Colors.black),
                     Text(
-                      '(Expired)',
-                      style: TextStyle(
-                        color: Colors.red,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      'Deadlines',
+                      style: TextStyle(color: Colors.black, fontSize: 22) //ADD ACTION TO THIS
                     ),
-                ],
-              ),
-            ),
-            SizedBox(height: 30),
-            Center(
-              child: Text(
-                '€${deadline['amount']}',
-                style: TextStyle(
-                  fontSize: 36,
-                  fontWeight: FontWeight.bold,
+                  ],
                 ),
+            ),
+            Placeholder(fallbackHeight: 70), //sapienza Icon
+            SizedBox(height: 20),
+            Row(mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text('1° Tuition Fee',
+                  style: TextStyle(
+                    fontSize: 26,
+                    color: Color.fromARGB(255, 111, 20, 28)
+                  ))
+              ],), //tuition fee info
+            SizedBox(height: 15),
+            Divider(color: CupertinoColors.inactiveGray, thickness: 0.5,),
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('A.A. Year:', style: TextStyle(fontSize: 20)),
+                Text('23/24', style: TextStyle(fontSize: 20))
+              ],),
+            Divider(color: CupertinoColors.inactiveGray, thickness: 0.5,),
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Status:', style: TextStyle(fontSize: 20)),
+                Text('Unpaid', style: TextStyle(fontSize: 20))
+              ],),
+            Divider(color: CupertinoColors.inactiveGray, thickness: 0.5,),
+            SizedBox(height: 30),
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children:[
+                Text('Regional Tax', style: TextStyle(fontSize: 20)),
+                Text('€140', style: TextStyle(fontSize: 20))
+              ]),
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Postage Stamp', style: TextStyle(fontSize: 20)),
+                Text('€16', style: TextStyle(fontSize: 20))
+              ]),
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('First Installment', style: TextStyle(fontSize: 20)),
+                Text('€550', style: TextStyle(fontSize: 20))
+              ]),
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Penalty Fee', style: TextStyle(fontSize: 20)),
+                Text('€60', style: TextStyle(fontSize: 20))
+              ]),
+            SizedBox(height: 200),
+            Text('DUE ON 15/11/2023',
+              style: TextStyle(
+                color: Color.fromARGB(255, 111, 20, 28),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 22
               ),
             ),
-            SizedBox(height: 20),
+            Text('(Expired)',
+              style: TextStyle(color: CupertinoColors.inactiveGray, fontSize: 22)), //only put this one if it's overdue
+            SizedBox(height: 30),
+            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              Text('€766')
+            ],),
             Center(
               child: ElevatedButton(
-                onPressed: () {
-                  // Implement pay now action
-                },
-                child: Text(
+                child: const Text(
                   'Pay Now',
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
+                onPressed: selectedDeadlines.isNotEmpty
+                  ? () {
+                    payModal(context);
+                  }
+                  : null,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color.fromARGB(255, 111, 20, 28),
-                  padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 20.0),
-                  textStyle: TextStyle(fontSize: 18),
+                backgroundColor: selectedDeadlines.isNotEmpty
+                  ? const Color.fromARGB(255, 111, 20, 28)
+                  : Colors.grey[500],
+                padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 20.0),
+                textStyle: const TextStyle(fontSize: 18),
                 ),
               ),
             ),
-          ],
-        ),
+          ]
+        )
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(CupertinoIcons.house_fill),
+            label: 'Home'
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(CupertinoIcons.clock_fill),
+            label: 'Deadlines'
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile'
+            ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Color.fromARGB(255, 130, 36, 51),
+        unselectedItemColor: Colors.grey, 
+        onTap: _onItemTapped,
+        selectedLabelStyle: labelStyle,
+        unselectedLabelStyle: labelStyle.copyWith(color: Colors.grey),
+        iconSize: 25,
       ),
     );
   }
