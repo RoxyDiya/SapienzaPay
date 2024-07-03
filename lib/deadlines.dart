@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'home_page.dart';
 import 'detailspage.dart';
+// ignore: unused_import
 import 'utils.dart';
 
 void main() {
@@ -30,11 +31,13 @@ class DeadlinesPage extends StatefulWidget {
 }
 
 class _DeadlinesPageState extends State<DeadlinesPage> {
+  // ignore: unused_field
   int _selectedIndex = 1;
   bool _isSelecting = false;
   Set<Map<String, String>> _selectedDeadlines = {};
   int? _selectedOption;
 
+  // ignore: unused_field
   final List<Widget> _widgetOptions = <Widget>[
     HomePage(),
     DeadlinesPage(),
@@ -192,6 +195,9 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
         setState(() {
           _selectedOption = index;
         });
+        Future.delayed(Duration(milliseconds: 100), () {
+          secondModal(context);
+        });
       },
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 20, horizontal: 16),
@@ -226,6 +232,62 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
           ],
         ),
       ),
+    );
+  }
+
+  void secondModal(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (BuildContext context) {
+        return GestureDetector(
+          onTap: () => Navigator.pop(context),
+          child: Stack(
+            children: [
+              GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Container(
+                  color: Colors.black54,
+                ),
+              ),
+              DraggableScrollableSheet(
+                initialChildSize: 0.5,
+                minChildSize: 0.3,
+                maxChildSize: 0.5,
+                builder: (_, controller) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(20),
+                      ),
+                    ),
+                    child: ListView(
+                      controller: controller,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('modal',),
+                              SizedBox(height:30),
+                              Text('modal content')
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ],
+          ), 
+        );
+      },
     );
   }
 
