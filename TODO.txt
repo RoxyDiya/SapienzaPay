@@ -1,0 +1,3 @@
+- icon asset
+- lil red dot next to the multa
+- notif red dot w the number 1 on Deadlines tab, which disappears when that deadline is paid
