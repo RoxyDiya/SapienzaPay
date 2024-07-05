@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'home_page.dart';
 import 'deadlines.dart';
-import 'profile_stud.dart';
 import 'utils.dart';
 
 void main() {
@@ -37,7 +36,7 @@ class _DeadlineDetailsState extends State<DeadlineDetailsPage> {
   final List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
     DeadlinesPage(),
-    ProfileScreen(),
+    PlaceholderWidget('Profile'),
   ];
 
   void _onItemTapped(int index) {
@@ -91,7 +90,7 @@ class _DeadlineDetailsState extends State<DeadlineDetailsPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Text('1° Tuition Fee',
+                    Text('2° Tuition Fee',
                         style: TextStyle(
                             fontSize: 26,
                             color: Color.fromARGB(255, 111, 20, 28))),
@@ -119,13 +118,6 @@ class _DeadlineDetailsState extends State<DeadlineDetailsPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Regional Tax', style: TextStyle(fontSize: 20)),
-                    Text('€140', style: TextStyle(fontSize: 20)),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
                     Text('Postage Stamp', style: TextStyle(fontSize: 20)),
                     Text('€16', style: TextStyle(fontSize: 20)),
                   ],
@@ -133,35 +125,23 @@ class _DeadlineDetailsState extends State<DeadlineDetailsPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('First Installment', style: TextStyle(fontSize: 20)),
-                    Text('€550', style: TextStyle(fontSize: 20)),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('Penalty Fee', style: TextStyle(fontSize: 20)),
-                    Text('€60', style: TextStyle(fontSize: 20)),
+                    Text('Third Installment', style: TextStyle(fontSize: 20)),
+                    Text('€789', style: TextStyle(fontSize: 20)),
                   ],
                 ),
                 SizedBox(height: 200),
                 Text(
-                  'DUE ON 15/11/2023',
+                  'DUE ON 10/03/2024',
                   style: TextStyle(
                     color: Color.fromARGB(255, 111, 20, 28),
                     fontWeight: FontWeight.bold,
                     fontSize: 22,
                   ),
                 ),
-                Text(
-                  '(Expired)',
-                  style: TextStyle(
-                      color: CupertinoColors.inactiveGray, fontSize: 22),
-                ), //only put this one if it's overdue
                 SizedBox(height: 30),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [Text('€766')],
+                  children: [Text('€805')],
                 ),
                 Center(
                   child: ElevatedButton(

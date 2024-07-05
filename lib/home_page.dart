@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/widgets.dart';
-import 'deadlines.dart';
+import 'package:intl/intl.dart';
+import 'utils.dart';
 
 void main() {
   runApp(const MyApp());
@@ -34,7 +34,7 @@ class HomePageState extends State<HomePage> {
 
   final List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
-    DeadlinesPage(),
+    PlaceholderWidget('Deadlines'),
     PlaceholderWidget('Profile'),
   ];
 
@@ -85,6 +85,25 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   bool showUniversityTransactions = false;
   bool isUniBankAccountSelected = true;
+
+  @override
+  void initState() {
+    super.initState();
+    // Adding initial university transactions to all transactions
+    allTransactions.addAll(universityTransactions);
+  }
+
+  void _addUniversityTransaction(String title, String amount, DateTime date) {
+    setState(() {
+      Map<String, String> newTransaction = {
+        'title': title,
+        'amount': amount,
+        'date': DateFormat('d MMMM yyyy').format(date),
+      };
+      universityTransactions.insert(0, newTransaction); // Insert at the beginning
+      allTransactions.insert(0, newTransaction); // Insert at the beginning for all transactions as well
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -145,7 +164,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 SizedBox(height: 25),
                 isUniBankAccountSelected
-                    ? _buildBankAccountCard()
+                    ? _buildBankAccountCard(context)
                     : _buildAllCardsView(),
               ],
             ),
@@ -159,8 +178,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 return Container(
                   decoration: BoxDecoration(
                     color: CupertinoColors.white,
-                    borderRadius:
-                        BorderRadius.vertical(top: Radius.circular(20)),
+                    borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.grey.withOpacity(0.3),
@@ -263,12 +281,18 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       Expanded(
-                        child: ListView(
+                        child: ListView.builder(
                           controller: scrollController,
-                          padding: EdgeInsets.zero, // Remove any padding
-                          children: showUniversityTransactions
-                              ? universityTransactions
-                              : allTransactions,
+                          padding: EdgeInsets.zero,
+                          itemCount: showUniversityTransactions
+                              ? universityTransactions.length
+                              : allTransactions.length,
+                          itemBuilder: (context, index) {
+                            final transaction = showUniversityTransactions
+                                ? universityTransactions[index]
+                                : allTransactions[index];
+                            return _buildTransactionItem(transaction);
+                          },
                         ),
                       ),
                     ],
@@ -281,7 +305,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildBankAccountCard() {
+  Widget _buildBankAccountCard(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(25),
       decoration: BoxDecoration(
@@ -296,461 +320,70 @@ class _HomeScreenState extends State<HomeScreen> {
             style: TextStyle(
                 color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
           ),
-          SizedBox(height: 10),
+          SizedBox(height: 15),
           Text(
-            'Card * * ** 1234',
-            style: TextStyle(
-                color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          SizedBox(height: 20),
-          Text(
-            '€ 2500,00',
+            '\€ 1,000.00',
             style: TextStyle(
                 color: Colors.white, fontSize: 35, fontWeight: FontWeight.bold),
           ),
-          SizedBox(height: 20),
-          Align(
-            alignment: Alignment.bottomLeft,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.grey.withOpacity(0.3),
-                borderRadius: BorderRadius.circular(20), // Adjust the radius value as needed
-              ),
-              child: CupertinoButton(
-                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                child: const Text(
-                  'Add money',
-                  style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+          SizedBox(height: 15),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              CupertinoButton(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                onPressed: () {},
+                child: Text(
+                  'Transactions',
+                  style: TextStyle(color: Colors.black),
                 ),
-                onPressed: () => _showAddMoneyModal(context),
               ),
-            ),
+            ],
           ),
         ],
       ),
     );
   }
 
- Widget _buildAllCardsView() {
-    return Stack(
-      alignment: Alignment.bottomCenter,
-      children: [
-        Container(
-          width: 500,
-          height: 370,
-          padding: EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: Colors.purple,
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Text(
-                    'CARD N°1',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(width: 210), // Adjust the spacing as needed
-                  Image.asset(
-                    'assets/mastercardlogo.png', // Replace with the path to your image
-                    width: 40,  // Set the desired width
-                    height: 40, // Set the desired height
-                    //color: Colors.white, // Apply color filter if needed
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-        Container(
-          width: 500,
-          height: 310,
-          padding: EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: Colors.pink,
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Text(
-                    'CARD N°2',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(width: 210), // Adjust the spacing as needed
-                  Image.asset(
-                    'assets/visalogo.png', // Replace with the path to your image
-                    width: 40,  // Set the desired width
-                    height: 40, // Set the desired height
-                    //color: Colors.white, // Apply color filter if needed
-                  ),
-                ],
-              ),              
-            ],
-          ),
-        ),
-        Container(
-          width: 500,
-          height: 250,
-          padding: EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: Colors.blue,
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Text(
-                    'CARD N°2',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(width: 210), // Adjust the spacing as needed
-                  Image.asset(
-                    'assets/mastercardlogo.png', // Replace with the path to your image
-                    width: 40,  // Set the desired width
-                    height: 40, // Set the desired height
-                    //color: Colors.white, // Apply color filter if needed
-                  ),
-                ],
-              ),   
-              SizedBox(height: 110),
-              Text(
-                'Firdaous Hajjaji                                03/30',
-                style: TextStyle(
-                    color: Colors.white, fontSize: 18, fontWeight: FontWeight.w500),
-              ),
-              SizedBox(height: 5),
-              Text(
-                '**** **** **** 0886',
-                style: TextStyle(
-                    color: Colors.white, fontSize: 18, fontWeight: FontWeight.w500),
-              ),              
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-    void _showAddMoneyModal(BuildContext context) {
-    showCupertinoModalPopup(
-      context: context,
-      builder: (context) {
-        return AddMoneyModal();
-      },
-    );
-  }
-}
-
-class AddMoneyModal extends StatefulWidget {
-  @override
-  _AddMoneyModalState createState() => _AddMoneyModalState();
-}
-
-
-class _AddMoneyModalState extends State<AddMoneyModal> {
-  int? _selectedOption;
-
-    @override
-  Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
-      navigationBar: CupertinoNavigationBar(
-        middle: Text(
-          'Add Money',
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
-        ),
-        leading: CupertinoButton(
-          padding: EdgeInsets.zero,
-          child: Text('Cancel', style: TextStyle(color: Colors.black)),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        trailing: _selectedOption != null
-            ? CupertinoButton(
-                padding: EdgeInsets.zero,
-                child: Text('Next', style: TextStyle(color: Colors.black)),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                      builder: (context) => EnterAmountScreen(
-                        selectedOption: _selectedOption!,
-                      ),
-                    ),
-                  );
-                },
-              )
-            : null,
-      ),
-      child: Padding(
-        padding: const EdgeInsets.only(top: 100.0), // Adjust the padding value as needed
-        child: Column(
-          children: [
-            _buildOptionRow(0, 'Uni Bank Account'),
-            _buildOptionRow(1, '**** **** **** 0886'),
-            _buildOptionRow(2, '**** **** **** 5678'),
-          ],
-        ),
+  Widget _buildAllCardsView() {
+    return Expanded(
+      child: GridView.builder(
+        gridDelegate:
+            SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+        itemCount: 4, // For now, just displaying 4 placeholder cards
+        itemBuilder: (context, index) {
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: PlaceholderWidget('Card ${index + 1}'),
+          );
+        },
       ),
     );
   }
 
-  Widget _buildOptionRow(int index, String text) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _selectedOption = index;
-        });
-      },
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: 20, horizontal: 16),
-        decoration: BoxDecoration(
-          border: Border(
-            bottom: BorderSide(
-              color: Color.fromARGB(255, 209, 209, 214),
-              width: 0.5,
-            ),
-          ),
-        ),
-        child: Row(
-          children: [
-            Icon(
-              _selectedOption == index
-                  ? CupertinoIcons.check_mark_circled_solid
-                  : CupertinoIcons.circle,
-              color: _selectedOption == index
-                  ? Color.fromARGB(255, 130, 36, 61)
-                  : CupertinoColors.inactiveGray,
-            ),
-            SizedBox(width: 10),
-            Text(
-              text,
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.black, // Set text color to black
-                fontWeight: FontWeight.normal, // Set text weight to normal (not bold)
-              ),
-            ),
-          ],
-        ),
+  Widget _buildTransactionItem(Map<String, String> transaction) {
+    return ListTile(
+      leading: Icon(Icons.account_balance_wallet),
+      title: Text(
+        transaction['title'] ?? '',
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+      ),
+      subtitle: Text(transaction['date'] ?? ''),
+      trailing: Text(
+        transaction['amount'] ?? '',
+        style: TextStyle(
+            color: double.parse(transaction['amount']!.replaceAll(
+                        new RegExp(r'[^\w\s]+'),'')) < 0
+                ? Colors.red
+                : Colors.green,
+            fontWeight: FontWeight.bold,
+            fontSize: 16),
       ),
     );
   }
 }
-
-class EnterAmountScreen extends StatelessWidget {
-  final int selectedOption;
-
-  EnterAmountScreen({required this.selectedOption});
-
-  @override
-  Widget build(BuildContext context) {
-    String selectedPaymentMethod;
-    switch (selectedOption) {
-      case 0:
-        selectedPaymentMethod = 'Uni Bank Account';
-        break;
-      case 1:
-        selectedPaymentMethod = '**** **** **** 0886';
-        break;
-      case 2:
-        selectedPaymentMethod = '**** **** **** 5678';
-        break;
-      default:
-        selectedPaymentMethod = 'Unknown';
-    }
-
-    return CupertinoPageScaffold(
-      navigationBar: CupertinoNavigationBar(
-        middle: Text(
-          'Add Money',
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
-        ),
-        leading: CupertinoButton(
-          padding: EdgeInsets.zero,
-          child: Text('Cancel', style: TextStyle(color: Colors.black)),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        trailing: Container(),
-      ),
-      child: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Remove the 'Enter Amount' title
-              SizedBox(height: 50),
-              Column(
-  crossAxisAlignment: CrossAxisAlignment.start,
-  children: [
-    // 'From' Section
-    Text(
-      'From:',
-      style: TextStyle(
-        fontSize: 20,
-        fontWeight: FontWeight.bold,
-        color: Colors.grey,
-      ),
-    ),
-    SizedBox(height: 10),
-    Container(
-      width: double.infinity,
-      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-      decoration: BoxDecoration(
-        color: CupertinoColors.systemGrey6,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(
-          color: CupertinoColors.systemGrey,
-          width: 0.5,
-        ),
-      ),
-      child: Text(
-        selectedPaymentMethod,
-        style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.w500),
-      ),
-    ),
-    SizedBox(height: 26),
-    // Center the Icon vertically
-    SizedBox(
-      height: 26, // Adjust the height as needed for vertical alignment
-      child: Center(
-        child: Icon(
-          CupertinoIcons.arrow_down,
-          size: 24,
-          color: Colors.black,
-        ),
-      ),
-    ),
-    SizedBox(height: 10),
-    // 'To' Section
-    Text(
-      'To:',
-      style: TextStyle(
-        fontSize: 20,
-        fontWeight: FontWeight.bold,
-        color: Colors.grey,
-      ),
-    ),
-    SizedBox(height: 10),
-    Container(
-      width: double.infinity,
-      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-      decoration: BoxDecoration(
-        color: CupertinoColors.systemGrey6,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(
-          color: CupertinoColors.systemGrey,
-          width: 0.5,
-        ),
-      ),
-      child: Text(
-        'University Bank Account', // Replace with actual 'To' text
-        style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.w500),
-      ),
-    ),
-  ],
-),
-
-
-              SizedBox(height: 80),
-              CupertinoTextField(
-                placeholder: 'Amount',
-                keyboardType: TextInputType.number,
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 22),
-                padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-                decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 242, 242, 246),
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
-                    color: CupertinoColors.systemGrey,
-                    width: 0.4,
-                  ),
-                ),
-              ),
-              SizedBox(height: 320),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-
-  List<Widget> get universityTransactions {
-    return [
-      _buildTransactionItem('University Fee', '€300.00', '12 March 2023'),
-      _buildTransactionItem('Library Fee', '€50.00', '15 March 2023'),
-      _buildTransactionItem('University Fee', '€300.00', '12 March 2023'),
-      _buildTransactionItem('Library Fee', '€50.00', '15 March 2023'),
-      _buildTransactionItem('University Fee', '€300.00', '12 March 2023'),
-      _buildTransactionItem('Library Fee', '€50.00', '15 March 2023'),
-      _buildTransactionItem('University Fee', '€300.00', '12 March 2023'),
-      _buildTransactionItem('Library Fee', '€50.00', '15 March 2023'),
-      _buildTransactionItem('University Fee', '€300.00', '12 March 2023'),
-      _buildTransactionItem('Library Fee', '€50.00', '15 March 2023'),
-      _buildTransactionItem('University Fee', '€300.00', '12 March 2023'),
-      _buildTransactionItem('Library Fee', '€50.00', '15 March 2023'),
-      _buildTransactionItem('University Fee', '€300.00', '12 March 2023'),
-      _buildTransactionItem('Library Fee', '€50.00', '15 March 2023'),
-    ];
-  }
-
-  List<Widget> get allTransactions {
-    return [
-      _buildTransactionItem('University Fee', '€300.00', '12 March 2023'),
-      _buildTransactionItem('Grocery', '€50.00', '10 March 2023'),
-      _buildTransactionItem('Cinema', '€15.00', '11 March 2023'),
-      ...universityTransactions,
-    ];
-  }
-
-  Widget _buildTransactionItem(String title, String amount, String date) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
-      padding: EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        border: Border.all(color: Color.fromARGB(232, 217, 217, 217)),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(title, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-              Text(date, style: TextStyle(fontSize: 14, color: Colors.grey)),
-            ],
-          ),
-          Text(amount, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-        ],
-      ),
-    );
-  }
-
 
 class PlaceholderWidget extends StatelessWidget {
   final String text;
@@ -762,7 +395,7 @@ class PlaceholderWidget extends StatelessWidget {
     return Center(
       child: Text(
         text,
-        style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
+        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
       ),
     );
   }
