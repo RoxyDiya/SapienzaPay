@@ -603,6 +603,7 @@ class _AddMoneyModalState extends State<AddMoneyModal> {
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: CupertinoTextField(
+                autofocus: _selectedOption != null,
                 placeholder: 'Enter amount',
                 keyboardType: TextInputType.number,
                 textAlign: TextAlign.start,
