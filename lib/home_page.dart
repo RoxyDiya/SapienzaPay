@@ -126,7 +126,7 @@ class _HomeScreenState extends State<HomeScreen> {
     // Listen for changes in the DraggableScrollableController
     _draggableController.addListener(() {
       setState(() {
-        
+         isSheetExpanded = _draggableController.size > 0.4;
       });
     });
   }
