@@ -102,6 +102,46 @@ class _HomeScreenState extends State<HomeScreen> {
       'amount': '€50.00',
       'date': '15 March 2023',
     },
+    {
+      'title': 'University Fee',
+      'amount': '€300.00',
+      'date': '12 March 2023',
+    },
+    {
+      'title': 'Library Fee',
+      'amount': '€50.00',
+      'date': '15 March 2023',
+    },
+    {
+      'title': 'University Fee',
+      'amount': '€300.00',
+      'date': '12 March 2023',
+    },
+    {
+      'title': 'Library Fee',
+      'amount': '€50.00',
+      'date': '15 March 2023',
+    },
+    {
+      'title': 'University Fee',
+      'amount': '€300.00',
+      'date': '12 March 2023',
+    },
+    {
+      'title': 'Library Fee',
+      'amount': '€50.00',
+      'date': '15 March 2023',
+    },
+    {
+      'title': 'University Fee',
+      'amount': '€300.00',
+      'date': '12 March 2023',
+    },
+    {
+      'title': 'Library Fee',
+      'amount': '€50.00',
+      'date': '15 March 2023',
+    },
   ];
 
   List<Map<String, String>> allTransactions = [
@@ -215,90 +255,134 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ),
-          if (isUniBankAccountSelected)
-            DraggableScrollableSheet(
-              initialChildSize: 0.4,
-              minChildSize: 0.4,
-              maxChildSize: 0.93,
-              controller: _draggableController,
-              builder: (context, scrollController) {
-                _scrollController = scrollController; // Attach the scroll controller
-                return Container(
-                  decoration: BoxDecoration(
-                    color: CupertinoColors.white,
-                    borderRadius:
-                        BorderRadius.vertical(top: Radius.circular(20)),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.3),
-                        spreadRadius: 1,
-                        blurRadius: 3,
-                        offset: Offset(0, 1),
+                  if (isUniBankAccountSelected)
+                    DraggableScrollableSheet(
+                      initialChildSize: 0.4,
+                      minChildSize: 0.4,
+                      maxChildSize: 0.93,
+                      controller: _draggableController,
+                      builder: (context, scrollController) {
+                        _scrollController = scrollController; // Attach the scroll controller
+                        return Container(
+                          decoration: BoxDecoration(
+                          color: CupertinoColors.white,
+                          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.3),
+                              spreadRadius: 1,
+                              blurRadius: 3,
+                              offset: Offset(0, 1),
+                        ),
+                      ],
+                    ),
+                    child: Stack(
+                      children: [
+                        Column(
+                          children: [
+                            SizedBox(height: 140), // Additional spacing before the ListView
+                            Expanded(
+                              child: ListView.builder(
+                              controller: scrollController,
+                              padding: EdgeInsets.zero,
+                              itemCount: showUniversityTransactions
+                                ? universityTransactions.length
+                                : allTransactions.length,
+                              itemBuilder: (context, index) {
+                                final transaction = showUniversityTransactions
+                                  ? universityTransactions[index]
+                                  : allTransactions[index];
+                                return _buildTransactionItem(transaction);
+                              },
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-                      GestureDetector(
-                        onVerticalDragUpdate: (details) {
-                          // Forward the drag updates to the scrollController
-                          scrollController.position.moveTo(
-                            scrollController.position.pixels -
-                                details.primaryDelta!,
-                          );
-                        },
-                        child: Container(
-                          padding: EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0),
+                      Positioned(
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        child: GestureDetector(
+                          onVerticalDragUpdate: (details) {
+                            double newSize = _draggableController.size -
+                              details.primaryDelta! / context.size!.height;
+                            newSize = newSize.clamp(0.0, 1.0); // Ensure the size is within [0, 1]
+                            _draggableController.jumpTo(newSize);
+                            },
+                          onVerticalDragEnd: (details) {
+                            double newSize = _draggableController.size -
+                                details.primaryVelocity! / context.size!.height;
+                            newSize = newSize.clamp(0.0, 1.0); // Ensure the size is within [0, 1]
+                            _draggableController.animateTo(
+                              newSize,
+                              duration: Duration(milliseconds: 300),
+                              curve: Curves.easeOut,
+                            );
+                          },
+                          child: Container(
+                            padding: EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0),
+                            decoration: BoxDecoration(
+                              color: CupertinoColors.white,
+                              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.white.withOpacity(0.3),
+                                  spreadRadius: 1,
+                                  blurRadius: 3,
+                                  offset: Offset(0, 1),
+                                ),
+                              ],
+                            ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Center(
-                                child: Container(
-                                  height: 5,
-                                  width: 40,
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey,
-                                    borderRadius: BorderRadius.circular(10),
+                                Center(
+                                  child: Container(
+                                    height: 5,
+                                    width: 40,
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    margin: EdgeInsets.only(top: 10, bottom: 10),
                                   ),
-                                  margin: EdgeInsets.only(top: 10, bottom: 10),
                                 ),
-                              ),
-                              Container(
-                                width: double.infinity,
-                                padding: EdgeInsets.symmetric(horizontal: 10),
-                                child: CupertinoSlidingSegmentedControl<int>(
-                                  children: {
-                                    0: Padding(
-                                      padding: const EdgeInsets.symmetric(vertical: 10),
-                                      child: Text(
-                                        'All',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 18,
-                                            color: showUniversityTransactions
+                                Container(
+                                  width: double.infinity,
+                                  padding: EdgeInsets.symmetric(horizontal: 10),
+                                  child: CupertinoSlidingSegmentedControl<int>(
+                                    children: {
+                                      0: Padding(
+                                        padding: const EdgeInsets.symmetric(vertical: 10),
+                                        child: Text(
+                                          'All',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 18,
+                                              color: showUniversityTransactions
                                                 ? Colors.black
                                                 : CupertinoColors.black),
+                                          ),
                                       ),
-                                    ),
-                                    1: Padding(
-                                      padding: const EdgeInsets.symmetric(vertical: 10),
-                                      child: Text(
-                                        'University',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 18,
-                                            color: showUniversityTransactions
+                                      1: Padding(
+                                        padding: const EdgeInsets.symmetric(vertical: 10),
+                                        child: Text(
+                                          'University',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 18,
+                                              color: showUniversityTransactions
                                                 ? CupertinoColors.black
                                                 : Colors.black),
+                                        ),
                                       ),
-                                    ),
-                                  },
-                                  onValueChanged: (int? val) {
-                                    setState(() {
-                                      showUniversityTransactions = val == 1;
-                                    });
-                                  },
-                                  groupValue: showUniversityTransactions ? 1 : 0,
+                                    },
+                                    onValueChanged: (int? val) {
+                                      setState(() {
+                                        showUniversityTransactions = val == 1;
+                                      });
+                                    },
+                                    groupValue: showUniversityTransactions ? 1 : 0,
                                   backgroundColor: CupertinoColors.lightBackgroundGray,
                                   thumbColor: CupertinoColors.white,
                                 ),
@@ -328,26 +412,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                       ),
-                      Expanded(
-                        child: ListView.builder(
-                          controller: scrollController,
-                          padding: EdgeInsets.zero,
-                          itemCount: showUniversityTransactions
-                              ? universityTransactions.length
-                              : allTransactions.length,
-                          itemBuilder: (context, index) {
-                            final transaction = showUniversityTransactions
-                                ? universityTransactions[index]
-                                : allTransactions[index];
-                            return _buildTransactionItem(transaction);
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
         ],
       ),
     );
