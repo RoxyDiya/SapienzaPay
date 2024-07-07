@@ -81,15 +81,16 @@ class HomePageState extends State<HomePage> {
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
-  
 }
 
 class _HomeScreenState extends State<HomeScreen> {
   bool showUniversityTransactions = false;
   bool isUniBankAccountSelected = true;
   double balance = 2500.00;
-
- // Dynamic transactions list for university and all
+  ScrollController _scrollController = ScrollController();
+  DraggableScrollableController _draggableController = DraggableScrollableController();
+  bool isSheetExpanded = false; // Track the state of the DraggableScrollableSheet
+  
   List<Map<String, String>> universityTransactions = [
     {
       'title': 'University Fee',
@@ -121,21 +122,34 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     // Adding initial university transactions to all transactions
     allTransactions.addAll(universityTransactions);
+
+    // Listen for changes in the DraggableScrollableController
+    _draggableController.addListener(() {
+      setState(() {
+        
+      });
+    });
   }
 
- void _addUniversityTransaction(String title, String amount, DateTime date) {
-  setState(() {
-    Map<String, String> newTransaction = {
-      'title': title,
-      'amount': amount,
-      'date': DateFormat('d MMMM yyyy').format(date),
-    };
-    universityTransactions.insert(0, newTransaction); // Insert at the beginning
-    allTransactions.insert(0, newTransaction); // Insert at the beginning for all transactions as well
-  });
-}
+  void _addUniversityTransaction(String title, String amount, DateTime date) {
+    setState(() {
+      Map<String, String> newTransaction = {
+        'title': title,
+        'amount': amount,
+        'date': DateFormat('d MMMM yyyy').format(date),
+      };
+      universityTransactions.insert(0, newTransaction); // Insert at the beginning
+      allTransactions.insert(0, newTransaction); // Insert at the beginning for all transactions as well
+    });
+  }
 
- 
+  void _toggleSheetSize() {
+    if (_draggableController.size > 0.4) {
+      _draggableController.jumpTo(0.4); // Minimize the sheet
+    } else {
+      _draggableController.jumpTo(1.0); // Fully expand the sheet
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -206,7 +220,9 @@ class _HomeScreenState extends State<HomeScreen> {
               initialChildSize: 0.4,
               minChildSize: 0.4,
               maxChildSize: 0.93,
+              controller: _draggableController,
               builder: (context, scrollController) {
+                _scrollController = scrollController; // Attach the scroll controller
                 return Container(
                   decoration: BoxDecoration(
                     color: CupertinoColors.white,
@@ -300,11 +316,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                   CupertinoButton(
                                     padding: EdgeInsets.all(7.0),
-                                    onPressed: () {},
+                                    onPressed: _toggleSheetSize,
                                     child: Text(
-                                      'View All',
-                                      style: TextStyle(
-                                          color: Colors.grey, fontSize: 16),
+                                      isSheetExpanded ? 'Minimize' : 'View All',
+                                      style: TextStyle(color: Colors.grey, fontSize: 16),
                                     ),
                                   ),
                                 ],
@@ -313,7 +328,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                       ),
-                    Expanded(
+                      Expanded(
                         child: ListView.builder(
                           controller: scrollController,
                           padding: EdgeInsets.zero,
@@ -337,6 +352,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+  
   @override
   Widget _buildBankAccountCard(BuildContext context) {
     return Container(
