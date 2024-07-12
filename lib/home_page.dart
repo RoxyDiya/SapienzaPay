@@ -739,6 +739,7 @@ class _AddMoneyModalState extends State<AddMoneyModal> {
                 fontSize: 18,
                 color: Colors.black,
                 fontWeight: FontWeight.normal,
+                decoration: TextDecoration.none
               ),
             ),
           ],
