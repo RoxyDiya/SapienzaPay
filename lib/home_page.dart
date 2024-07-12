@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:intl/intl.dart';
+//import 'package:intl/intl.dart';
 import 'utils.dart';
 
 void main() {
@@ -98,7 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
       Map<String, String> newTransaction = {
         'title': title,
         'amount': amount,
-        'date': DateFormat('d MMMM yyyy').format(date),
+        //'date': DateFormat('d MMMM yyyy').format(date),
       };
       universityTransactions.insert(0, newTransaction); // Insert at the beginning
       allTransactions.insert(0, newTransaction); // Insert at the beginning for all transactions as well
