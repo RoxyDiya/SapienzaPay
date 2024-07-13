@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 //import 'package:intl/intl.dart';
+import 'deadlines.dart';
+
 import 'utils.dart';
 
 void main() {
@@ -34,7 +36,7 @@ class HomePageState extends State<HomePage> {
 
   final List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
-    PlaceholderWidget('Deadlines'),
+    DeadlinesPage(),
     PlaceholderWidget('Profile'),
   ];
 

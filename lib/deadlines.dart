@@ -100,18 +100,21 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
         GestureDetector(
           onTap: () => _onDeadlineTap(deadline),
           onLongPress: () => _onDeadlineLongPress(deadline),
-          child: Container(
+          child: AnimatedContainer(
+            duration: Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
             decoration: BoxDecoration(
               color: isOverdue ? Color.fromARGB(33, 236, 51, 57) : Colors.white,
               borderRadius: BorderRadius.circular(0.0),
             ),
             width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 30),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 if (_isSelecting)
                   Padding(
-                    padding: const EdgeInsets.only(right: 8),
+                    padding: const EdgeInsets.only(right: 20), // Adjust padding as needed
                     child: Icon(
                       isSelected
                           ? CupertinoIcons.check_mark_circled_solid
@@ -119,6 +122,7 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
                       color: isSelected
                           ? Color.fromARGB(255, 130, 36, 61)
                           : CupertinoColors.inactiveGray,
+                      size: 30, // Increase icon size
                     ),
                   ),
                 Column(
@@ -144,6 +148,7 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
                     SizedBox(height: 8),
                   ],
                 ),
+                SizedBox(width: 30), // Adjust spacing as needed
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -160,7 +165,9 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
                     ),
                   ],
                 ),
-                const Icon(CupertinoIcons.right_chevron),
+                Spacer(),
+                if (!_isSelecting)
+                  const Icon(CupertinoIcons.right_chevron),
               ],
             ),
           ),
@@ -215,8 +222,7 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
               ),
               const SizedBox(height: 15),
               Column(
-                children:
-                    overdueFees.map((fee) => buildDeadlineItem(fee, true)).toList(),
+                children: overdueFees.map((fee) => buildDeadlineItem(fee, true)).toList(),
               ),
               const SizedBox(height: 40),
               const Text(
@@ -229,9 +235,7 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
               ),
               const SizedBox(height: 15),
               Column(
-                children: upcomingFees
-                    .map((fee) => buildDeadlineItem(fee, false))
-                    .toList(),
+                children: upcomingFees.map((fee) => buildDeadlineItem(fee, false)).toList(),
               ),
               const SizedBox(height: 190),
               Center(
