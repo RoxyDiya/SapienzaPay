@@ -2,11 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'home_page.dart';
 import 'deadlines.dart';
-import 'profile_stud.dart';
-import 'utils.dart';
-import 'package:flutter/cupertino.dart';
-import 'home_page.dart';
-import 'deadlines.dart';
 import 'profile_stud.dart'; // Assuming profile_stud.dart contains ProfileScreen
 
 class DeadlineDetailsPage extends StatefulWidget {
@@ -16,19 +11,6 @@ class DeadlineDetailsPage extends StatefulWidget {
 
   @override
   _DeadlineDetailsPageState createState() => _DeadlineDetailsPageState();
-}
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        primaryColor: const Color.fromARGB(255, 111, 20, 28),
-      ),
-      home: const HomePage(),
-    );
-  }
 }
 
 class _DeadlineDetailsPageState extends State<DeadlineDetailsPage> {
@@ -60,102 +42,123 @@ class _DeadlineDetailsPageState extends State<DeadlineDetailsPage> {
               children: [
                 Container(
                   color: Color.fromARGB(255, 130, 36, 61),
-                  padding: EdgeInsets.symmetric(vertical: 15),
-                  child: Center(
-                    child: CircleAvatar(
-                      radius: 40,
-                      backgroundImage: NetworkImage('https://via.placeholder.com/100'),
-                    ),
-                  ),
-                ),
-                Container(
-                  color: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Center(
-                        child: Column(
-                          children: [
-                            Text(
-                              '1° Tuition Fee',
-                              style: TextStyle(
-                                fontSize: 26,
-                                color: Color.fromARGB(255, 111, 20, 28),
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            SizedBox(height: 10),
-                            Text(
-                              'A.A. Year: 23/24',
-                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-                            ),
-                            Text(
-                              'Status: Unpaid',
-                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 20),
-                      Divider(color: CupertinoColors.inactiveGray, thickness: 0.5),
-                      SizedBox(height: 10),
-                      _buildFeeRow('Regional Tax', '€140'),
-                      _buildFeeRow('Postage Stamp', '€16'),
-                      _buildFeeRow('First Installment', '€550'),
-                      _buildFeeRow('Penalty Fee', '€60'),
-                      SizedBox(height: 20),
-                      Center(
-                        child: Column(
-                          children: [
-                            Text(
-                              'DUE ON 15/11/2023',
-                              style: TextStyle(
-                                color: Color.fromARGB(255, 111, 20, 28),
-                                fontWeight: FontWeight.bold,
-                                fontSize: 22,
-                              ),
-                            ),
-                            Text(
-                              '(Expired)',
-                              style: TextStyle(
-                                color: CupertinoColors.inactiveGray,
-                                fontSize: 22,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 20),
-                      Center(
-                        child: Text(
-                          '€766',
-                          style: TextStyle(
-                            fontSize: 36,
-                            fontWeight: FontWeight.bold,
-                            color: Color.fromARGB(255, 111, 20, 28),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 20),
-                      Center(
-                        child: CupertinoButton.filled(
-                          onPressed: () {},
-                          child: const Text(
-                            'Pay Now',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 20.0),
-                        ),
-                      ),
-                    ],
-                  ),
+                  padding: EdgeInsets.symmetric(vertical: 60),
+                  width: double.infinity, // Ensure it stretches to the full width
                 ),
                 Expanded(
-                  child: Container(),
+                  child: SingleChildScrollView(
+                    child: Container(
+                      color: Colors.white,
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 15), // Add space for the CircleAvatar
+                          Text(
+                            '1° Tuition Fee',
+                            style: TextStyle(fontSize: 24,color: Color.fromARGB(255, 111, 20, 28),fontWeight: FontWeight.bold,),
+                          ),
+                          SizedBox(height: 10),
+                          Divider(color: CupertinoColors.inactiveGray, thickness: 0.5),
+                          SizedBox(height: 2),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'A.A. Year:',
+                                style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal, color: CupertinoColors.black),
+                              ),
+                              Text(
+                                '23/24',
+                                style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal, color: CupertinoColors.black),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 2),
+
+                          Divider(color: CupertinoColors.inactiveGray, thickness: 0.5),
+                          SizedBox(height: 2),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Status:',
+                                style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal, color: CupertinoColors.black),
+                              ),
+                              Text(
+                                'Unpaid',
+                                style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal, color: CupertinoColors.black),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 2),
+                          Divider(color: CupertinoColors.inactiveGray, thickness: 0.5),
+                          SizedBox(height: 10),
+                          _buildFeeRow('Regional Tax', '€140'),
+                          _buildFeeRow('Postage Stamp', '€16'),
+                          _buildFeeRow('First Installment', '€550'),
+                          _buildFeeRow('Penalty Fee', '€60'),
+                          SizedBox(height: 70),
+                          
+                                Text(
+                                  'DUE ON 15/11/2023',
+                                  style: TextStyle(
+                                    color: Color.fromARGB(255, 111, 20, 28),
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 22,
+                                  ),
+                                ),
+                                Text(
+                                  '(Expired)',
+                                  style: TextStyle(
+                                    color: CupertinoColors.inactiveGray,
+                                    fontWeight: FontWeight.normal,
+
+                                    fontSize: 22,
+                                  ),
+                                ),
+                              
+                          SizedBox(height: 50),
+                          Center(
+                            child: Text(
+                              '€766',
+                              style: TextStyle(
+                                fontSize: 36,
+                                fontWeight: FontWeight.w700,
+                                color: CupertinoColors.black,
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 20),
+                          Center(
+                            child: ElevatedButton(
+                              onPressed: () {},
+                              child: const Text(
+                    'Pay Now',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.normal,
+                      fontSize: 24,
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    fixedSize: Size.fromWidth(350),
+                    backgroundColor: const Color.fromARGB(255, 111, 20, 28),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 16.0, horizontal: 20.0),
+                    textStyle: const TextStyle(fontSize: 18),
+                  ),
+                            ),
+                          ),
+                          SizedBox(height: 40),
+
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
                 CupertinoTabBar(
                   items: const <BottomNavigationBarItem>[
@@ -184,6 +187,14 @@ class _DeadlineDetailsPageState extends State<DeadlineDetailsPage> {
               bottom: BorderSide.none, // Remove bottom shadow
             ),
           ),
+          Positioned(
+            top: 110,
+            left: MediaQuery.of(context).size.width / 2 - 45, // Adjust to center horizontally
+            child: CircleAvatar(
+              radius: 45,
+              backgroundImage: NetworkImage('https://via.placeholder.com/100'),
+            ),
+          ),
         ],
       ),
     );
@@ -197,11 +208,11 @@ class _DeadlineDetailsPageState extends State<DeadlineDetailsPage> {
         children: [
           Text(
             label,
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color.fromARGB(255, 111, 20, 28)),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal, color: CupertinoColors.black),
           ),
           Text(
             value,
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color.fromARGB(255, 111, 20, 28)),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal, color: CupertinoColors.black),
           ),
         ],
       ),
