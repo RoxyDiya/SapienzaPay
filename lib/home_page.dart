@@ -49,6 +49,8 @@ class HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     TextStyle labelStyle = TextStyle(fontSize: 12, fontWeight: FontWeight.w600);
     return Scaffold(
+      //backgroundColor: Colors.white,  // Set the background color you want here
+
       body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
