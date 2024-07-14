@@ -15,23 +15,23 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: Color.fromARGB(1000, 130, 36, 61),
       ),
-      home: const HomePage(),
+      home: const HomePage2(),
     );
   }
 }
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class HomePage2 extends StatefulWidget {
+  const HomePage2({super.key});
 
   @override
   HomePageState createState() => HomePageState();
 }
 
-class HomePageState extends State<HomePage> {
+class HomePageState extends State<HomePage2> {
   int _selectedIndex = 0;
 
   final List<Widget> _widgetOptions = <Widget>[
-    HomeScreen(),
+    HomeScreen2(),
     PlaceholderWidget('Deadlines'),
     ProfileScreen(), // Update this line to use the new ProfileScreen
   ];
@@ -75,12 +75,12 @@ class HomePageState extends State<HomePage> {
   }
 }
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen2 extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen2> {
   bool showUniversityTransactions = false;
   bool isUniBankAccountSelected = true;
 
