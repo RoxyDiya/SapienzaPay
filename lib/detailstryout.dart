@@ -14,7 +14,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      //title: 'sapienzapay';
       theme: ThemeData(
         primaryColor: Color.fromARGB(255, 111, 20, 28),
       ),
@@ -37,7 +36,7 @@ class _DeadlineDetailsState extends State<DeadlineDetailsPage> {
   final List<Widget> _widgetOptions = <Widget>[
     HomePage(),
     DeadlinesPage(),
-    PlaceholderWidget('Profile')
+    ProfileScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -48,7 +47,6 @@ class _DeadlineDetailsState extends State<DeadlineDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
-    TextStyle labelStyle = TextStyle(fontSize: 14, fontWeight: FontWeight.w600);
     return Scaffold(
       body: Column(
         children: [
@@ -79,9 +77,9 @@ class _DeadlineDetailsState extends State<DeadlineDetailsPage> {
                 ),
                 SizedBox(height: 20),
                 Center(
-                  child: Placeholder(
-                    fallbackHeight: 70,
-                    color: Colors.white,
+                  child: CircleAvatar(
+                    radius: 30,
+                    backgroundImage: AssetImage('assets/RedLogo.png'),
                   ), // sapienza Icon
                 ),
                 SizedBox(height: 20),
@@ -177,15 +175,11 @@ class _DeadlineDetailsState extends State<DeadlineDetailsPage> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      onPressed: selectedDeadlines.isNotEmpty
-                          ? () {
-                              payModal(context);
-                            }
-                          : null,
+                      onPressed: () {
+                        // Add your onPressed code here!
+                      },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: selectedDeadlines.isNotEmpty
-                            ? const Color.fromARGB(255, 111, 20, 28)
-                            : Colors.grey[500],
+                        backgroundColor: const Color.fromARGB(255, 111, 20, 28),
                         padding: const EdgeInsets.symmetric(
                             vertical: 16.0, horizontal: 20.0),
                         textStyle: const TextStyle(fontSize: 18),
@@ -198,23 +192,29 @@ class _DeadlineDetailsState extends State<DeadlineDetailsPage> {
           ),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-              icon: Icon(CupertinoIcons.house_fill), label: 'Home'),
-          BottomNavigationBarItem(
-              icon: Icon(CupertinoIcons.clock_fill), label: 'Deadlines'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Color.fromARGB(255, 130, 36, 51),
-        unselectedItemColor: Colors.grey,
-        onTap: _onItemTapped,
-        selectedLabelStyle: labelStyle,
-        unselectedLabelStyle: labelStyle.copyWith(color: Colors.grey),
-        iconSize: 25,
-      ),
     );
   }
 }
+
+class HomeScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(child: Text("Home Screen"));
+  }
+}
+
+class DeadlinesPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(child: Text("Deadlines Page"));
+  }
+}
+
+class ProfileScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(child: Text("Profile Screen"));
+  }
+}
+
+
