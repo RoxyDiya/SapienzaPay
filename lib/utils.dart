@@ -285,3 +285,189 @@ void processPayment(BuildContext context, Map<String, String> fee) {
     );
   }
 }
+
+
+
+void _showAddMoneyModal(BuildContext context) {
+    showCupertinoModalPopup(
+      context: context,
+      builder: (context) => AddMoneyModal(
+        onAmountAdded: (amount) {
+          setState(() {
+            balance += amount;
+            // Adding a new university transaction
+            _addUniversityTransaction('New transaction', '€${amount.toStringAsFixed(2)}', DateTime.now());
+          });
+        },
+      ),
+    );
+  }
+
+class AddMoneyModal extends StatefulWidget {
+  final Function(double) onAmountAdded;
+
+  AddMoneyModal({required this.onAmountAdded});
+
+  @override
+  _AddMoneyModalState createState() => _AddMoneyModalState();
+}
+
+class _AddMoneyModalState extends State<AddMoneyModal> {
+  int? _selectedOption;
+  String _amount = '';
+  bool _isAmountValid = false;
+  bool _showError = false;
+
+  void _updateAmount(String value) {
+    setState(() {
+      _amount = value;
+      _isAmountValid = double.tryParse(value) != null && double.parse(value) > 0;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CupertinoPageScaffold(
+      navigationBar: CupertinoNavigationBar(
+        middle: Text(
+          'Add Money',
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+        ),
+        leading: CupertinoButton(
+          padding: EdgeInsets.zero,
+          child: Text('Cancel', style: TextStyle(color: Colors.black)),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        trailing: _isAmountValid
+            ? CupertinoButton(
+                padding: EdgeInsets.zero,
+                child: Text('Next', style: TextStyle(color: Colors.black)),
+                onPressed: () {
+                  widget.onAmountAdded(double.parse(_amount));
+                  _showDoneOverlay(context);
+                },
+              )
+            : null,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.only(top: 100.0),
+        child: Column(
+          children: [
+            _buildOptionRow(0, '**** **** **** 1928'),
+            _buildOptionRow(1, '**** **** **** 0886'),
+            _buildOptionRow(2, '**** **** **** 5678'),
+            SizedBox(height: 20),
+            if (_showError)
+              Text(
+                'Choose an option before entering an amount',
+                style: TextStyle(color: Colors.red, fontSize: 14),
+              ),
+            SizedBox(height: 10),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: CupertinoTextField(
+                autofocus: _selectedOption != null,
+                placeholder: 'Enter amount',
+                keyboardType: TextInputType.number,
+                textAlign: TextAlign.start,
+                style: TextStyle(fontSize: 18),
+                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                decoration: BoxDecoration(
+                  color: Color.fromARGB(255, 242, 242, 246),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: CupertinoColors.systemGrey,
+                    width: 0.4,
+                  ),
+                ),
+                enabled: _selectedOption != null,
+                onChanged: _updateAmount,
+                onTap: () {
+                  if (_selectedOption == null) {
+                    setState(() {
+                      _showError = true;
+                    });
+                  }
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildOptionRow(int index, String text) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _selectedOption = index;
+          _showError = false;
+        });
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(
+              color: CupertinoColors.systemGrey4,
+              width: 0.5,
+            ),
+          ),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              _selectedOption == index
+                  ? CupertinoIcons.check_mark_circled_solid
+                  : CupertinoIcons.circle,
+              color: _selectedOption == index
+                  ? Color.fromARGB(255, 130, 36, 61)
+                  : CupertinoColors.inactiveGray,
+            ),
+            SizedBox(width: 10),
+            Text(
+              text,
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.black,
+                fontWeight: FontWeight.normal,
+                decoration: TextDecoration.none
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showDoneOverlay(BuildContext context) {
+    showCupertinoDialog(
+      context: context,
+      builder: (_) => CupertinoAlertDialog(
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              CupertinoIcons.check_mark_circled,
+              color: CupertinoColors.systemGrey,
+              size: 100,
+            ),
+            SizedBox(height: 10),
+            Text(
+              'Done',
+              style: TextStyle(fontSize: 24),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    Future.delayed(Duration(seconds: 2), () {
+      Navigator.of(context).pop();
+      Navigator.of(context).pop();
+    });
+  }
+}
