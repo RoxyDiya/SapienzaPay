@@ -33,11 +33,12 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
   int _selectedIndex = 1;
   bool _isSelecting = false;
   Set<Map<String, String>> _selectedDeadlines = {};
+  double _totalAmount = 0.0;
 
   final List<Widget> _widgetOptions = <Widget>[
     HomePage(),
     DeadlinesPage(),
-    PlaceholderWidget('Profile'),
+    ProfileScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -65,6 +66,7 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
     setState(() {
       _isSelecting = true;
       _selectedDeadlines.add(deadline);
+      _updateTotalAmount();
     });
   }
 
@@ -72,12 +74,20 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
     setState(() {
       if (_selectedDeadlines.contains(deadline)) {
         _selectedDeadlines.remove(deadline);
-        if (_selectedDeadlines.isEmpty) {
-          _isSelecting = false;
-        }
       } else {
         _selectedDeadlines.add(deadline);
       }
+      _updateTotalAmount();
+
+      if (_selectedDeadlines.isEmpty) {
+        _isSelecting = false;
+      }
+    });
+  }
+
+  void _updateTotalAmount() {
+    _totalAmount = _selectedDeadlines.fold(0.0, (sum, deadline) {
+      return sum + double.parse(deadline['amount']!.replaceAll('€', '').trim());
     });
   }
 
@@ -85,6 +95,7 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
     setState(() {
       _isSelecting = false;
       _selectedDeadlines.clear();
+      _totalAmount = 0.0;
     });
   }
 
@@ -114,7 +125,7 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
               children: [
                 if (_isSelecting)
                   Padding(
-                    padding: const EdgeInsets.only(right: 20), // Adjust padding as needed
+                    padding: const EdgeInsets.only(right: 20),
                     child: Icon(
                       isSelected
                           ? CupertinoIcons.check_mark_circled_solid
@@ -122,7 +133,7 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
                       color: isSelected
                           ? Color.fromARGB(255, 130, 36, 61)
                           : CupertinoColors.inactiveGray,
-                      size: 30, // Increase icon size
+                      size: 30,
                     ),
                   ),
                 Column(
@@ -148,7 +159,7 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
                     SizedBox(height: 8),
                   ],
                 ),
-                SizedBox(width: 30), // Adjust spacing as needed
+                SizedBox(width: 30),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -242,7 +253,7 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
                 child: ElevatedButton(
                   onPressed: _selectedDeadlines.isNotEmpty
                       ? () {
-                          payModal(context);
+                          showPayModal(context, _totalAmount);
                         }
                       : null,
                   child: const Text(

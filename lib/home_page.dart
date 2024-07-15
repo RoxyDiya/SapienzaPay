@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 //import 'package:intl/intl.dart';
 import 'deadlines.dart';
-import 'utils.dart';
+//import 'utils.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
+import 'profile_stud.dart';
 
 
 void main() {
@@ -39,7 +40,7 @@ class HomePageState extends State<HomePage> {
   final List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
     DeadlinesPage(),
-    PlaceholderWidget('Profile'),
+    ProfileScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -665,9 +666,9 @@ class _AddMoneyModalState extends State<AddMoneyModal> {
         padding: const EdgeInsets.only(top: 100.0),
         child: Column(
           children: [
-            _buildOptionRow(0, '**** **** **** 1928'),
-            _buildOptionRow(1, '**** **** **** 0886'),
-            _buildOptionRow(2, '**** **** **** 5678'),
+            _buildOptionRow(0, 'Card **** **** **** 1928'),
+            _buildOptionRow(1, 'Card **** **** **** 5678'),
+            _buildOptionRow(2, 'Card **** **** **** 0886'),
             SizedBox(height: 20),
             if (_showError)
               Text(
@@ -710,48 +711,57 @@ class _AddMoneyModalState extends State<AddMoneyModal> {
   }
 
   Widget _buildOptionRow(int index, String text) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _selectedOption = index;
-          _showError = false;
-        });
-      },
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: 20, horizontal: 16),
-        decoration: BoxDecoration(
-          border: Border(
-            bottom: BorderSide(
-              color: CupertinoColors.systemGrey4,
-              width: 0.5,
-            ),
+  // Define the path to the image asset corresponding to the index
+  String imagePath = 'assets/card${index + 1}.png';
+
+  return GestureDetector(
+    onTap: () {
+      setState(() {
+        _selectedOption = index;
+        _showError = false;
+      });
+    },
+    child: Container(
+      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+            color: CupertinoColors.systemGrey4,
+            width: 0.5,
           ),
         ),
-        child: Row(
-          children: [
-            Icon(
-              _selectedOption == index
-                  ? CupertinoIcons.check_mark_circled_solid
-                  : CupertinoIcons.circle,
-              color: _selectedOption == index
-                  ? Color.fromARGB(255, 130, 36, 61)
-                  : CupertinoColors.inactiveGray,
-            ),
-            SizedBox(width: 10),
-            Text(
-              text,
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.black,
-                fontWeight: FontWeight.normal,
-                decoration: TextDecoration.none
-              ),
-            ),
-          ],
-        ),
       ),
-    );
-  }
+      child: Row(
+        children: [
+          Icon(
+            _selectedOption == index
+                ? CupertinoIcons.check_mark_circled_solid
+                : CupertinoIcons.circle,
+            color: _selectedOption == index
+                ? Color.fromARGB(255, 130, 36, 61)
+                : CupertinoColors.inactiveGray,
+          ),
+          SizedBox(width: 10),
+          Image.asset(
+            imagePath,
+            width: 50,
+            height: 30,
+          ),
+          SizedBox(width: 10),
+          Text(
+            text,
+            style: TextStyle(
+              fontSize: 18,
+              color: Colors.black,
+              fontWeight: FontWeight.normal,
+              decoration: TextDecoration.none,
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
 
   void _showDoneOverlay(BuildContext context) {
     showCupertinoDialog(

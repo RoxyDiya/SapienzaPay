@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
+import 'deadlines.dart';
+import 'home_page.dart';
 import 'home_page.dart';
 
 //VARS
@@ -20,321 +22,15 @@ List<Map<String, String>> upcomingFees = [
   {'month': 'MAR', 'day': '10', 'description': '3rd TUITION FEE', 'amount': '€805'}
 ];
 
-List<Map<String, String>> paymentmeth = [
-  {'icon': 'sapienzalogo.png', 'accname': 'University Bank Account'},
-  {'icon': 'visalogo.png', 'accname': 'Card **** **** **** 9876'},
-  {'icon': 'mclogo.png', 'accname': 'Card **** **** **** 1928'}
-];
 
-Set<Map<String, String>> selectedDeadlines = {};
 
-List<Map<String, String>> universityTransactions = [
-  {
-    'title': 'University Fee',
-    'amount': '€300.00',
-    'date': '12 March 2023',
-  },
-  {
-    'title': 'Library Fee',
-    'amount': '€50.00',
-    'date': '15 March 2023',
-  },
-];
-
-List<Map<String, String>> allTransactions = [
-  {
-    'title': 'Grocery',
-    'amount': '€50.00',
-    'date': '10 March 2023',
-  },
-  {
-    'title': 'Cinema',
-    'amount': '€15.00',
-    'date': '11 March 2023',
-  },
-];
-
-//FUNCS
-void payModal(BuildContext context) {
-  showModalBottomSheet(
+//---------------------------- NEW
+void showPayModal(BuildContext context, double totalAmount) {
+  showCupertinoModalPopup(
     context: context,
-    isScrollControlled: true,
-    builder: (BuildContext context) {
-      return StatefulBuilder(
-        builder: (BuildContext context, StateSetter setState) {
-          return Container(
-            padding: const EdgeInsets.all(16.0),
-            height: MediaQuery.of(context).size.height * 0.9,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    GestureDetector(
-                      onTap: () => Navigator.pop(context),
-                      child: const Text(
-                        'Cancel',
-                        style: TextStyle(
-                          color: CupertinoColors.inactiveGray,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
-                    const Text(
-                      'Payment Method',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                Column(
-                  children: paymentmeth.map((payment) {
-                    int index = paymentmeth.indexOf(payment);
-                    return buildOptionRow(index, payment['accname']!, setState, context);
-                  }).toList(),
-                ),
-              ],
-            ),
-          );
-        },
-      );
-    },
-  );
-}
-
-void addUniversityTransaction(String title, String amount, DateTime date) {
-  Map<String, String> newTransaction = {
-    'title': title,
-    'amount': amount,
-    'date': DateFormat('d MMMM yyyy').format(date),
-  };
-  universityTransactions.insert(0, newTransaction); // Insert at the beginning
-  allTransactions.insert(0, newTransaction); // Insert at the beginning for all transactions as well
-}
-
-Widget buildOptionRow(int index, String text, StateSetter setState, BuildContext context) {
-  return GestureDetector(
-    onTap: () {
-      setState(() {
-        _selectedOption = index;
-      });
-      // Show the payment confirmation modal
-      showPaymentConfirmationModal(context);
-    },
-    child: Container(
-      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 16),
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            color: Color.fromARGB(255, 209, 209, 214),
-            width: 0.5,
-          ),
-        ),
-      ),
-      child: Row(
-        children: [
-          Icon(
-            _selectedOption == index
-                ? CupertinoIcons.check_mark_circled_solid
-                : CupertinoIcons.circle,
-            color: _selectedOption == index
-                ? Color.fromARGB(255, 130, 36, 61)
-                : CupertinoColors.inactiveGray,
-          ),
-          SizedBox(width: 10),
-          Text(
-            text,
-            style: TextStyle(
-              fontSize: 18,
-              color: Colors.black,
-              fontWeight: FontWeight.normal,
-            ),
-          )
-        ],
-      ),
-    ),
-  );
-}
-
-void showPaymentConfirmationModal(BuildContext context) {
-  if (_selectedOption == null) return;
-
-  // Get the selected payment method
-  String selectedPaymentMethod = paymentmeth[_selectedOption!]['accname']!;
-
-  showModalBottomSheet(
-    context: context,
-    isScrollControlled: true,
-    builder: (BuildContext context) {
-      return StatefulBuilder(
-        builder: (BuildContext context, StateSetter setState) {
-          return Container(
-            padding: const EdgeInsets.all(16.0),
-            height: MediaQuery.of(context).size.height * 0.5,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    GestureDetector(
-                      onTap: () => Navigator.pop(context),
-                      child: const Text(
-                        'Cancel',
-                        style: TextStyle(
-                          color: CupertinoColors.inactiveGray,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
-                    const Text(
-                      'Confirm Payment',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                Text(
-                  'You have selected:',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  selectedPaymentMethod,
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.black,
-                    fontWeight: FontWeight.normal,
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Text(
-                  'Overdue Fee:',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  '${overdueFees[0]['description']} - ${overdueFees[0]['amount']}',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.black,
-                    fontWeight: FontWeight.normal,
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Center(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      processPayment(context, overdueFees[0]);
-                    },
-                    child: Text('Confirm Payment'),
-                  ),
-                ),
-              ],
-            ),
-          );
-        },
-      );
-    },
-  );
-}
-
-void processPayment(BuildContext context, Map<String, String> fee) {
-  double feeAmount = double.parse(fee['amount']!.replaceAll('€', ''));
-
-  if (balance >= feeAmount) {
-    balance -= feeAmount;
-    addUniversityTransaction(fee['description']!, fee['amount']!, DateTime.now());
-
-    // Remove the fee from overdue fees
-    overdueFees.remove(fee);
-
-    // Close the modal
-    Navigator.pop(context);
-    Navigator.pop(context);
-  } else {
-    // Show an error if the balance is not sufficient
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Insufficient Balance'),
-          content: Text('Your balance is not sufficient to make this payment.'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-}
-
-
-/*
-void _showAddMoneyModal(BuildContext context) {
-    showCupertinoModalPopup(
-      context: context,
-      builder: (context) => AddMoneyModal(
-        onAmountAdded: (amount) {
-          setState(() {
-            balance += amount;
-            // Adding a new university transaction
-            _addUniversityTransaction('New transaction', '€${amount.toStringAsFixed(2)}', DateTime.now());
-          });
-        },
-      ),
-    );
-  }
-  */
-
-class AddMoneyModal extends StatefulWidget {
-  final Function(double) onAmountAdded;
-
-  AddMoneyModal({required this.onAmountAdded});
-
-  @override
-  _AddMoneyModalState createState() => _AddMoneyModalState();
-}
-
-class _AddMoneyModalState extends State<AddMoneyModal> {
-  int? _selectedOption;
-  String _amount = '';
-  bool _isAmountValid = false;
-  bool _showError = false;
-
-  void _updateAmount(String value) {
-    setState(() {
-      _amount = value;
-      _isAmountValid = double.tryParse(value) != null && double.parse(value) > 0;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
+    builder: (BuildContext context) => CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        middle: Text(
-          'Add Money',
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
-        ),
+        middle: Text('Payment Method'),
         leading: CupertinoButton(
           padding: EdgeInsets.zero,
           child: Text('Cancel', style: TextStyle(color: Colors.black)),
@@ -342,72 +38,350 @@ class _AddMoneyModalState extends State<AddMoneyModal> {
             Navigator.pop(context);
           },
         ),
-        trailing: _isAmountValid
-            ? CupertinoButton(
-                padding: EdgeInsets.zero,
-                child: Text('Next', style: TextStyle(color: Colors.black)),
-                onPressed: () {
-                  widget.onAmountAdded(double.parse(_amount));
-                  _showDoneOverlay(context);
-                },
-              )
-            : null,
       ),
-      child: Padding(
-        padding: const EdgeInsets.only(top: 100.0),
-        child: Column(
-          children: [
-            _buildOptionRow(0, '**** **** **** 1928'),
-            _buildOptionRow(1, '**** **** **** 0886'),
-            _buildOptionRow(2, '**** **** **** 5678'),
-            SizedBox(height: 20),
-            if (_showError)
-              Text(
-                'Choose an option before entering an amount',
-                style: TextStyle(color: Colors.red, fontSize: 14),
-              ),
-            SizedBox(height: 10),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: CupertinoTextField(
-                autofocus: _selectedOption != null,
-                placeholder: 'Enter amount',
-                keyboardType: TextInputType.number,
-                textAlign: TextAlign.start,
-                style: TextStyle(fontSize: 18),
-                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 242, 242, 246),
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
-                    color: CupertinoColors.systemGrey,
-                    width: 0.4,
+      child: PayModalContent(totalAmount: totalAmount), // Pass the total amount
+    ),
+  );
+}
+
+
+class PayModalContent extends StatefulWidget {
+  final double totalAmount; // Add this line
+
+  PayModalContent({required this.totalAmount}); // Add this line
+
+  @override
+  _PayModalContentState createState() => _PayModalContentState();
+}
+class _PayModalContentState extends State<PayModalContent> {
+  int? _selectedOption;
+  OverlayEntry? _overlayEntry;
+
+  OverlayEntry _createOverlayEntry(BuildContext context) {
+    return OverlayEntry(
+      builder: (context) => Positioned(
+        top: MediaQuery.of(context).size.height * 0.22,
+        right: -30,
+        child: GestureDetector(
+          onTap: () {
+            //_removeOverlayEntry();
+            _navigateToHomePage(context);
+          },
+          child: Row(
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Double Click \n to Pay',
+                    style: TextStyle(
+                      color: CupertinoColors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.right,
                   ),
-                ),
-                enabled: _selectedOption != null,
-                onChanged: _updateAmount,
-                onTap: () {
-                  if (_selectedOption == null) {
-                    setState(() {
-                      _showError = true;
-                    });
-                  }
-                },
+                ],
               ),
-            ),
-          ],
+              SizedBox(width: 5),
+              Container(
+                width: 40,
+                height: 110,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: CupertinoColors.white,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
+  void _removeOverlayEntry() {
+    if (_overlayEntry != null) {
+      _overlayEntry!.remove();
+      _overlayEntry = null;
+    }
+  }
+
+void _navigateToHomePage(BuildContext context) {
+  if (!mounted) {
+    print('Error: Widget is not mounted');
+    return;
+  }
+
+  try {
+    // Remove the overlay entry if it exists
+    _removeOverlayEntry();
+    print('Overlay entry removed.');
+
+    // Pop the payment confirmation modal if it's open
+    if (Navigator.canPop(context)) {
+      Navigator.of(context).pop();
+      print('Payment confirmation modal popped.');
+    }
+
+    Future.delayed(Duration(milliseconds: 300), () {
+      if (!mounted) {
+        print('Error: Widget is not mounted');
+        return;
+      }
+
+      // Check again and pop the payment method modal if it's still open
+      if (Navigator.canPop(context)) {
+        Navigator.of(context).pop();
+        print('Payment method modal popped.');
+      }
+
+      Future.delayed(Duration(milliseconds: 300), () {
+        if (!mounted) {
+          print('Error: Widget is not mounted');
+          return;
+        }
+
+        try {
+          // Now navigate to the home page using root navigator
+          Navigator.of(context, rootNavigator: true).pushReplacement(
+            MaterialPageRoute(builder: (context) => HomePage()),
+          );
+          print('Navigating to HomePage.');
+        } catch (e) {
+          print('Error navigating to HomePage: $e');
+        }
+      });
+    });
+  } catch (e) {
+    print('Error in _navigateToHomePage: $e');
+  }
+}
+
+
+
+
+
+
+    void _showPaymentConfirmationModal(BuildContext context) {
+  if (_selectedOption == null) return;
+
+  String selectedPaymentMethod = _paymentMethods[_selectedOption!];
+
+  _overlayEntry = _createOverlayEntry(context);
+  Overlay.of(context)!.insert(_overlayEntry!);
+
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    builder: (BuildContext context) {
+      return StatefulBuilder(
+        builder: (BuildContext modalContext, StateSetter setModalState) {
+          return Container(
+            padding: const EdgeInsets.all(16.0),
+            height: MediaQuery.of(context).size.height * 0.65,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Transaction recap',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 24,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(modalContext).pop(); // Close the modal bottom sheet
+                        _overlayEntry?.remove(); // Remove the overlay entry
+                        setState(() {
+                          _selectedOption = null;
+                        });
+                      },
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: <Widget>[
+                          Icon(
+                            CupertinoIcons.circle_fill,
+                            size: 30,
+                            color: CupertinoColors.systemGrey5,
+                          ),
+                          Icon(
+                            CupertinoIcons.xmark,
+                            size: 18,
+                            color: CupertinoColors.systemGrey,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.95,
+                  padding: EdgeInsets.only(left: 12.0, right: 60, top: 12.0, bottom: 12.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      width: 1.0,
+                      color: Colors.grey.withOpacity(0.3),
+                    ),
+                    color: CupertinoColors.systemGrey6,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Bank Account',
+                        style: TextStyle(
+                          fontWeight: FontWeight.normal,
+                          fontSize: 16,
+                          color: CupertinoColors.systemGrey,
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      Text(
+                        selectedPaymentMethod,
+                        style: TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.95,
+                  padding: EdgeInsets.only(left: 12.0, right: 60, top: 12.0, bottom: 12.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      width: 1.0,
+                      color: Colors.grey.withOpacity(0.3),
+                    ),
+                    color: CupertinoColors.systemGrey6,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'To:',
+                        style: TextStyle(
+                          fontWeight: FontWeight.normal,
+                          fontSize: 16,
+                          color: CupertinoColors.systemGrey,
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      const Text(
+                        'University of Rome "La Sapienza" \n IBAN: IT71I0200805227000400014148',
+                        style: TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.95,
+                  padding: EdgeInsets.only(left: 12.0, right: 60, top: 12.0, bottom: 12.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      width: 1.0,
+                      color: Colors.grey.withOpacity(0.3),
+                    ),
+                    color: CupertinoColors.systemGrey6,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Invoice to:',
+                        style: TextStyle(
+                          fontWeight: FontWeight.normal,
+                          fontSize: 16,
+                          color: CupertinoColors.systemGrey,
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      const Text(
+                        'Firdaous Hajjaji \nLargo Itri 25, Roma \nhajjaji.2006406@studenti.uniroma1.it',
+                        style: TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+                const Text(
+                  'Total:',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                 Text(
+                  '${widget.totalAmount.toStringAsFixed(2)} €', // Display the total amount,
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: CupertinoColors.black,
+                  ),
+                ),
+                const SizedBox(height: 5),
+                Divider(
+                  color: CupertinoColors.systemGrey4,
+                  thickness: 0.5,
+                ),
+                const SizedBox(height: 5),
+                Center(
+                  child: Column(
+                    children: [
+                      Image.asset(
+                        'assets/sidebutton.png',
+                        width: 60,
+                        height: 60,
+                      ),
+                      const SizedBox(height: 2),
+                      const Text(
+                        'Confirm with Side Button',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: CupertinoColors.systemGrey,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      );
+    }).whenComplete(() {
+      _overlayEntry?.remove();
+      setState(() {
+        _selectedOption = null;
+      });
+    });
+  }
+
+
   Widget _buildOptionRow(int index, String text) {
+    String imagePath = 'assets/card${index + 1}.png';
+
     return GestureDetector(
       onTap: () {
         setState(() {
           _selectedOption = index;
-          _showError = false;
         });
+        _showPaymentConfirmationModal(context);
       },
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 20, horizontal: 16),
@@ -430,13 +404,19 @@ class _AddMoneyModalState extends State<AddMoneyModal> {
                   : CupertinoColors.inactiveGray,
             ),
             SizedBox(width: 10),
+            Image.asset(
+              imagePath,
+              width: 50,
+              height: 30,
+            ),
+            SizedBox(width: 10),
             Text(
               text,
               style: TextStyle(
                 fontSize: 18,
                 color: Colors.black,
                 fontWeight: FontWeight.normal,
-                decoration: TextDecoration.none
+                decoration: TextDecoration.none,
               ),
             ),
           ],
@@ -445,31 +425,28 @@ class _AddMoneyModalState extends State<AddMoneyModal> {
     );
   }
 
-  void _showDoneOverlay(BuildContext context) {
-    showCupertinoDialog(
-      context: context,
-      builder: (_) => CupertinoAlertDialog(
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              CupertinoIcons.check_mark_circled,
-              color: CupertinoColors.systemGrey,
-              size: 100,
-            ),
-            SizedBox(height: 10),
-            Text(
-              'Done',
-              style: TextStyle(fontSize: 24),
-            ),
-          ],
-        ),
+  final List<String> _paymentMethods = [
+    'Card **** **** **** 1928',
+    'Card **** **** **** 5678',
+    'Card **** **** **** 0886',
+    'University Bank Account',
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 90),
+          Column(
+            children: List.generate(_paymentMethods.length, (index) {
+              return _buildOptionRow(index, _paymentMethods[index]);
+            }),
+          ),
+        ],
       ),
     );
-
-    Future.delayed(Duration(seconds: 2), () {
-      Navigator.of(context).pop();
-      Navigator.of(context).pop();
-    });
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'home_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -93,7 +94,7 @@ class InitialLoginPage extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const ParentLoginPage()),
+                    MaterialPageRoute(builder: (context) => const HomePage()),
                   );
                 },
                 child: Text('Student'),
@@ -241,19 +242,6 @@ class _ParentLoginPageState extends State<ParentLoginPage> {
           ),
           SizedBox(height: 20),
         ],
-      ),
-    );
-  }
-}
-
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Text('Home Page'),
       ),
     );
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'home_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: Color.fromARGB(1000, 130, 36, 61),
       ),
-      home: const HomePage2(),
+      home: const HomePage(),
     );
   }
 }
