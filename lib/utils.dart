@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
+import 'home_page.dart';
 
 //VARS
 int? _selectedOption;
@@ -287,7 +288,7 @@ void processPayment(BuildContext context, Map<String, String> fee) {
 }
 
 
-
+/*
 void _showAddMoneyModal(BuildContext context) {
     showCupertinoModalPopup(
       context: context,
@@ -302,6 +303,7 @@ void _showAddMoneyModal(BuildContext context) {
       ),
     );
   }
+  */
 
 class AddMoneyModal extends StatefulWidget {
   final Function(double) onAmountAdded;

@@ -813,7 +813,6 @@ class PlaceholderWidget extends StatelessWidget {
   final String text;
 
   PlaceholderWidget(this.text);
-  PlaceholderWidget(this.text);
 
   @override
   Widget build(BuildContext context) {
