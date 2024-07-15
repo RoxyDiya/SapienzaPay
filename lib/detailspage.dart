@@ -6,8 +6,10 @@ import 'profile_stud.dart'; // Assuming profile_stud.dart contains ProfileScreen
 
 class DeadlineDetailsPage extends StatefulWidget {
   final Map<String, String> deadline;
+  final Function showPayModal;
+  final Function removeSelectedDeadline;
 
-  const DeadlineDetailsPage({super.key, required this.deadline});
+  const DeadlineDetailsPage({super.key, required this.deadline, required this.showPayModal, required this.removeSelectedDeadline});
 
   @override
   _DeadlineDetailsPageState createState() => _DeadlineDetailsPageState();
@@ -26,6 +28,11 @@ class _DeadlineDetailsPageState extends State<DeadlineDetailsPage> {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  void _onPaymentSuccess() {
+    Navigator.pop(context); // Navigate back to the previous page
+    widget.removeSelectedDeadline(); // Call the function to remove the deadline
   }
 
   @override
@@ -56,7 +63,7 @@ class _DeadlineDetailsPageState extends State<DeadlineDetailsPage> {
                           SizedBox(height: 15), // Add space for the CircleAvatar
                           Text(
                             '1° Tuition Fee',
-                            style: TextStyle(fontSize: 24,color: Color.fromARGB(255, 111, 20, 28),fontWeight: FontWeight.bold,),
+                            style: TextStyle(fontSize: 24, color: Color.fromARGB(255, 111, 20, 28), fontWeight: FontWeight.bold,),
                           ),
                           SizedBox(height: 10),
                           Divider(color: CupertinoColors.inactiveGray, thickness: 0.5),
@@ -75,7 +82,6 @@ class _DeadlineDetailsPageState extends State<DeadlineDetailsPage> {
                             ],
                           ),
                           SizedBox(height: 2),
-
                           Divider(color: CupertinoColors.inactiveGray, thickness: 0.5),
                           SizedBox(height: 2),
                           Row(
@@ -100,23 +106,22 @@ class _DeadlineDetailsPageState extends State<DeadlineDetailsPage> {
                           _buildFeeRow('Penalty Fee', '€60'),
                           SizedBox(height: 70),
                           
-                                Text(
-                                  'DUE ON 15/11/2023',
-                                  style: TextStyle(
-                                    color: Color.fromARGB(255, 111, 20, 28),
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 22,
-                                  ),
-                                ),
-                                Text(
-                                  '(Expired)',
-                                  style: TextStyle(
-                                    color: CupertinoColors.inactiveGray,
-                                    fontWeight: FontWeight.normal,
-
-                                    fontSize: 22,
-                                  ),
-                                ),
+                          Text(
+                            'DUE ON 15/11/2023',
+                            style: TextStyle(
+                              color: Color.fromARGB(255, 111, 20, 28),
+                              fontWeight: FontWeight.w700,
+                              fontSize: 22,
+                            ),
+                          ),
+                          Text(
+                            '(Expired)',
+                            style: TextStyle(
+                              color: CupertinoColors.inactiveGray,
+                              fontWeight: FontWeight.normal,
+                              fontSize: 22,
+                            ),
+                          ),
                               
                           SizedBox(height: 50),
                           Center(
@@ -132,29 +137,30 @@ class _DeadlineDetailsPageState extends State<DeadlineDetailsPage> {
                           SizedBox(height: 20),
                           Center(
                             child: ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                widget.showPayModal(context, 766.00, _onPaymentSuccess);
+                              },
                               child: const Text(
-                    'Pay Now',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.normal,
-                      fontSize: 24,
-                    ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    fixedSize: Size.fromWidth(350),
-                    backgroundColor: const Color.fromARGB(255, 111, 20, 28),
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 16.0, horizontal: 20.0),
-                    textStyle: const TextStyle(fontSize: 18),
-                  ),
+                                'Pay Now',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 24,
+                                ),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                fixedSize: Size.fromWidth(350),
+                                backgroundColor: const Color.fromARGB(255, 111, 20, 28),
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 16.0, horizontal: 20.0),
+                                textStyle: const TextStyle(fontSize: 18),
+                              ),
                             ),
                           ),
-                          SizedBox(height: 40),
-
+                          SizedBox(height: 100),
                         ],
                       ),
                     ),
@@ -220,32 +226,4 @@ class _DeadlineDetailsPageState extends State<DeadlineDetailsPage> {
   }
 }
 
-class HomeScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(child: Text("Home Screen"));
-  }
-}
 
-class DeadlinesPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(child: Text("Deadlines Page"));
-  }
-}
-
-class ProfileScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(child: Text("Profile Screen"));
-  }
-}
-
-void main() {
-  runApp(CupertinoApp(
-    theme: CupertinoThemeData(
-      primaryColor: Color.fromARGB(255, 111, 20, 28),
-    ),
-    home: HomeScreen(),
-  ));
-}

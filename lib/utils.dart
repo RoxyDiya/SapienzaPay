@@ -25,7 +25,7 @@ List<Map<String, String>> upcomingFees = [
 
 
 //---------------------------- NEW
-void showPayModal(BuildContext context, double totalAmount) {
+void showPayModal(BuildContext context, double totalAmount, VoidCallback onPaymentSuccess) {
   showCupertinoModalPopup(
     context: context,
     builder: (BuildContext context) => CupertinoPageScaffold(
@@ -39,16 +39,19 @@ void showPayModal(BuildContext context, double totalAmount) {
           },
         ),
       ),
-      child: PayModalContent(totalAmount: totalAmount), // Pass the total amount
+      child: PayModalContent(totalAmount: totalAmount, onPaymentSuccess: onPaymentSuccess), // Pass the callback
     ),
   );
 }
 
 
+
 class PayModalContent extends StatefulWidget {
   final double totalAmount; // Add this line
+  final VoidCallback onPaymentSuccess; // Add this line
 
-  PayModalContent({required this.totalAmount}); // Add this line
+
+  PayModalContent({required this.totalAmount, required this.onPaymentSuccess}); // Add this line
 
   @override
   _PayModalContentState createState() => _PayModalContentState();
@@ -65,7 +68,9 @@ class _PayModalContentState extends State<PayModalContent> {
         child: GestureDetector(
           onTap: () {
             //_removeOverlayEntry();
-            _navigateToHomePage(context);
+            _navigateToPaymentMethod(context);
+            Navigator.pop(context);
+
           },
           child: Row(
             children: [
@@ -107,56 +112,31 @@ class _PayModalContentState extends State<PayModalContent> {
     }
   }
 
-void _navigateToHomePage(BuildContext context) {
-  if (!mounted) {
-    print('Error: Widget is not mounted');
-    return;
-  }
 
-  try {
-    // Remove the overlay entry if it exists
-    _removeOverlayEntry();
-    print('Overlay entry removed.');
-
-    // Pop the payment confirmation modal if it's open
-    if (Navigator.canPop(context)) {
-      Navigator.of(context).pop();
-      print('Payment confirmation modal popped.');
+void _navigateToPaymentMethod(BuildContext context) {
+    if (!mounted) {
+      print('Error: Widget is not mounted');
+      return;
     }
+    try {
+      // Remove the overlay entry if it exists
+      _removeOverlayEntry();
+      print('Overlay entry removed.');
 
-    Future.delayed(Duration(milliseconds: 300), () {
-      if (!mounted) {
-        print('Error: Widget is not mounted');
-        return;
-      }
-
-      // Check again and pop the payment method modal if it's still open
+      // Ensure the payment confirmation modal is popped
       if (Navigator.canPop(context)) {
         Navigator.of(context).pop();
-        print('Payment method modal popped.');
+        print('Payment confirmation modal popped.');
       }
 
-      Future.delayed(Duration(milliseconds: 300), () {
-        if (!mounted) {
-          print('Error: Widget is not mounted');
-          return;
-        }
+      // Call the callback to remove the selected deadlines
+      widget.onPaymentSuccess();
 
-        try {
-          // Now navigate to the home page using root navigator
-          Navigator.of(context, rootNavigator: true).pushReplacement(
-            MaterialPageRoute(builder: (context) => HomePage()),
-          );
-          print('Navigating to HomePage.');
-        } catch (e) {
-          print('Error navigating to HomePage: $e');
-        }
-      });
-    });
-  } catch (e) {
-    print('Error in _navigateToHomePage: $e');
+    } catch (e) {
+      print('Error in _navigateToPaymentMethod: $e');
+    }
   }
-}
+
 
 
 
@@ -195,11 +175,7 @@ void _navigateToHomePage(BuildContext context) {
                     ),
                     GestureDetector(
                       onTap: () {
-                        Navigator.of(modalContext).pop(); // Close the modal bottom sheet
-                        _overlayEntry?.remove(); // Remove the overlay entry
-                        setState(() {
-                          _selectedOption = null;
-                        });
+                        _navigateToPaymentMethod(context);
                       },
                       child: Stack(
                         alignment: Alignment.center,
