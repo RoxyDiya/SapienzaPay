@@ -503,6 +503,8 @@ class ProfileScreen extends StatelessWidget {
       navigationBar: CupertinoNavigationBar(
         backgroundColor: Colors.white,
         middle: Text('Profile'),
+        automaticallyImplyLeading: false,
+
       ),
       child: SingleChildScrollView(
         child: Padding(

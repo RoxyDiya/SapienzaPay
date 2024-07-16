@@ -4,6 +4,7 @@ import 'home_page.dart';
 import 'deadlines.dart' as deadlinesinstallments;
 import 'all_in_one_deadline.dart' as all_in_one_deadline;
 import 'utils.dart' as utils;
+import 'login.dart';
 
 void main() {
   runApp(const MyApp());
@@ -503,6 +504,7 @@ class ProfileScreen extends StatelessWidget {
       navigationBar: CupertinoNavigationBar(
         backgroundColor: Colors.white,
         middle: Text('Profile'),
+        automaticallyImplyLeading: false,
       ),
       child: SingleChildScrollView(
         child: Padding(
@@ -618,7 +620,11 @@ class ProfileScreen extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: TextButton(
                   onPressed: () {
-                    // Handle sign out
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      InstantPageRoute(page: InitialLoginPage()),  // Use custom page route here
+                      (Route<dynamic> route) => false,
+                    );
                   },
                   child: Align(
                     alignment: Alignment.centerLeft,
@@ -878,4 +884,21 @@ CupertinoButton(
       ),
     );
   }
+}
+
+class InstantPageRoute extends PageRouteBuilder {
+  final Widget page;
+
+  InstantPageRoute({required this.page})
+      : super(
+          pageBuilder: (context, animation, secondaryAnimation) => page,
+          transitionDuration: Duration.zero, // No transition duration
+          reverseTransitionDuration: Duration.zero, // No reverse transition duration
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return child; // No transition effect
+          },
+        );
+
+  @override
+  bool get opaque => false;
 }
