@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'home_page.dart';
+import 'deadline_parent.dart';
 
 void main() {
   runApp(const MyApp());
@@ -20,6 +21,8 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+
 
 class InitialLoginPage extends StatelessWidget {
   const InitialLoginPage({super.key});
@@ -202,7 +205,7 @@ class _ParentLoginPageState extends State<ParentLoginPage> {
                       if (_formKey.currentState!.validate()) {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const HomePage()),
+                          MaterialPageRoute(builder: (context) => const DeadlinesPage()),
                         );
                       }
                     },

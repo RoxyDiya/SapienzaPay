@@ -24,38 +24,22 @@ class _DeadlineDetailsPageState extends State<DeadlineDetailsPage> {
   int _selectedIndex = 1;
 
   final List<Widget> _widgetOptions = <Widget>[
-    HomePage(),
-    DeadlinesPage(),
-    ProfileScreen(),
+    HomeScreen(),
+    ValueListenableBuilder<Widget>(
+      valueListenable: selectedDeadlinePage,
+      builder: (context, value, child) {
+        return value;
+      },
+    ),
+    ProfileScreen(), // Update this line to use the new ProfileScreen
   ];
 
 void _onItemTapped(int index) {
-    if (index == _selectedIndex) return;
-
-    Navigator.pop(context); // Pop to DeadlinesPage
-
-    Future.delayed(Duration(milliseconds: 500), () {
-      switch (index) {
-        case 0:
-          Navigator.pushReplacement(
-            context,
-            CupertinoPageRoute(builder: (context) => HomePage()),
-          );
-          break;
-        case 1:
-          Navigator.pushReplacement(
-            context,
-            CupertinoPageRoute(builder: (context) => DeadlinesPage()),
-          );
-          break;
-        case 2:
-          Navigator.pushReplacement(
-            context,
-            CupertinoPageRoute(builder: (context) => ProfileScreen()),
-          );
-          break;
-      }
+    setState(() {
+      _selectedIndex = index;
     });
+    print("Index: $index");
+    Navigator.pop(context,index);
   }
 
   void _onPaymentSuccess() {

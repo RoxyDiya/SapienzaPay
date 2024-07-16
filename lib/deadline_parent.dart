@@ -1,12 +1,11 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'utils.dart';
+import 'package:flutter/cupertino.dart';
 import 'home_page.dart';
-import 'detailspageALL.dart' as detailspage1;
-import 'profile_stud.dart';
-
-
-
+import 'detailspage.dart' as detailspage1;
+import 'detailspage2.dart' as detailspage2;
+import 'detailspage3.dart' as detailspage3;
+import 'utils.dart';
+import 'profile_par.dart';
 
 void main() {
   runApp(const MyApp());
@@ -21,7 +20,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: const Color.fromARGB(255, 111, 20, 28),
       ),
-      home: const HomePage(),
+      home: const DeadlinesPage(),
     );
   }
 }
@@ -30,19 +29,24 @@ class DeadlinesPage extends StatefulWidget {
   const DeadlinesPage({super.key});
 
   @override
-  _DeadlinesPageState createState() => _DeadlinesPageState();
+  DeadlinesPageState createState() => DeadlinesPageState();
 }
 
-class _DeadlinesPageState extends State<DeadlinesPage> {
-  int _selectedIndex = 1;
+class DeadlinesPageState extends State<DeadlinesPage> {
+  int _selectedIndex = 0;
   bool _isSelecting = false;
   Set<Map<String, String>> _selectedDeadlines = {};
   double _totalAmount = 0.0;
 
+
   final List<Widget> _widgetOptions = <Widget>[
-    HomePage(),
-    DeadlinesPage(),
-    ProfileScreen(),  // Replace with the correct ProfileScreen if it conflicts
+    ValueListenableBuilder<Widget>(
+      valueListenable: selectedDeadlinePage,
+      builder: (context, value, child) {
+        return value;
+      },
+    ),
+    ProfileScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -51,32 +55,73 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
     });
   }
 
-void _onDeadlineTap(Map<String, String> deadline) {
-  if (_isSelecting) {
-    _toggleSelection(deadline);
-  } else {
-    Widget detailsPage;
-    String description = deadline['description'] ?? '';
-
-    switch (description) {
-      case 'TUITION FEE':
-        detailsPage = detailspage1.DeadlineDetailsPage(
-          deadline: deadline,
-          showPayModal: showPayModal,
-          removeSpecificDeadline: (d) => _removeSpecificDeadline(d), // Updated line
-        );
-        break;
-      default:
-        return;
-    }
-
-    Navigator.push(
-      context,
-      CupertinoPageRoute(builder: (context) => detailsPage),
+  @override
+  Widget build(BuildContext context) {
+    TextStyle labelStyle = TextStyle(fontSize: 12, fontWeight: FontWeight.w600);
+    return Scaffold(
+      body: _widgetOptions.elementAt(_selectedIndex),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(CupertinoIcons.clock_fill),
+            label: 'Deadlines',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Color.fromARGB(255, 130, 36, 51),
+        unselectedItemColor: Colors.grey,
+        onTap: _onItemTapped,
+        selectedLabelStyle: labelStyle,
+        unselectedLabelStyle: labelStyle.copyWith(color: Colors.grey),
+        iconSize: 25,
+      ),
     );
   }
-}
 
+  void _onDeadlineTap(Map<String, String> deadline) {
+    if (_isSelecting) {
+      _toggleSelection(deadline);
+    } else {
+      Widget detailsPage;
+      String description = deadline['description'] ?? '';
+
+      switch (description) {
+        case '1st TUITION FEE':
+          detailsPage = detailspage1.DeadlineDetailsPage(
+            deadline: deadline,
+            showPayModal: showPayModal,
+            removeSpecificDeadline: (d) => _removeSpecificDeadline(d),
+          );
+          break;
+        case '2nd TUITION FEE':
+          detailsPage = detailspage2.DeadlineDetailsPage(
+            deadline: deadline,
+            showPayModal: showPayModal,
+            removeSpecificDeadline: (d) => _removeSpecificDeadline(d),
+          );
+          break;
+        case '3rd TUITION FEE':
+          detailsPage = detailspage3.DeadlineDetailsPage(
+            deadline: deadline,
+            showPayModal: showPayModal,
+            removeSpecificDeadline: (d) => _removeSpecificDeadline(d),
+          );
+          break;
+        default:
+          return;
+      }
+
+      Navigator.push(
+        context,
+        CupertinoPageRoute(builder: (context) => detailsPage),
+      );
+    }
+  }
 
   void _onDeadlineLongPress(Map<String, String> deadline) {
     setState(() {
@@ -115,12 +160,10 @@ void _onDeadlineTap(Map<String, String> deadline) {
     });
   }
 
-
-
   Widget buildDeadlineItem(Map<String, String> deadline, bool isOverdue, int index) {
     bool isSelected = _selectedDeadlines.contains(deadline);
     return Column(
-      key: ValueKey(index),  // Ensure each item has a unique key
+      key: ValueKey(index),
       children: [
         Divider(
           color: CupertinoColors.inactiveGray.withOpacity(0.6),
@@ -213,15 +256,16 @@ void _onDeadlineTap(Map<String, String> deadline) {
 
   void _removeSpecificDeadline(Map<String, String> deadline) {
     print("removing deadline: $deadline");
-  setState(() {
-    allinonefees.removeWhere((fee) => fee == deadline);
-    
-  });
-}
+    setState(() {
+      overdueFees.removeWhere((fee) => fee == deadline);
+      upcomingFees.removeWhere((fee) => fee == deadline);
+    });
+  }
 
   void _removeSelectedDeadlines() {
     setState(() {
-      allinonefees.removeWhere((fee) => _selectedDeadlines.contains(fee));
+      overdueFees.removeWhere((fee) => _selectedDeadlines.contains(fee));
+      upcomingFees.removeWhere((fee) => _selectedDeadlines.contains(fee));
       _selectedDeadlines.clear();
       _totalAmount = 0.0;
       _isSelecting = false;
@@ -230,7 +274,7 @@ void _onDeadlineTap(Map<String, String> deadline) {
 
   @override
   Widget build(BuildContext context) {
-    bool hasDeadlines = allinonefees.isNotEmpty ;
+    bool hasDeadlines = overdueFees.isNotEmpty || upcomingFees.isNotEmpty;
 
     return Scaffold(
       body: Stack(
@@ -247,8 +291,7 @@ void _onDeadlineTap(Map<String, String> deadline) {
                     style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 30),
-
-                  if (allinonefees.isNotEmpty) ...[
+                  if (overdueFees.isNotEmpty) ...[
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -275,13 +318,25 @@ void _onDeadlineTap(Map<String, String> deadline) {
                     ),
                     const SizedBox(height: 15),
                     Column(
-                      children: allinonefees.map((fee) => buildDeadlineItem(fee, true, allinonefees.indexOf(fee))).toList(),
+                      children: overdueFees.map((fee) => buildDeadlineItem(fee, true, overdueFees.indexOf(fee))).toList(),
                     ),
                     const SizedBox(height: 40),
                   ],
-
-                  
-
+                  if (upcomingFees.isNotEmpty) ...[
+                    const Text(
+                      '  Upcoming:',
+                      style: TextStyle(
+                        fontSize: 24,
+                        color: Color.fromARGB(255, 111, 20, 28),
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                    const SizedBox(height: 15),
+                    Column(
+                      children: upcomingFees.map((fee) => buildDeadlineItem(fee, false, upcomingFees.indexOf(fee))).toList(),
+                    ),
+                    const SizedBox(height: 190),
+                  ],
                   if (!hasDeadlines) ...[
                     Center(
                       child: Column(
@@ -340,7 +395,26 @@ void _onDeadlineTap(Map<String, String> deadline) {
             ),
         ],
       ),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(CupertinoIcons.clock_fill),
+            label: 'Deadlines',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Color.fromARGB(255, 130, 36, 51),
+        unselectedItemColor: Colors.grey,
+        onTap: _onItemTapped,
+        selectedLabelStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+        unselectedLabelStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w600).copyWith(color: Colors.grey),
+        iconSize: 25,
+      ),
     );
   }
 }
-

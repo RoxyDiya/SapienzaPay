@@ -33,6 +33,8 @@ class _DeadlineDetailsPageState extends State<DeadlineDetailsPage> {
     setState(() {
       _selectedIndex = index;
     });
+    print("Index: $index");
+    Navigator.pop(context,index);
   }
 
   void _onPaymentSuccess() {

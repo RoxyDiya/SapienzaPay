@@ -33,6 +33,8 @@ class _DeadlineDetailsPageState extends State<DeadlineDetailsPage> {
     setState(() {
       _selectedIndex = index;
     });
+    print("Index: $index");
+    Navigator.pop(context,index);
   }
 
   void _onPaymentSuccess() {
@@ -229,30 +231,6 @@ class _DeadlineDetailsPageState extends State<DeadlineDetailsPage> {
             ),
           ),
         ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.house_fill),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.clock_fill),
-            label: 'Deadlines',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Color.fromARGB(255, 130, 36, 51),
-        unselectedItemColor: Colors.grey,
-        onTap: _onItemTapped,
-        selectedLabelStyle: labelStyle,
-        unselectedLabelStyle: labelStyle.copyWith(color: Colors.grey),
-        iconSize: 25,
       ),
     );
   }
