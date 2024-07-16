@@ -249,124 +249,7 @@ class DeadlinesPageState extends State<DeadlinesPage> {
     TextStyle labelStyle = TextStyle(fontSize: 12, fontWeight: FontWeight.w600);
 
     return Scaffold(
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 10, bottom: 80),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 60),
-                  const Text(
-                    ' Deadlines',
-                    style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 30),
-                  if (overdueFees.isNotEmpty) ...[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          '  Overdue:',
-                          style: TextStyle(
-                            color: Color.fromARGB(255, 111, 20, 28),
-                            fontWeight: FontWeight.bold,
-                            fontSize: 24,
-                          ),
-                        ),
-                        if (_isSelecting)
-                          GestureDetector(
-                            onTap: _cancelSelection,
-                            child: Text(
-                              'Cancel  ',
-                              style: TextStyle(
-                                color: Color.fromARGB(255, 130, 130, 146),
-                                fontSize: 18,
-                              ),
-                            ),
-                          ),
-                      ],
-                    ),
-                    const SizedBox(height: 15),
-                    Column(
-                      children: overdueFees.map((fee) => buildDeadlineItem(fee, true, overdueFees.indexOf(fee))).toList(),
-                    ),
-                    const SizedBox(height: 40),
-                  ],
-                  if (upcomingFees.isNotEmpty) ...[
-                    const Text(
-                      '  Upcoming:',
-                      style: TextStyle(
-                        fontSize: 24,
-                        color: Color.fromARGB(255, 111, 20, 28),
-                        fontWeight: FontWeight.normal,
-                      ),
-                    ),
-                    const SizedBox(height: 15),
-                    Column(
-                      children: upcomingFees.map((fee) => buildDeadlineItem(fee, false, upcomingFees.indexOf(fee))).toList(),
-                    ),
-                    const SizedBox(height: 190),
-                  ],
-                  if (!hasDeadlines) ...[
-                    Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
-                          SizedBox(height: 250),
-                          Text(
-                            'There are no more tuition \nfees to pay',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 24,
-                              color: CupertinoColors.systemGrey,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ],
-              ),
-            ),
-          ),
-          if (hasDeadlines)
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 20),
-                child: ElevatedButton(
-                  onPressed: _selectedDeadlines.isNotEmpty
-                      ? () {
-                          showPayModal(context, _totalAmount, _removeSelectedDeadlines);
-                        }
-                      : null,
-                  child: const Text(
-                    'Pay Now',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.normal,
-                      fontSize: 24,
-                    ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    fixedSize: Size.fromWidth(350),
-                    backgroundColor: _selectedDeadlines.isNotEmpty
-                        ? const Color.fromARGB(255, 111, 20, 28)
-                        : Colors.grey[500],
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 16.0, horizontal: 20.0),
-                    textStyle: const TextStyle(fontSize: 18),
-                  ),
-                ),
-              ),
-            ),
-        ],
-      ),
+      body: _widgetOptions[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
@@ -390,3 +273,5 @@ class DeadlinesPageState extends State<DeadlinesPage> {
     );
   }
 }
+
+
