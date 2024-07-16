@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 //import 'package:intl/intl.dart';
-import 'deadlines.dart';
-//import 'utils.dart';
+import 'deadlines.dart' as deadlinesinstallments;
+import 'utils.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'profile_stud.dart';
+import 'all_in_one_deadline.dart' as all_in_one_deadline;
+
+// Define a global ValueNotifier
+ValueNotifier<Widget> selectedDeadlinePage = ValueNotifier<Widget>(deadlinesinstallments.DeadlinesPage());
 
 
 void main() {
@@ -37,11 +41,18 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
 
+  // Update the widget options to use the ValueNotifier for deadlines page
   final List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
-    DeadlinesPage(),
-    ProfileScreen(),
+    ValueListenableBuilder<Widget>(
+      valueListenable: selectedDeadlinePage,
+      builder: (context, value, child) {
+        return value;
+      },
+    ),
+    ProfileScreen(), // Update this line to use the new ProfileScreen
   ];
+
 
   void _onItemTapped(int index) {
     setState(() {
@@ -797,28 +808,29 @@ class _AddMoneyModalState extends State<AddMoneyModal> {
 
 
     Widget _buildTransactionItem(Map<String, String> transaction) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
-      padding: EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        border: Border.all(color: Color.fromARGB(232, 217, 217, 217)),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(transaction['title']!, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-              Text(transaction['date']!, style: TextStyle(fontSize: 14, color: Colors.grey)),
-            ],
-          ),
-          Text(transaction['amount']!, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-        ],
-      ),
-    );
-  }
+  return Container(
+    margin: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+    padding: EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      border: Border.all(color: Color.fromARGB(232, 217, 217, 217)),
+      borderRadius: BorderRadius.circular(10),
+    ),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(transaction['title']!, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            Text(transaction['date']!, style: TextStyle(fontSize: 14, color: Colors.grey)),
+          ],
+        ),
+        Text(transaction['amount']!, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+      ],
+    ),
+  );
+}
+
 class PlaceholderWidget extends StatelessWidget {
   final String text;
 

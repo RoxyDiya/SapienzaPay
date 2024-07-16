@@ -25,6 +25,8 @@ class MyApp extends StatelessWidget {
   }
 }
 
+
+
 class DeadlinesPage extends StatefulWidget {
   const DeadlinesPage({super.key});
 
@@ -62,21 +64,21 @@ void _onDeadlineTap(Map<String, String> deadline) {
         detailsPage = detailspage1.DeadlineDetailsPage(
           deadline: deadline,
           showPayModal: showPayModal,
-          removeSelectedDeadline: _removeSelectedDeadlines
+          removeSpecificDeadline: (d) => _removeSpecificDeadline(d), // Updated line
         );
         break;
       case '2nd TUITION FEE':
         detailsPage = detailspage2.DeadlineDetailsPage(
           deadline: deadline,
-          //showPayModal: showPayModal,
-          //removeSelectedDeadline: _removeSelectedDeadlines
+          showPayModal: showPayModal,
+          removeSpecificDeadline: (d) => _removeSpecificDeadline(d), // Updated line
         );
         break;
       case '3rd TUITION FEE':
         detailsPage = detailspage3.DeadlineDetailsPage(
           deadline: deadline,
-          //showPayModal: showPayModal,
-          //removeSelectedDeadline: _removeSelectedDeadlines
+          showPayModal: showPayModal,
+          removeSpecificDeadline: (d) => _removeSpecificDeadline(d), // Updated line
         );
         break;
       default:
@@ -221,6 +223,14 @@ void _onDeadlineTap(Map<String, String> deadline) {
       ],
     );
   }
+
+  void _removeSpecificDeadline(Map<String, String> deadline) {
+    print("removing deadline: $deadline");
+  setState(() {
+    overdueFees.removeWhere((fee) => fee == deadline);
+    upcomingFees.removeWhere((fee) => fee == deadline);
+  });
+}
 
   void _removeSelectedDeadlines() {
     setState(() {

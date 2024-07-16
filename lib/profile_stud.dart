@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'home_page.dart';
+import 'deadlines.dart' as deadlinesinstallments;
+import 'all_in_one_deadline.dart' as all_in_one_deadline;
+import 'utils.dart' as utils;
 
 void main() {
   runApp(const MyApp());
@@ -768,13 +771,15 @@ class _EditProfileModalState extends State<EditProfileModal> {
   }
 }
 
+String _selectedPlan = 'Installments';
+
+
 class PaymentPlanScreen extends StatefulWidget {
   @override
   _PaymentPlanScreenState createState() => _PaymentPlanScreenState();
 }
 
 class _PaymentPlanScreenState extends State<PaymentPlanScreen> {
-  String _selectedPlan = 'Installments';
 
   @override
   Widget build(BuildContext context) {
@@ -786,7 +791,8 @@ class _PaymentPlanScreenState extends State<PaymentPlanScreen> {
           onPressed: () {
             Navigator.pop(context);
           },
-          previousPageTitle: 'Profile', color: Colors.black,
+          previousPageTitle: 'Profile', 
+          color: Colors.black,
         ),
       ),
       child: Padding(
@@ -797,53 +803,73 @@ class _PaymentPlanScreenState extends State<PaymentPlanScreen> {
             Container(
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(15),
+                borderRadius: BorderRadius.circular(12),
               ),
               child: Column(
                 children: [
                   CupertinoButton(
-                    padding: EdgeInsets.symmetric(vertical: 20, horizontal: 16),
-                    onPressed: () {
-                      setState(() {
-                        _selectedPlan = 'All-in-one';
-                      });
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'All-in-one',
-                          style: TextStyle(
-                            color: _selectedPlan == 'All-in-one' ? Colors.black : Colors.black,
-                          ),
-                        ),
-                        if (_selectedPlan == 'All-in-one')
-                          Icon(CupertinoIcons.check_mark, color: Color.fromARGB(1000, 130, 36, 61)),
-                      ],
-                    ),
-                  ),
-                  Divider(color: Colors.grey[300]),
-                  CupertinoButton(
-                    padding: EdgeInsets.symmetric(vertical: 20, horizontal: 16),
-                    onPressed: () {
-                      setState(() {
-                        _selectedPlan = 'Installments';
-                      });
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Installments',
-                          style: TextStyle(
-                            color: _selectedPlan == 'Installments' ? Colors.black : Colors.black,
-                          ),
-                        ),
-                        if (_selectedPlan == 'Installments')
-                          Icon(CupertinoIcons.check_mark, color: Color.fromARGB(1000, 130, 36, 61)),
-                      ],
-                    ),
-                  ),
+  padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+  onPressed: utils.isPaymentCompleted ? null : () {
+    setState(() {
+      _selectedPlan = 'All-in-one';
+    });
+    selectedDeadlinePage.value = all_in_one_deadline.DeadlinesPage();
+  },
+  child: Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      Expanded(
+        child: Padding(
+          padding: const EdgeInsets.only(top: 5.0),
+          child: Text(
+            'All-in-one',
+            style: TextStyle(
+              color: utils.isPaymentCompleted && _selectedPlan == 'All-in-one' ? Colors.grey : Colors.black,
+              
+            ),
+          ),
+        ),
+      ),
+      if (_selectedPlan == 'All-in-one')
+        Icon(
+          CupertinoIcons.check_mark,
+          color: utils.isPaymentCompleted ? Colors.grey : Color.fromARGB(1000, 130, 36, 61),
+        ),
+    ],
+  ),
+),
+Divider(color: Colors.grey[300]),
+CupertinoButton(
+  padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+  onPressed: utils.isPaymentCompleted ? null : () {
+    setState(() {
+      _selectedPlan = 'Installments';
+    });
+    selectedDeadlinePage.value = deadlinesinstallments.DeadlinesPage();
+  },
+  child: Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      Expanded(
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 5.0),
+          child: Text(
+            'Installments',
+            style: TextStyle(
+              color: utils.isPaymentCompleted && _selectedPlan == 'Installments' ? Colors.grey : Colors.black,
+            ),
+          ),
+        ),
+      ),
+      if (_selectedPlan == 'Installments')
+        Icon(
+          CupertinoIcons.check_mark,
+          color: utils.isPaymentCompleted ? Colors.grey : Color.fromARGB(1000, 130, 36, 61),
+        ),
+    ],
+  ),
+),
+
                 ],
               ),
             ),

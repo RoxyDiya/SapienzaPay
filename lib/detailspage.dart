@@ -7,9 +7,14 @@ import 'profile_stud.dart'; // Assuming profile_stud.dart contains ProfileScreen
 class DeadlineDetailsPage extends StatefulWidget {
   final Map<String, String> deadline;
   final Function showPayModal;
-  final Function removeSelectedDeadline;
+  final Function removeSpecificDeadline;
 
-  const DeadlineDetailsPage({super.key, required this.deadline, required this.showPayModal, required this.removeSelectedDeadline});
+  const DeadlineDetailsPage({
+    super.key, 
+    required this.deadline, 
+    required this.showPayModal, 
+    required this.removeSpecificDeadline
+  });
 
   @override
   _DeadlineDetailsPageState createState() => _DeadlineDetailsPageState();
@@ -31,14 +36,47 @@ class _DeadlineDetailsPageState extends State<DeadlineDetailsPage> {
   }
 
   void _onPaymentSuccess() {
+  try {
+    print("Payment successful");
+
     Navigator.pop(context); // Navigate back to the previous page
-    widget.removeSelectedDeadline(); // Call the function to remove the deadline
+    print("Popped successfully");
+
+    // Check if widget.deadline is null
+    if (widget.deadline == null) {
+      print("Error: widget.deadline is null");
+      return;
+    } else {
+      print("widget.deadline: ${widget.deadline}");
+    }
+
+    // Check if widget.removeSpecificDeadline is null
+    if (widget.removeSpecificDeadline == null) {
+      print("Error: widget.removeSpecificDeadline is null");
+      return;
+    } else {
+      print("widget.removeSpecificDeadline is not null");
+    }
+
+    // Attempt to call widget.removeSpecificDeadline
+    var result = widget.removeSpecificDeadline(widget.deadline);
+    print("Result of removeSpecificDeadline: $result");
+
+    // Call the removeSpecificDeadline function
+    widget.removeSpecificDeadline(widget.deadline);
+    print("Removed deadline");
+  } catch (e, stackTrace) {
+    print("Error in _onPaymentSuccess: $e");
+    print("Stack trace: $stackTrace");
   }
+}
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
-      child: Stack(
+    TextStyle labelStyle = TextStyle(fontSize: 12, fontWeight: FontWeight.w600);
+
+    return Scaffold(
+      body: Stack(
         children: [
           Container(
             color: Color.fromARGB(255, 130, 36, 61),
@@ -104,7 +142,7 @@ class _DeadlineDetailsPageState extends State<DeadlineDetailsPage> {
                           _buildFeeRow('Postage Stamp', '€16'),
                           _buildFeeRow('First Installment', '€550'),
                           _buildFeeRow('Penalty Fee', '€60'),
-                          SizedBox(height: 70),
+                          SizedBox(height: 50),
                           
                           Text(
                             'DUE ON 15/11/2023',
@@ -123,7 +161,7 @@ class _DeadlineDetailsPageState extends State<DeadlineDetailsPage> {
                             ),
                           ),
                               
-                          SizedBox(height: 50),
+                          SizedBox(height: 40),
                           Center(
                             child: Text(
                               '€766',
@@ -134,7 +172,7 @@ class _DeadlineDetailsPageState extends State<DeadlineDetailsPage> {
                               ),
                             ),
                           ),
-                          SizedBox(height: 20),
+                          SizedBox(height: 10),
                           Center(
                             child: ElevatedButton(
                               onPressed: () {
@@ -166,17 +204,6 @@ class _DeadlineDetailsPageState extends State<DeadlineDetailsPage> {
                     ),
                   ),
                 ),
-                CupertinoTabBar(
-                  items: const <BottomNavigationBarItem>[
-                    BottomNavigationBarItem(icon: Icon(CupertinoIcons.house_fill), label: 'Home'),
-                    BottomNavigationBarItem(icon: Icon(CupertinoIcons.clock_fill), label: 'Deadlines'),
-                    BottomNavigationBarItem(icon: Icon(CupertinoIcons.person), label: 'Profile'),
-                  ],
-                  currentIndex: _selectedIndex,
-                  activeColor: Color.fromARGB(255, 130, 36, 51),
-                  inactiveColor: Colors.grey,
-                  onTap: _onItemTapped,
-                ),
               ],
             ),
           ),
@@ -203,6 +230,30 @@ class _DeadlineDetailsPageState extends State<DeadlineDetailsPage> {
           ),
         ],
       ),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(CupertinoIcons.house_fill),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(CupertinoIcons.clock_fill),
+            label: 'Deadlines',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Color.fromARGB(255, 130, 36, 51),
+        unselectedItemColor: Colors.grey,
+        onTap: _onItemTapped,
+        selectedLabelStyle: labelStyle,
+        unselectedLabelStyle: labelStyle.copyWith(color: Colors.grey),
+        iconSize: 25,
+      ),
     );
   }
 
@@ -225,5 +276,3 @@ class _DeadlineDetailsPageState extends State<DeadlineDetailsPage> {
     );
   }
 }
-
-
