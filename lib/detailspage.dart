@@ -200,7 +200,7 @@ class _DeadlineDetailsPageState extends State<DeadlineDetailsPage> {
                               ),
                             ),
                           ),
-                          SizedBox(height: 100),
+                          SizedBox(height: 200),
                         ],
                       ),
                     ),

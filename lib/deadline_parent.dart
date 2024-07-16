@@ -38,7 +38,6 @@ class DeadlinesPageState extends State<DeadlinesPage> {
   Set<Map<String, String>> _selectedDeadlines = {};
   double _totalAmount = 0.0;
 
-
   final List<Widget> _widgetOptions = <Widget>[
     ValueListenableBuilder<Widget>(
       valueListenable: selectedDeadlinePage,
@@ -55,34 +54,6 @@ class DeadlinesPageState extends State<DeadlinesPage> {
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    TextStyle labelStyle = TextStyle(fontSize: 12, fontWeight: FontWeight.w600);
-    return Scaffold(
-      body: _widgetOptions.elementAt(_selectedIndex),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.clock_fill),
-            label: 'Deadlines',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Color.fromARGB(255, 130, 36, 51),
-        unselectedItemColor: Colors.grey,
-        onTap: _onItemTapped,
-        selectedLabelStyle: labelStyle,
-        unselectedLabelStyle: labelStyle.copyWith(color: Colors.grey),
-        iconSize: 25,
-      ),
-    );
-  }
-
   void _onDeadlineTap(Map<String, String> deadline) {
     if (_isSelecting) {
       _toggleSelection(deadline);
@@ -95,21 +66,21 @@ class DeadlinesPageState extends State<DeadlinesPage> {
           detailsPage = detailspage1.DeadlineDetailsPage(
             deadline: deadline,
             showPayModal: showPayModal,
-            removeSpecificDeadline: (d) => _removeSpecificDeadline(d),
+            removeSpecificDeadline: _removeSpecificDeadline,
           );
           break;
         case '2nd TUITION FEE':
           detailsPage = detailspage2.DeadlineDetailsPage(
             deadline: deadline,
             showPayModal: showPayModal,
-            removeSpecificDeadline: (d) => _removeSpecificDeadline(d),
+            removeSpecificDeadline: _removeSpecificDeadline,
           );
           break;
         case '3rd TUITION FEE':
           detailsPage = detailspage3.DeadlineDetailsPage(
             deadline: deadline,
             showPayModal: showPayModal,
-            removeSpecificDeadline: (d) => _removeSpecificDeadline(d),
+            removeSpecificDeadline: _removeSpecificDeadline,
           );
           break;
         default:
@@ -275,6 +246,7 @@ class DeadlinesPageState extends State<DeadlinesPage> {
   @override
   Widget build(BuildContext context) {
     bool hasDeadlines = overdueFees.isNotEmpty || upcomingFees.isNotEmpty;
+    TextStyle labelStyle = TextStyle(fontSize: 12, fontWeight: FontWeight.w600);
 
     return Scaffold(
       body: Stack(
@@ -411,8 +383,8 @@ class DeadlinesPageState extends State<DeadlinesPage> {
         selectedItemColor: Color.fromARGB(255, 130, 36, 51),
         unselectedItemColor: Colors.grey,
         onTap: _onItemTapped,
-        selectedLabelStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
-        unselectedLabelStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w600).copyWith(color: Colors.grey),
+        selectedLabelStyle: labelStyle,
+        unselectedLabelStyle: labelStyle.copyWith(color: Colors.grey),
         iconSize: 25,
       ),
     );
