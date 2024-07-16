@@ -246,7 +246,7 @@ void _onDeadlineTap(Map<String, String> deadline) {
                     ' Deadlines',
                     style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
                   ),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 15),
 
                   if (allinonefees.isNotEmpty) ...[
                     Row(

@@ -216,10 +216,14 @@ class _DeadlineDetailsPageState extends State<DeadlineDetailsPage> {
           Positioned(
             top: 110,
             left: MediaQuery.of(context).size.width / 2 - 45, // Adjust to center horizontally
-            child: CircleAvatar(
-              radius: 45,
-              backgroundImage: NetworkImage('https://via.placeholder.com/100'),
-            ),
+            child: ClipOval(
+                    child: Image.asset(
+                      'assets/logo.png',
+                      width: 90,
+                      height: 100,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
           ),
         ],
       ),
