@@ -388,7 +388,7 @@ void _showOverdueAlertDialog() {
                 child: ElevatedButton(
                   onPressed: _selectedDeadlines.isNotEmpty
                       ? () {
-                          showPayModal(context, _totalAmount, _removeSelectedDeadlines);
+                          showPayModal(context,_selectedDeadlines , _removeSelectedDeadlines);
                         }
                       : null,
                   child: const Text(

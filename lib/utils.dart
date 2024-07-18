@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'deadlines.dart';
-import 'home_page.dart';
+import 'home_page.dart' as home_page;
+import 'package:intl/intl.dart';
+import 'transactions_provider.dart';
+
+
 
 // VARS
 int? _selectedOption;
@@ -32,7 +36,22 @@ void updatePaymentStatus() {
 }
 
 
-void showPayModal(BuildContext context, double totalAmount, VoidCallback onPaymentSuccess) {
+void showPayModal(BuildContext context, Set<Map<String, String>> selectedDeadlines, VoidCallback onPaymentSuccess) {
+  double totalAmount = selectedDeadlines.fold(0.0, (sum, deadline) {
+    return sum + double.parse(deadline['amount']!.replaceAll('€', '').trim());
+  });
+  print('Selected Deadlines" $selectedDeadlines');
+
+  print ('Total Amount: $totalAmount');
+  
+  double newBalance = balance - totalAmount;
+  if (_selectedOption != null && _selectedOption! == 3) {
+  home_page.updateBalance(newBalance);
+  }
+  print('Balance: $balance');
+  print('New Balance: $newBalance');
+  String selectedFeeDescription = selectedDeadlines.map((d) => d['description']!.split(' ').take(1).join()).join(' & ') + ' Tuition Fee';
+  
   showCupertinoModalPopup(
     context: context,
     builder: (BuildContext context) => CupertinoPageScaffold(
@@ -46,22 +65,33 @@ void showPayModal(BuildContext context, double totalAmount, VoidCallback onPayme
           },
         ),
       ),
-      child: PayModalContent(totalAmount: totalAmount, onPaymentSuccess: onPaymentSuccess),
+      child: PayModalContent(
+        totalAmount: totalAmount,
+        selectedFeeDescription: selectedFeeDescription,
+        onPaymentSuccess: onPaymentSuccess,
+      ),
     ),
   );
 }
 
+
 class PayModalContent extends StatefulWidget {
   final double totalAmount;
+  final String selectedFeeDescription;
   final VoidCallback onPaymentSuccess;
 
-  PayModalContent({required this.totalAmount, required this.onPaymentSuccess});
+  PayModalContent({
+    required this.totalAmount,
+    required this.selectedFeeDescription,
+    required this.onPaymentSuccess,
+  });
 
   @override
-  _PayModalContentState createState() => _PayModalContentState();
+  PayModalContentState createState() => PayModalContentState();
 }
 
-class _PayModalContentState extends State<PayModalContent> {
+
+class PayModalContentState extends State<PayModalContent> {
   int? _selectedOption;
   OverlayEntry? _overlayEntry;
 
@@ -72,7 +102,6 @@ class _PayModalContentState extends State<PayModalContent> {
         right: -30,
         child: GestureDetector(
           onTap: () {
-            print("Double click detected. Navigating to payment method.");
             _navigateToPaymentMethod(context);
             Navigator.pop(context);
           },
@@ -109,6 +138,7 @@ class _PayModalContentState extends State<PayModalContent> {
     );
   }
 
+
   void _removeOverlayEntry() {
     if (_overlayEntry != null) {
       _overlayEntry!.remove();
@@ -132,6 +162,18 @@ class _PayModalContentState extends State<PayModalContent> {
 
       // Call the function to update the payment status
       updatePaymentStatus();
+
+      // Call subtractUniversityTransaction to update the balance and fee list
+      if (_selectedOption != null && _selectedOption! == 3) {
+      home_page.subtractUniversityTransaction(
+        title: widget.selectedFeeDescription,
+        amount: widget.totalAmount.toStringAsFixed(2),
+        date: DateTime.now(), // Example date, adjust as needed
+        setStateCallback: setState, // Assuming you have access to setState
+        universityTransactions: home_page.universityTransactions, // Assuming this list is accessible
+        allTransactions: home_page.allTransactions, // Assuming this list is accessible
+        balance: home_page.balance, // Assuming this variable is accessible
+    );}
 
       widget.onPaymentSuccess();
     } catch (e) {
@@ -422,5 +464,4 @@ class _PayModalContentState extends State<PayModalContent> {
     );
   }
 }
-
 

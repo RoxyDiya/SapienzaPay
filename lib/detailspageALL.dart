@@ -183,7 +183,9 @@ void _onItemTapped(int index) {
                           Center(
                             child: ElevatedButton(
                               onPressed: () {
-                                widget.showPayModal(context, 2209.00, _onPaymentSuccess);
+                                widget.showPayModal(context, {
+                                  {'month': 'NOV', 'day': '15', 'description': 'TUITION FEE', 'amount': '€2209'}
+                                }, _onPaymentSuccess);
                               },
                               child: const Text(
                                 'Pay Now',

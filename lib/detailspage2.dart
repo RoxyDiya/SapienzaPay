@@ -169,7 +169,9 @@ class _DeadlineDetailsPageState extends State<DeadlineDetailsPage> {
                           Center(
                             child: ElevatedButton(
                               onPressed: () {
-                                widget.showPayModal(context, 670.00, _onPaymentSuccess);
+                                widget.showPayModal(context, {
+                                  {'month': 'DEC', 'day': '19', 'description': '2nd TUITION FEE', 'amount': '€670'}
+                                }, _onPaymentSuccess);
                               },
                               child: const Text(
                                 'Pay Now',

@@ -1,15 +1,94 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-//import 'package:intl/intl.dart';
+import 'package:intl/intl.dart';
 import 'deadlines.dart' as deadlinesinstallments;
 import 'utils.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'profile_stud.dart';
 import 'all_in_one_deadline.dart' as all_in_one_deadline;
+import 'package:badges/badges.dart' as badges;
+
 
 // Define a global ValueNotifier
 ValueNotifier<Widget> selectedDeadlinePage = ValueNotifier<Widget>(deadlinesinstallments.DeadlinesPage());
+ValueNotifier<bool> hasOverdueFees = ValueNotifier<bool>(true);
+
+
+bool showUniversityTransactions = false;
+bool isUniBankAccountSelected = true;
+double balance = 2500.00;
+
+void updateBalance(double newBalance) {
+      balance = newBalance;
+  }
+
+List<Map<String, String>> universityTransactions = [
+    {
+      'title': 'University Fee',
+      'amount': '€300.00',
+      'date': '12 March 2023',
+    },
+    {
+      'title': 'Library Fee',
+      'amount': '€50.00',
+      'date': '15 March 2023',
+    },
+    {
+      'title': 'University Fee',
+      'amount': '€300.00',
+      'date': '12 March 2023',
+    },
+    {
+      'title': 'Library Fee',
+      'amount': '€50.00',
+      'date': '15 March 2023',
+    },
+    {
+      'title': 'University Fee',
+      'amount': '€300.00',
+      'date': '12 March 2023',
+    },
+    {
+      'title': 'Library Fee',
+      'amount': '€50.00',
+      'date': '15 March 2023',
+    },
+    {
+      'title': 'University Fee',
+      'amount': '€300.00',
+      'date': '12 March 2023',
+    },
+    {
+      'title': 'Library Fee',
+      'amount': '€50.00',
+      'date': '15 March 2023',
+    },
+    {
+      'title': 'University Fee',
+      'amount': '€300.00',
+      'date': '12 March 2023',
+    },
+    {
+      'title': 'Library Fee',
+      'amount': '€50.00',
+      'date': '15 March 2023',
+    },
+  ];
+
+  List<Map<String, String>> allTransactions = [
+    {
+      'title': 'Grocery',
+      'amount': '€50.00',
+      'date': '10 March 2023',
+    },
+    {
+      'title': 'Cinema',
+      'amount': '€15.00',
+      'date': '11 March 2023',
+    },
+  ];
+
 
 
 void main() {
@@ -60,38 +139,54 @@ class HomePageState extends State<HomePage> {
     });
   }
 
+  void checkOverdueFees() {
+    hasOverdueFees.value = overdueFees.isNotEmpty;
+  }
 
 
   @override
   Widget build(BuildContext context) {
     TextStyle labelStyle = TextStyle(fontSize: 12, fontWeight: FontWeight.w600);
-    return Scaffold(
-      //backgroundColor: Colors.white,  // Set the background color you want here
+    checkOverdueFees();
 
+    return Scaffold(
       body: _widgetOptions.elementAt(_selectedIndex),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.house_fill),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.clock_fill),
-            label: 'Deadlines',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Color.fromARGB(255, 130, 36, 51),
-        unselectedItemColor: Colors.grey,
-        onTap: _onItemTapped,
-        selectedLabelStyle: labelStyle,
-        unselectedLabelStyle: labelStyle.copyWith(color: Colors.grey),
-        iconSize: 25,
+      bottomNavigationBar: ValueListenableBuilder<bool>(
+        valueListenable: hasOverdueFees,
+        builder: (context, value, child) {
+          return BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
+            items: <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: Icon(CupertinoIcons.house_fill),
+                label: 'Home',
+              ),
+              BottomNavigationBarItem(
+                icon: badges.Badge(
+                  showBadge: value,
+                  badgeContent: Text('1', style: TextStyle(color: Colors.white)),
+                  badgeStyle: badges.BadgeStyle(
+                    shape: badges.BadgeShape.circle,
+                    badgeColor: Colors.red,
+                  ),
+                  child: Icon(CupertinoIcons.clock_fill),
+                ),
+                label: 'Deadlines',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.person),
+                label: 'Profile',
+              ),
+            ],
+            currentIndex: _selectedIndex,
+            selectedItemColor: Color.fromARGB(255, 130, 36, 51),
+            unselectedItemColor: Colors.grey,
+            onTap: _onItemTapped,
+            selectedLabelStyle: labelStyle,
+            unselectedLabelStyle: labelStyle.copyWith(color: Colors.grey),
+            iconSize: 25,
+          );
+        },
       ),
     );
   }
@@ -103,9 +198,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  bool showUniversityTransactions = false;
-  bool isUniBankAccountSelected = true;
-  double balance = 2500.00;
   ScrollController _scrollController = ScrollController();
   DraggableScrollableController _draggableController = DraggableScrollableController();
   bool isSheetExpanded = false; // Track the state of the DraggableScrollableSheet
@@ -181,6 +273,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  
   void _toggleSheetSize() {
     if (_draggableController.size > 0.4) {
       _draggableController.jumpTo(0.4); // Minimize the sheet
@@ -895,4 +988,30 @@ class PlaceholderWidget extends StatelessWidget {
       ),
     );
   }
+}
+
+
+// Top-level function for subtracting university transaction
+void subtractUniversityTransaction({
+  required String title,
+  required String amount,
+  required DateTime date,
+  required void Function(void Function()) setStateCallback,
+  required List<Map<String, String>> universityTransactions,
+  required List<Map<String, String>> allTransactions,
+  required double balance,
+}) {
+  setStateCallback(() {
+
+    String formattedAmount = "- €${amount}";
+
+    Map<String, String> newTransaction = {
+      'title': title,
+      'amount': formattedAmount,
+      'date': DateFormat('d MMMM yyyy').format(date),
+    };
+    universityTransactions.insert(0, newTransaction);
+    allTransactions.insert(0, newTransaction);
+    balance -= double.parse(amount.substring(1)); // Subtracting amount from balance
+  });
 }
