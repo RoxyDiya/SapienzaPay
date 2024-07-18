@@ -498,11 +498,13 @@ class MainScreen extends StatelessWidget {
 }
 
 class ProfileScreen extends StatelessWidget {
+bool notificationsEnabled = true;
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
+      backgroundColor: CupertinoColors.white,
       navigationBar: CupertinoNavigationBar(
-        backgroundColor: Colors.white,
+        backgroundColor: CupertinoColors.white,
         middle: Text('Profile'),
         automaticallyImplyLeading: false,
       ),
@@ -526,7 +528,7 @@ class ProfileScreen extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     radius: 30,
-                    backgroundImage: AssetImage('assets/profile_picture.png'), // Replace with your image asset
+                    backgroundImage: AssetImage('assets/profilepic.png'), // Replace with your image asset
                   ),
                   SizedBox(width: 10),
                   Column(
@@ -606,9 +608,10 @@ class ProfileScreen extends StatelessWidget {
                       ),
                     ),
                     CupertinoSwitch(
-                      value: false,
-                      onChanged: (bool value) {
-                        // Handle switch toggle
+                    value: notificationsEnabled,
+                    onChanged: (bool value) {
+  
+                        notificationsEnabled = value;
                       },
                     ),
                   ],
@@ -690,7 +693,7 @@ class _EditProfileModalState extends State<EditProfileModal> {
                   children: [
                     CircleAvatar(
                       radius: 50,
-                      backgroundImage: AssetImage('assets/profile_picture.png'), // Replace with your image asset
+                      backgroundImage: AssetImage('assets/profilepic.png'), // Replace with your image asset
                     ),
                     CupertinoButton(
                       padding: EdgeInsets.zero,

@@ -242,6 +242,54 @@ void _onDeadlineTap(Map<String, String> deadline) {
     });
   }
 
+void _showOverdueAlertDialog() {
+    showCupertinoDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return CupertinoAlertDialog(
+          title: Text('Payment Alert', style: TextStyle(fontSize: 22),),
+          content: Text('You are not up to date with the payment of one tuition fee'),
+          actions: <Widget>[
+            CupertinoDialogAction(
+              child: Text('Cancel', style: TextStyle(color: Colors.blue)),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            CupertinoDialogAction(
+                      child: Text('Pay', style: TextStyle(color: Colors.blue)),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        // Fetching the amount from the first overdue fee
+                        double amount = double.parse(
+                            overdueFees.first['amount']!.replaceAll('€', ''));
+                        showPayModal(
+                          context,
+                          amount,
+                          () {
+                            // Define what should happen on payment success
+                            // For example, you could navigate to another page or show a success message
+                            print('Payment successful');
+                          },
+                        );
+                      },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (overdueFees.isNotEmpty) {
+        _showOverdueAlertDialog();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     bool hasDeadlines = overdueFees.isNotEmpty || upcomingFees.isNotEmpty;

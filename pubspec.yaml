@@ -30,7 +30,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  badges: ^3.1.2
   intl: ^0.17.0
+
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -72,6 +74,13 @@ flutter:
     - assets/card4.png
     - assets/sidebutton.png
     - assets/logo.png
+    - assets/profilepic.png
+    - assets/ilmitico.png
+    - assets/book.png
+    - assets/borgir.png
+    - assets/cinema.png
+    - assets/discolaziooo.png
+    - assets/wallet.png
 
 
 

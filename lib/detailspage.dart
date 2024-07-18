@@ -73,7 +73,6 @@ class _DeadlineDetailsPageState extends State<DeadlineDetailsPage> {
   }
 }
 
-  @override
   Widget build(BuildContext context) {
     TextStyle labelStyle = TextStyle(fontSize: 12, fontWeight: FontWeight.w600);
 
@@ -143,7 +142,7 @@ class _DeadlineDetailsPageState extends State<DeadlineDetailsPage> {
                           _buildFeeRow('Regional Tax', '€140'),
                           _buildFeeRow('Postage Stamp', '€16'),
                           _buildFeeRow('First Installment', '€550'),
-                          _buildFeeRow('Penalty Fee', '€60'),
+                          _buildFeeRow('Penalty Fee', '€60', showRedDot: true),
                           SizedBox(height: 50),
                           
                           Text(
@@ -239,15 +238,31 @@ class _DeadlineDetailsPageState extends State<DeadlineDetailsPage> {
     );
   }
 
-  Widget _buildFeeRow(String label, String value) {
+  Widget _buildFeeRow(String label, String value, {bool showRedDot = false}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            label,
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal, color: CupertinoColors.black),
+          Row(
+            children: [
+              Text(
+                label,
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal, color: CupertinoColors.black),
+              ),
+              if (showRedDot)
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: Container(
+                    width: 12,
+                    height: 12,
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                ),
+            ],
           ),
           Text(
             value,

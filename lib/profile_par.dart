@@ -501,8 +501,9 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
+      backgroundColor: CupertinoColors.white,
       navigationBar: CupertinoNavigationBar(
-        backgroundColor: Colors.white,
+        backgroundColor: CupertinoColors.white,
         middle: Text('Profile'),
         automaticallyImplyLeading: false,
       ),
@@ -526,21 +527,21 @@ class ProfileScreen extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     radius: 30,
-                    backgroundImage: AssetImage('assets/profile_picture.png'), // Replace with your image asset
+                    backgroundImage: AssetImage('assets/ilmitico.png'), // Replace with your image asset
                   ),
                   SizedBox(width: 10),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Firdaous Hajjaji',
+                        'Said Hajjaji',
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       Text(
-                        'Student',
+                        'Parent',
                         style: TextStyle(
                           fontSize: 16,
                           color: CupertinoColors.inactiveGray,
@@ -582,7 +583,7 @@ class ProfileScreen extends StatelessWidget {
               SizedBox(height: 5),
               ListTile(
                 contentPadding: EdgeInsets.zero,
-                title: Text('Payment plan'),
+                title: Text('Payment options'),
                 trailing: Icon(CupertinoIcons.right_chevron),
                 onTap: () {
                   Navigator.push(
@@ -646,6 +647,130 @@ class ProfileScreen extends StatelessWidget {
   }
 }
 
+Widget _buildAllCardsView() {
+    return Stack(
+      alignment: Alignment.bottomCenter,
+      children: [
+        Container(
+          width: 500,
+          height: 370,
+          padding: EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: Colors.purple,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Text(
+                    'CARD N°1',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      decoration: TextDecoration.none,
+                    ),
+                  ),
+                  SizedBox(width: 210), // Adjust the spacing as needed
+                  Image.asset(
+                    'assets/mastercardlogo.png', // Replace with the path to your image
+                    width: 40,  // Set the desired width
+                    height: 40, // Set the desired height
+                    //color: Colors.white, // Apply color filter if needed
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        Container(
+          width: 500,
+          height: 310,
+          padding: EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: Colors.pink,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Text(
+                    'CARD N°2',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      decoration: TextDecoration.none,
+                    ),
+                  ),
+                  SizedBox(width: 210), // Adjust the spacing as needed
+                  Image.asset(
+                    'assets/visalogo.png', // Replace with the path to your image
+                    width: 40,  // Set the desired width
+                    height: 40, // Set the desired height
+                    //color: Colors.white, // Apply color filter if needed
+                  ),
+                ],
+              ),              
+            ],
+          ),
+        ),
+        Container(
+          width: 500,
+          height: 250,
+          padding: EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: Colors.blue,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Text(
+                    'CARD N°3',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      decoration: TextDecoration.none,
+                    ),
+                  ),
+                  SizedBox(width: 210), // Adjust the spacing as needed
+                  Image.asset(
+                    'assets/mastercardlogo.png', // Replace with the path to your image
+                    width: 40,  // Set the desired width
+                    height: 40, // Set the desired height
+                    //color: Colors.white, // Apply color filter if needed
+                  ),
+                ],
+              ),   
+              SizedBox(height: 110),
+              Text(
+                'Said Hajjaji                                      03/30',
+                style: TextStyle(
+                    color: Colors.white, fontSize: 18, fontWeight: FontWeight.w500,
+                    decoration: TextDecoration.none,),
+                    
+              ),
+              SizedBox(height: 5),
+              Text(
+                '**** **** **** 0886',
+                style: TextStyle(
+                    color: Colors.white, fontSize: 18, fontWeight: FontWeight.w500,
+                    decoration: TextDecoration.none,),
+              ),              
+            ],
+          ),
+        ),
+      ],
+    );
+  }
 
 
 class EditProfileModal extends StatefulWidget {
@@ -654,7 +779,7 @@ class EditProfileModal extends StatefulWidget {
 }
 
 class _EditProfileModalState extends State<EditProfileModal> {
-  TextEditingController phoneController = TextEditingController(text: '+39 370 307 53 54');
+  TextEditingController phoneController = TextEditingController(text: '+39 370 308 27 69');
   bool isEditingPhoneNumber = false;
 
   @override
@@ -690,7 +815,7 @@ class _EditProfileModalState extends State<EditProfileModal> {
                   children: [
                     CircleAvatar(
                       radius: 50,
-                      backgroundImage: AssetImage('assets/profile_picture.png'), // Replace with your image asset
+                      backgroundImage: AssetImage('assets/ilmitico.png'), // Replace with your image asset
                     ),
                     CupertinoButton(
                       padding: EdgeInsets.zero,
@@ -711,27 +836,18 @@ class _EditProfileModalState extends State<EditProfileModal> {
               SizedBox(height: 20),
               Divider(color: Colors.grey[300]),
               ListTile(
-                title: Text('NAME: Firdaous'),
+                title: Text('NAME: Said'),
               ),
               Divider(color: Colors.grey[300]),
               ListTile(
                 title: Text('SURNAME: Hajjaji'),
               ),
+              
+              
+              
               Divider(color: Colors.grey[300]),
               ListTile(
-                title: Text('STUDENT ID N°: 2006406'),
-              ),
-              Divider(color: Colors.grey[300]),
-              ListTile(
-                title: Text('ENROLLMENT YEAR: 2021/22'),
-              ),
-              Divider(color: Colors.grey[300]),
-              ListTile(
-                title: Text('COURSE NAME: ACSAI'),
-              ),
-              Divider(color: Colors.grey[300]),
-              ListTile(
-                title: Text('EMAIL: hajjaji.2006406@studenti.uni...'),
+                title: Text('EMAIL: hajjaji.2006406@genitori.uni...'),
               ),
               Divider(color: Colors.grey[300]),
               Row(
@@ -792,95 +908,18 @@ class _PaymentPlanScreenState extends State<PaymentPlanScreen> {
     return CupertinoPageScaffold(
       backgroundColor: Color(0xFFF7E8E8),
       navigationBar: CupertinoNavigationBar(
-        middle: Text('Payment plan'),
+        middle: Text('Payment options'),
         leading: CupertinoNavigationBarBackButton(
           onPressed: () {
             Navigator.pop(context);
           },
-          previousPageTitle: 'Profile', 
+          previousPageTitle: 'Profile',
           color: Colors.black,
         ),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(19.0),
-        child: Column(
-          children: <Widget>[
-            SizedBox(height: 120),
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Column(
-                children: [
-                  CupertinoButton(
-  padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-  onPressed: utils.isPaymentCompleted ? null : () {
-    setState(() {
-      _selectedPlan = 'All-in-one';
-    });
-    selectedDeadlinePage.value = all_in_one_deadline.DeadlinesPage();
-  },
-  child: Row(
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children: [
-      Expanded(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 5.0),
-          child: Text(
-            'All-in-one',
-            style: TextStyle(
-              color: utils.isPaymentCompleted && _selectedPlan == 'All-in-one' ? Colors.grey : Colors.black,
-              
-            ),
-          ),
-        ),
-      ),
-      if (_selectedPlan == 'All-in-one')
-        Icon(
-          CupertinoIcons.check_mark,
-          color: utils.isPaymentCompleted ? Colors.grey : Color.fromARGB(1000, 130, 36, 61),
-        ),
-    ],
-  ),
-),
-Divider(color: Colors.grey[300]),
-CupertinoButton(
-  padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-  onPressed: utils.isPaymentCompleted ? null : () {
-    setState(() {
-      _selectedPlan = 'Installments';
-    });
-    selectedDeadlinePage.value = deadlinesinstallments.DeadlinesPage();
-  },
-  child: Row(
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children: [
-      Expanded(
-        child: Padding(
-          padding: const EdgeInsets.only(bottom: 5.0),
-          child: Text(
-            'Installments',
-            style: TextStyle(
-              color: utils.isPaymentCompleted && _selectedPlan == 'Installments' ? Colors.grey : Colors.black,
-            ),
-          ),
-        ),
-      ),
-      if (_selectedPlan == 'Installments')
-        Icon(
-          CupertinoIcons.check_mark,
-          color: utils.isPaymentCompleted ? Colors.grey : Color.fromARGB(1000, 130, 36, 61),
-        ),
-    ],
-  ),
-),
-
-                ],
-              ),
-            ),
-          ],
-        ),
+        padding: EdgeInsets.fromLTRB(16.0, 130.0, 16.0, 0.0),
+        child: _buildAllCardsView(),
       ),
     );
   }
@@ -902,3 +941,4 @@ class InstantPageRoute extends PageRouteBuilder {
   @override
   bool get opaque => false;
 }
+
