@@ -242,6 +242,9 @@ void _onDeadlineTap(Map<String, String> deadline) {
     });
   }
 
+
+
+
 void _showOverdueAlertDialog() {
     showCupertinoDialog(
       context: context,
@@ -262,16 +265,11 @@ void _showOverdueAlertDialog() {
                         Navigator.of(context).pop();
                         // Fetching the amount from the first overdue fee
                         double amount = double.parse(
-                            overdueFees.first['amount']!.replaceAll('€', ''));
-                        showPayModal(
-                          context,
-                          amount,
-                          () {
-                            // Define what should happen on payment success
-                            // For example, you could navigate to another page or show a success message
-                            print('Payment successful');
-                          },
-                        );
+                          overdueFees.first['amount']!.replaceAll('€', ''));
+                           showPayModal(context, {
+                  {'month': 'NOV', 'day': '15', 'description': '1st TUITION FEE', 'amount': '€766'}
+                }, () => _removeSpecificDeadline(overdueFees.first));
+
                       },
             ),
           ],

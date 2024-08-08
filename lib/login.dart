@@ -159,7 +159,7 @@ class _ParentLoginPageState extends State<ParentLoginPage> {
               color: Color.fromARGB(255, 130, 36, 61),
               height: MediaQuery.of(context).size.height * 0.20, // Reduced height
             ),
-            SizedBox(height: 60), // Adjust this value if needed for spacing
+            SizedBox(height: 40), // Adjust this value if needed for spacing
             Text(
               'Parent Login',
               style: TextStyle(

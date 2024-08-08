@@ -6,6 +6,7 @@ import 'detailspage2.dart' as detailspage2;
 import 'detailspage3.dart' as detailspage3;
 import 'utils.dart';
 import 'profile_par.dart';
+import 'package:badges/badges.dart' as badges;
 
 void main() {
   runApp(const MyApp());
@@ -37,6 +38,8 @@ class DeadlinesPageState extends State<DeadlinesPage> {
   bool _isSelecting = false;
   Set<Map<String, String>> _selectedDeadlines = {};
   double _totalAmount = 0.0;
+  bool hasOverdueFees = true;
+
 
   final List<Widget> _widgetOptions = <Widget>[
     ValueListenableBuilder<Widget>(
@@ -51,6 +54,12 @@ class DeadlinesPageState extends State<DeadlinesPage> {
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+    });
+  }
+
+  void checkOverdueFees() {
+    setState(() {
+      hasOverdueFees = overdueFees.isNotEmpty;
     });
   }
 
@@ -247,14 +256,25 @@ class DeadlinesPageState extends State<DeadlinesPage> {
   Widget build(BuildContext context) {
     bool hasDeadlines = overdueFees.isNotEmpty || upcomingFees.isNotEmpty;
     TextStyle labelStyle = TextStyle(fontSize: 12, fontWeight: FontWeight.w600);
+    checkOverdueFees();
+
 
     return Scaffold(
       body: _widgetOptions[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        items: const <BottomNavigationBarItem>[
+        items:  <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.clock_fill),
+          icon: badges.Badge(
+              showBadge: hasOverdueFees
+                ? true
+                : false,
+              badgeContent: Text('1', style: TextStyle(color: Colors.white)),
+              badgeStyle: badges.BadgeStyle(
+                shape: badges.BadgeShape.circle,
+                badgeColor: Colors.red),
+              child: Icon(CupertinoIcons.clock_fill),
+            ),            
             label: 'Deadlines',
           ),
           BottomNavigationBarItem(

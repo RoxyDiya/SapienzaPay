@@ -117,6 +117,7 @@ class PayModalContentState extends State<PayModalContent> {
                       color: CupertinoColors.white,
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
+                      decoration: TextDecoration.none
                     ),
                     textAlign: TextAlign.right,
                   ),

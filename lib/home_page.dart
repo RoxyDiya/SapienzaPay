@@ -24,68 +24,37 @@ void updateBalance(double newBalance) {
   }
 
 List<Map<String, String>> universityTransactions = [
+   
     {
-      'title': 'University Fee',
-      'amount': '€300.00',
-      'date': '12 March 2023',
-    },
-    {
-      'title': 'Library Fee',
-      'amount': '€50.00',
+      'title': 'Discolazio',
+      'amount': '+ €170.00',
       'date': '15 March 2023',
     },
+    
     {
-      'title': 'University Fee',
-      'amount': '€300.00',
-      'date': '12 March 2023',
+      'title': 'Regional Tax',
+      'amount': '- €140.00',
+      'date': '11 March 2023',
+    },
+   
+    {
+      'title': 'Discolazio',
+      'amount': '+ €50.00',
+      'date': '15 February 2023',
     },
     {
-      'title': 'Library Fee',
-      'amount': '€50.00',
-      'date': '15 March 2023',
+      'title': 'Discolazio',
+      'amount': '+ €50.00',
+      'date': '20 January 2023',
     },
-    {
-      'title': 'University Fee',
-      'amount': '€300.00',
-      'date': '12 March 2023',
-    },
-    {
-      'title': 'Library Fee',
-      'amount': '€50.00',
-      'date': '15 March 2023',
-    },
-    {
-      'title': 'University Fee',
-      'amount': '€300.00',
-      'date': '12 March 2023',
-    },
-    {
-      'title': 'Library Fee',
-      'amount': '€50.00',
-      'date': '15 March 2023',
-    },
-    {
-      'title': 'University Fee',
-      'amount': '€300.00',
-      'date': '12 March 2023',
-    },
-    {
-      'title': 'Library Fee',
-      'amount': '€50.00',
-      'date': '15 March 2023',
-    },
+    
   ];
 
   List<Map<String, String>> allTransactions = [
     {
-      'title': 'Grocery',
-      'amount': '€50.00',
-      'date': '10 March 2023',
-    },
-    {
-      'title': 'Cinema',
-      'amount': '€15.00',
-      'date': '11 March 2023',
+      'title': 'Library Fee',
+      'amount': '- €50.00',
+      'date': '20 May 2023',
     },
   ];
 
@@ -202,50 +171,6 @@ class _HomeScreenState extends State<HomeScreen> {
   DraggableScrollableController _draggableController = DraggableScrollableController();
   bool isSheetExpanded = false; // Track the state of the DraggableScrollableSheet
   
-  List<Map<String, String>> universityTransactions = [
-   
-    {
-      'title': 'Discolazio',
-      'amount': '+ €170.00',
-      'date': '15 March 2023',
-    },
-    
-    {
-      'title': 'Regional Tax',
-      'amount': '- €140.00',
-      'date': '15 March 2023',
-    },
-   
-    {
-      'title': 'Discolazio',
-      'amount': '+ €50.00',
-      'date': '15 March 2023',
-    },
-    {
-      'title': 'Cinema',
-      'amount': '- €50.00',
-      'date': '15 March 2023',
-    },
-    
-    {
-      'title': 'Library Fee',
-      'amount': '- €50.00',
-      'date': '15 March 2023',
-    },
-  ];
-
-  List<Map<String, String>> allTransactions = [
-    {
-      'title': 'Discolazio',
-      'amount': '+ €170.00',
-      'date': '10 March 2023',
-    },
-    {
-      'title': 'Regional Tax',
-      'amount': '- €140.00',
-      'date': '11 March 2023',
-    },
-  ];
 
   @override
   void initState() {
@@ -893,9 +818,9 @@ class _AddMoneyModalState extends State<AddMoneyModal> {
     "3rd Tuition Fee": 'assets/logo.png',
     "1st & 2nd Tuition Fee": 'assets/logo.png',
     "1st & 3rd Tuition Fee": 'assets/logo.png',
-    "2st & 1st Tuition Fee": 'assets/logo.png',
+    "2nd & 1st Tuition Fee": 'assets/logo.png',
     "2nd & 3rd Tuition Fee": 'assets/logo.png',
-    "3nd & 2rd Tuition Fee": 'assets/logo.png',
+    "3rd & 2nd Tuition Fee": 'assets/logo.png',
     "3rd & 1st Tuition Fee": 'assets/logo.png',
     "1st & 2nd & 3rd Tuition Fee": 'assets/logo.png',
     "1st & 3rd & 2nd Tuition Fee": 'assets/logo.png',
