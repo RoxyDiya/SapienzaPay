@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'home_page.dart';
+import 'package:flutter/cupertino.dart';
+import 'deadlines.dart';
+import 'utils.dart';
+import 'profile_stud.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,7 +17,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'SapienzaPay app',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 111, 20, 28)),
         useMaterial3: true,

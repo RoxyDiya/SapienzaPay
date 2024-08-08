@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'home_page.dart';
-import 'detailspage.dart';
+import 'detailspage.dart' as detailspage1;
+import 'detailspage2.dart' as detailspage2;
+import 'detailspage3.dart' as detailspage3;
 import 'utils.dart';
+import 'profile_stud.dart';
 
 void main() {
   runApp(const MyApp());
@@ -22,6 +25,8 @@ class MyApp extends StatelessWidget {
   }
 }
 
+
+
 class DeadlinesPage extends StatefulWidget {
   const DeadlinesPage({super.key});
 
@@ -38,7 +43,7 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
   final List<Widget> _widgetOptions = <Widget>[
     HomePage(),
     DeadlinesPage(),
-    ProfileScreen(),
+    ProfileScreen(),  // Replace with the correct ProfileScreen if it conflicts
   ];
 
   void _onItemTapped(int index) {
@@ -47,20 +52,46 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
     });
   }
 
-  void _onDeadlineTap(Map<String, String> deadline) {
-    if (_isSelecting) {
-      _toggleSelection(deadline);
-    } else {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => DeadlineDetailsPage(
-            deadline: deadline,
-          ),
-        ),
-      );
+void _onDeadlineTap(Map<String, String> deadline) {
+  if (_isSelecting) {
+    _toggleSelection(deadline);
+  } else {
+    Widget detailsPage;
+    String description = deadline['description'] ?? '';
+
+    switch (description) {
+      case '1st TUITION FEE':
+        detailsPage = detailspage1.DeadlineDetailsPage(
+          deadline: deadline,
+          showPayModal: showPayModal,
+          removeSpecificDeadline: (d) => _removeSpecificDeadline(d), // Updated line
+        );
+        break;
+      case '2nd TUITION FEE':
+        detailsPage = detailspage2.DeadlineDetailsPage(
+          deadline: deadline,
+          showPayModal: showPayModal,
+          removeSpecificDeadline: (d) => _removeSpecificDeadline(d), // Updated line
+        );
+        break;
+      case '3rd TUITION FEE':
+        detailsPage = detailspage3.DeadlineDetailsPage(
+          deadline: deadline,
+          showPayModal: showPayModal,
+          removeSpecificDeadline: (d) => _removeSpecificDeadline(d), // Updated line
+        );
+        break;
+      default:
+        return;
     }
+
+    Navigator.push(
+      context,
+      CupertinoPageRoute(builder: (context) => detailsPage),
+    );
   }
+}
+
 
   void _onDeadlineLongPress(Map<String, String> deadline) {
     setState(() {
@@ -99,9 +130,10 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
     });
   }
 
-  Widget buildDeadlineItem(Map<String, String> deadline, bool isOverdue) {
+  Widget buildDeadlineItem(Map<String, String> deadline, bool isOverdue, int index) {
     bool isSelected = _selectedDeadlines.contains(deadline);
     return Column(
+      key: ValueKey(index),  // Ensure each item has a unique key
       children: [
         Divider(
           color: CupertinoColors.inactiveGray.withOpacity(0.6),
@@ -192,68 +224,169 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
     );
   }
 
+  void _removeSpecificDeadline(Map<String, String> deadline) {
+    print("removing deadline: $deadline");
+  setState(() {
+    overdueFees.removeWhere((fee) => fee == deadline);
+    upcomingFees.removeWhere((fee) => fee == deadline);
+  });
+}
+
+  void _removeSelectedDeadlines() {
+    setState(() {
+      overdueFees.removeWhere((fee) => _selectedDeadlines.contains(fee));
+      upcomingFees.removeWhere((fee) => _selectedDeadlines.contains(fee));
+      _selectedDeadlines.clear();
+      _totalAmount = 0.0;
+      _isSelecting = false;
+    });
+  }
+
+
+
+
+void _showOverdueAlertDialog() {
+    showCupertinoDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return CupertinoAlertDialog(
+          title: Text('Payment Alert', style: TextStyle(fontSize: 22),),
+          content: Text('You are not up to date with the payment of one tuition fee'),
+          actions: <Widget>[
+            CupertinoDialogAction(
+              child: Text('Cancel', style: TextStyle(color: Colors.blue)),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            CupertinoDialogAction(
+                      child: Text('Pay', style: TextStyle(color: Colors.blue)),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        // Fetching the amount from the first overdue fee
+                        double amount = double.parse(
+                          overdueFees.first['amount']!.replaceAll('€', ''));
+                           showPayModal(context, {
+                  {'month': 'NOV', 'day': '15', 'description': '1st TUITION FEE', 'amount': '€766'}
+                }, () => _removeSpecificDeadline(overdueFees.first));
+
+                      },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (overdueFees.isNotEmpty) {
+        _showOverdueAlertDialog();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    bool hasDeadlines = overdueFees.isNotEmpty || upcomingFees.isNotEmpty;
+
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 60),
-              const Text(
-                ' Deadlines',
-                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 30),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 10, bottom: 80),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  const SizedBox(height: 60),
                   const Text(
-                    '  Overdue:',
-                    style: TextStyle(
-                      color: Color.fromARGB(255, 111, 20, 28),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 24,
-                    ),
+                    ' Deadlines',
+                    style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
                   ),
-                  if (_isSelecting)
-                    GestureDetector(
-                      onTap: _cancelSelection,
-                      child: Text(
-                        'Cancel  ',
-                        style: TextStyle(
-                          color: Color.fromARGB(255, 130, 130, 146),
-                          fontSize: 18,
+                  const SizedBox(height: 15),
+
+                  if (overdueFees.isNotEmpty) ...[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          '  Overdue:',
+                          style: TextStyle(
+                            color: Color.fromARGB(255, 111, 20, 28),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 24,
+                          ),
                         ),
+                        if (_isSelecting)
+                          GestureDetector(
+                            onTap: _cancelSelection,
+                            child: Text(
+                              'Cancel  ',
+                              style: TextStyle(
+                                color: Color.fromARGB(255, 130, 130, 146),
+                                fontSize: 18,
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                    const SizedBox(height: 15),
+                    Column(
+                      children: overdueFees.map((fee) => buildDeadlineItem(fee, true, overdueFees.indexOf(fee))).toList(),
+                    ),
+                    const SizedBox(height: 40),
+                  ],
+
+                  if (upcomingFees.isNotEmpty) ...[
+                    const Text(
+                      '  Upcoming:',
+                      style: TextStyle(
+                        fontSize: 24,
+                        color: Color.fromARGB(255, 111, 20, 28),
+                        fontWeight: FontWeight.normal,
                       ),
                     ),
+                    const SizedBox(height: 15),
+                    Column(
+                      children: upcomingFees.map((fee) => buildDeadlineItem(fee, false, upcomingFees.indexOf(fee))).toList(),
+                    ),
+                    const SizedBox(height: 190),
+                  ],
+
+                  if (!hasDeadlines) ...[
+                    Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          SizedBox(height: 250),
+                          Text(
+                            'There are no more tuition \nfees to pay',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 24,
+                              color: CupertinoColors.systemGrey,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ],
               ),
-              const SizedBox(height: 15),
-              Column(
-                children: overdueFees.map((fee) => buildDeadlineItem(fee, true)).toList(),
-              ),
-              const SizedBox(height: 40),
-              const Text(
-                '  Upcoming:',
-                style: TextStyle(
-                  fontSize: 24,
-                  color: Color.fromARGB(255, 111, 20, 28),
-                  fontWeight: FontWeight.normal,
-                ),
-              ),
-              const SizedBox(height: 15),
-              Column(
-                children: upcomingFees.map((fee) => buildDeadlineItem(fee, false)).toList(),
-              ),
-              const SizedBox(height: 190),
-              Center(
+            ),
+          ),
+          if (hasDeadlines)
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 20),
                 child: ElevatedButton(
                   onPressed: _selectedDeadlines.isNotEmpty
                       ? () {
-                          showPayModal(context, _totalAmount);
+                          showPayModal(context,_selectedDeadlines , _removeSelectedDeadlines);
                         }
                       : null,
                   child: const Text(
@@ -278,9 +411,8 @@ class _DeadlinesPageState extends State<DeadlinesPage> {
                   ),
                 ),
               ),
-            ],
-          ),
-        ),
+            ),
+        ],
       ),
     );
   }

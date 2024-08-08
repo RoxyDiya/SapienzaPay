@@ -1,11 +1,63 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-//import 'package:intl/intl.dart';
-import 'deadlines.dart';
-//import 'utils.dart';
+import 'package:intl/intl.dart';
+import 'deadlines.dart' as deadlinesinstallments;
+import 'utils.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'profile_stud.dart';
+import 'all_in_one_deadline.dart' as all_in_one_deadline;
+import 'package:badges/badges.dart' as badges;
+
+
+// Define a global ValueNotifier
+ValueNotifier<Widget> selectedDeadlinePage = ValueNotifier<Widget>(deadlinesinstallments.DeadlinesPage());
+ValueNotifier<bool> hasOverdueFees = ValueNotifier<bool>(true);
+
+
+bool showUniversityTransactions = false;
+bool isUniBankAccountSelected = true;
+double balance = 2500.00;
+
+void updateBalance(double newBalance) {
+      balance = newBalance;
+  }
+
+List<Map<String, String>> universityTransactions = [
+   
+    {
+      'title': 'Discolazio',
+      'amount': '+ €170.00',
+      'date': '15 March 2023',
+    },
+    
+    {
+      'title': 'Regional Tax',
+      'amount': '- €140.00',
+      'date': '11 March 2023',
+    },
+   
+    {
+      'title': 'Discolazio',
+      'amount': '+ €50.00',
+      'date': '15 February 2023',
+    },
+    {
+      'title': 'Discolazio',
+      'amount': '+ €50.00',
+      'date': '20 January 2023',
+    },
+    
+  ];
+
+  List<Map<String, String>> allTransactions = [
+    {
+      'title': 'Library Fee',
+      'amount': '- €50.00',
+      'date': '20 May 2023',
+    },
+  ];
+
 
 
 void main() {
@@ -37,11 +89,18 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
 
+  // Update the widget options to use the ValueNotifier for deadlines page
   final List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
-    DeadlinesPage(),
-    ProfileScreen(),
+    ValueListenableBuilder<Widget>(
+      valueListenable: selectedDeadlinePage,
+      builder: (context, value, child) {
+        return value;
+      },
+    ),
+    ProfileScreen(), // Update this line to use the new ProfileScreen
   ];
+
 
   void _onItemTapped(int index) {
     setState(() {
@@ -49,36 +108,54 @@ class HomePageState extends State<HomePage> {
     });
   }
 
+  void checkOverdueFees() {
+    hasOverdueFees.value = overdueFees.isNotEmpty;
+  }
+
+
   @override
   Widget build(BuildContext context) {
     TextStyle labelStyle = TextStyle(fontSize: 12, fontWeight: FontWeight.w600);
-    return Scaffold(
-      //backgroundColor: Colors.white,  // Set the background color you want here
+    checkOverdueFees();
 
+    return Scaffold(
       body: _widgetOptions.elementAt(_selectedIndex),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.house_fill),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.clock_fill),
-            label: 'Deadlines',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Color.fromARGB(255, 130, 36, 51),
-        unselectedItemColor: Colors.grey,
-        onTap: _onItemTapped,
-        selectedLabelStyle: labelStyle,
-        unselectedLabelStyle: labelStyle.copyWith(color: Colors.grey),
-        iconSize: 25,
+      bottomNavigationBar: ValueListenableBuilder<bool>(
+        valueListenable: hasOverdueFees,
+        builder: (context, value, child) {
+          return BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
+            items: <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: Icon(CupertinoIcons.house_fill),
+                label: 'Home',
+              ),
+              BottomNavigationBarItem(
+                icon: badges.Badge(
+                  showBadge: value,
+                  badgeContent: Text('1', style: TextStyle(color: Colors.white)),
+                  badgeStyle: badges.BadgeStyle(
+                    shape: badges.BadgeShape.circle,
+                    badgeColor: Colors.red,
+                  ),
+                  child: Icon(CupertinoIcons.clock_fill),
+                ),
+                label: 'Deadlines',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.person),
+                label: 'Profile',
+              ),
+            ],
+            currentIndex: _selectedIndex,
+            selectedItemColor: Color.fromARGB(255, 130, 36, 51),
+            unselectedItemColor: Colors.grey,
+            onTap: _onItemTapped,
+            selectedLabelStyle: labelStyle,
+            unselectedLabelStyle: labelStyle.copyWith(color: Colors.grey),
+            iconSize: 25,
+          );
+        },
       ),
     );
   }
@@ -90,78 +167,10 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  bool showUniversityTransactions = false;
-  bool isUniBankAccountSelected = true;
-  double balance = 2500.00;
   ScrollController _scrollController = ScrollController();
   DraggableScrollableController _draggableController = DraggableScrollableController();
   bool isSheetExpanded = false; // Track the state of the DraggableScrollableSheet
   
-  List<Map<String, String>> universityTransactions = [
-    {
-      'title': 'University Fee',
-      'amount': '€300.00',
-      'date': '12 March 2023',
-    },
-    {
-      'title': 'Library Fee',
-      'amount': '€50.00',
-      'date': '15 March 2023',
-    },
-    {
-      'title': 'University Fee',
-      'amount': '€300.00',
-      'date': '12 March 2023',
-    },
-    {
-      'title': 'Library Fee',
-      'amount': '€50.00',
-      'date': '15 March 2023',
-    },
-    {
-      'title': 'University Fee',
-      'amount': '€300.00',
-      'date': '12 March 2023',
-    },
-    {
-      'title': 'Library Fee',
-      'amount': '€50.00',
-      'date': '15 March 2023',
-    },
-    {
-      'title': 'University Fee',
-      'amount': '€300.00',
-      'date': '12 March 2023',
-    },
-    {
-      'title': 'Library Fee',
-      'amount': '€50.00',
-      'date': '15 March 2023',
-    },
-    {
-      'title': 'University Fee',
-      'amount': '€300.00',
-      'date': '12 March 2023',
-    },
-    {
-      'title': 'Library Fee',
-      'amount': '€50.00',
-      'date': '15 March 2023',
-    },
-  ];
-
-  List<Map<String, String>> allTransactions = [
-    {
-      'title': 'Grocery',
-      'amount': '€50.00',
-      'date': '10 March 2023',
-    },
-    {
-      'title': 'Cinema',
-      'amount': '€15.00',
-      'date': '11 March 2023',
-    },
-  ];
 
   @override
   void initState() {
@@ -189,6 +198,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  
   void _toggleSheetSize() {
     if (_draggableController.size > 0.4) {
       _draggableController.jumpTo(0.4); // Minimize the sheet
@@ -200,6 +210,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
+      backgroundColor: CupertinoColors.white,
       child: Stack(
         children: [
           Padding(
@@ -606,7 +617,7 @@ void _showAddMoneyModal(BuildContext context) {
           setState(() {
             balance += amount;
             // Adding a new university transaction
-            _addUniversityTransaction('New transaction', '€${amount.toStringAsFixed(2)}', DateTime.now());
+            _addUniversityTransaction('Wire transfer', '€${amount.toStringAsFixed(2)}', DateTime.now());
           });
         },
       ),
@@ -639,6 +650,7 @@ class _AddMoneyModalState extends State<AddMoneyModal> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
+      backgroundColor: CupertinoColors.white,
       navigationBar: CupertinoNavigationBar(
         middle: Text(
           'Add Money',
@@ -684,12 +696,12 @@ class _AddMoneyModalState extends State<AddMoneyModal> {
                 keyboardType: TextInputType.number,
                 textAlign: TextAlign.start,
                 style: TextStyle(fontSize: 18),
-                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                padding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
                 decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 242, 242, 246),
+                  color: CupertinoColors.white,
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(
-                    color: CupertinoColors.systemGrey,
+                    color: CupertinoColors.systemGrey3,
                     width: 0.4,
                   ),
                 ),
@@ -795,30 +807,98 @@ class _AddMoneyModalState extends State<AddMoneyModal> {
 
 
 
+ final Map<String, String> imagePaths = {
+    "Grocery": 'assets/borgir.png',
+    "Library Fee": 'assets/book.png',
+    "Cinema": 'assets/cinema.png',
+    "Regional Tax": 'assets/logo.png',
+    "Discolazio": 'assets/discolaziooo.png',
+    "1st Tuition Fee": 'assets/logo.png',
+    "2nd Tuition Fee": 'assets/logo.png',
+    "3rd Tuition Fee": 'assets/logo.png',
+    "1st & 2nd Tuition Fee": 'assets/logo.png',
+    "1st & 3rd Tuition Fee": 'assets/logo.png',
+    "2nd & 1st Tuition Fee": 'assets/logo.png',
+    "2nd & 3rd Tuition Fee": 'assets/logo.png',
+    "3rd & 2nd Tuition Fee": 'assets/logo.png',
+    "3rd & 1st Tuition Fee": 'assets/logo.png',
+    "1st & 2nd & 3rd Tuition Fee": 'assets/logo.png',
+    "1st & 3rd & 2nd Tuition Fee": 'assets/logo.png',
+    "2nd & 1st & 3rd Tuition Fee": 'assets/logo.png',
+    "2nd & 3rd & 1st Tuition Fee": 'assets/logo.png',
+    "3rd & 2nd & 1st Tuition Fee": 'assets/logo.png',
+    "3rd & 1st & 3rd Tuition Fee": 'assets/logo.png',
 
-    Widget _buildTransactionItem(Map<String, String> transaction) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
-      padding: EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        border: Border.all(color: Color.fromARGB(232, 217, 217, 217)),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
+
+
+
+  };
+
+ Widget _buildTransactionItem(Map<String, String> transaction) {
+  // Get the image path based on the transaction title
+  String imagePath = imagePaths[transaction['title']] ?? 'assets/wallet.png';
+
+  // Determine text color based on amount sign
+  bool isIncome = transaction['amount'].toString().startsWith('+');
+  bool isTuitionFee = transaction['title'].toString().contains('Tuition Fee');
+  bool isWireTransfer = transaction['title'].toString() == 'Wire transfer';
+
+  // Determine the color based on the conditions
+  Color amountColor = Colors.white;
+  String amountText = transaction['amount']!;
+
+  if (isIncome || isWireTransfer) {
+    amountColor = Colors.green;
+    if (isWireTransfer && !amountText.startsWith('+')) {
+      amountText = '+ ' + amountText;
+    }
+  } else if (isIncome == false || isTuitionFee == false) {
+    amountColor = Colors.red;
+    if (isTuitionFee && !amountText.startsWith('-')) {
+      amountText = '- ' + amountText;
+    }
+  }
+  // Debug print to check the image path
+  print('Loading image: $imagePath');
+
+  return Container(
+    margin: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+    padding: EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      border: Border.all(color: Color.fromARGB(232, 217, 217, 217)),
+      borderRadius: BorderRadius.circular(10),
+    ),
+    child: Row(
+      children: [
+        Image.asset(
+          imagePath, // Use the dynamic image path
+          width: 38, // Adjust the width as needed
+          height: 38, // Adjust the height as needed
+          errorBuilder: (context, error, stackTrace) {
+            // Display a default icon if the image fails to load
+            return Icon(Icons.error, size: 24, color: Colors.red);
+          },
+        ),
+        SizedBox(width: 10), // Adjust the spacing between image and text
+        Expanded(
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(transaction['title']!, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
               Text(transaction['date']!, style: TextStyle(fontSize: 14, color: Colors.grey)),
             ],
           ),
-          Text(transaction['amount']!, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-        ],
-      ),
-    );
-  }
+        ),
+        Text(
+          amountText,
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: amountColor),
+        ),
+      ],
+    ),
+  );
+}
+
+
 class PlaceholderWidget extends StatelessWidget {
   final String text;
 
@@ -833,4 +913,30 @@ class PlaceholderWidget extends StatelessWidget {
       ),
     );
   }
+}
+
+
+// Top-level function for subtracting university transaction
+void subtractUniversityTransaction({
+  required String title,
+  required String amount,
+  required DateTime date,
+  required void Function(void Function()) setStateCallback,
+  required List<Map<String, String>> universityTransactions,
+  required List<Map<String, String>> allTransactions,
+  required double balance,
+}) {
+  setStateCallback(() {
+
+    String formattedAmount = "- €${amount}";
+
+    Map<String, String> newTransaction = {
+      'title': title,
+      'amount': formattedAmount,
+      'date': DateFormat('d MMMM yyyy').format(date),
+    };
+    universityTransactions.insert(0, newTransaction);
+    allTransactions.insert(0, newTransaction);
+    balance -= double.parse(amount.substring(1)); // Subtracting amount from balance
+  });
 }
