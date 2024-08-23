@@ -1,8 +1,3 @@
-Certainly! Here's a GitHub page template for your project, formatted similarly to the example you provided:
-
----
-
-
 <h1 align="center"> SapienzaPay </h1>
 </br>
 
