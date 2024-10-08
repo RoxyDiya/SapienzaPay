@@ -108,7 +108,7 @@
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Email: <a>martellucci.1988602@studenti.uniroma1.it</a> <br>
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GitHub: <a href="https://github.com/elena-martellucci">@elena-martellucci</a> <br>
 
-  :woman: <b>Eden Paradiso</b> <br>
+  :man: <b>Eden Paradiso</b> <br>
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Email: <a>paradiso.1988447@studenti.uniroma1.it</a> <br>
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GitHub: <a href="https://github.com/mouthofKala">@mouthofKala</a> <br>
 
